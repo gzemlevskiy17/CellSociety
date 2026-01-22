@@ -1,12 +1,25 @@
 # Cell Society Design Lab Discussion
-#### Names and NetIDs
+#### Michael Li - mll80, Joseph Wang - jhw45, Georgiy Zemlevskiy - gz78
 
+
+Segregation: model agent simulation, meaning that as long as the current ratio blocks of preferred / similar blocks is less than a value, then it moves to a position of a better value (the position next to it).
+
+Forest fire: 3 states: empty, 
+
+Game of life: Live or dead cell
+
+    1. Any live cell with < 2 neighbors dies or > 3 neighbors dies
+    2. Any dead cell with exactly 3 neighbors becomes alive
+
+The game of life will run for a given time. 
 
 ### Simulations
 
  * Commonalities
- 
+ The commonality is that all of them have specific sets of rules, which alter block states based on the neighbors around them. 
+
  * Variations
+ The variation of the segregation game is that the blocks actually move across the board when dealing with ratios, and the forest-fire models depend on probability p, and game of life deals with certainties of whether or not a cell is dead/alive.
 
 
 
@@ -14,20 +27,35 @@
 
  * How does a Cell know what rules to apply for its simulation?
 
- * How does a Cell know about its neighbors?
+ Game of Life: Check number of live/dead neighbors and use 4 rules.
+ Forest-fire: Also conforms to the 4 rules that affects its states
+ Segregation: Also dependent on neighbors on where to move
 
- * How can a Cell update itself without affecting its neighbors update?
+ * How does a Cell know about its neighbors?
+ Parse directions in a 8-directional array.
+
+ * How can a Cell update itself without affecting its neighbors update
+ The game of life and forest fire can update on a row by row, column by column. Segregation operates on a first-come-first serve basis.
 
  * What behaviors does the Grid itself have?
+ The grid is a (m x n) grid, where m is number of rows and n is the number of columns. Each cell has a certain number of states, and these states are updated on the certain set of rules.
 
  * How can a Grid update all the Cells it contains?
 
- * What information about a simulation needs to be in the configuration file?
+ Looping through row by row, column by column.
+
+* What information about a simulation needs to be in the configuration file?
+
+The simulation needs its preset identities, like a set probability, number of block states, etc.
+
 
  * How is configuration information used to set up a simulation?
 
+Grid size set up, along with initializing the board with its states.
+
  * How is the graphical view of the simulation updated after all the cells have been updated?
 
+Go through a new grid and set its states, after parsing through the old grid.
 
 
 ### Alternate Designs
