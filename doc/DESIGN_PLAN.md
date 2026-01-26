@@ -1,7 +1,6 @@
 # Cell Society Design Plan
-### Team Number
-### Names
-
+### Team 1
+### Michael, Georgiy, Joseph
 
 #### Examples
 
@@ -21,13 +20,116 @@ taken from [Brilliant Examples of Sketched UI Wireframes and Mock-Ups](https://o
 
 
 ## Overview
+The primary design goals of this project is to be able to make a framework that can run various simulations of cellular automata on a 2-d grid. The designs that are most flexible are the user interface (since you can design/decorate however you want), and the primary architecture of this design centers on transitioning states within each cell of the GUI. Any user input will be private, and the screen is also private. The classes that could be public are the different game mode files, since they all may need to communicate with the Main class in order to actually run the simulation.
 
 
 ## User Interface
+![alt text](image.png)
 
 
 ## Configuration File Format
+This is what our configuration file (XML) would look like:
 
+<?xml version="1.0" encoding="UTF-8"?>
+
+<simulation>
+    <!-- What kind of simulation this is -->
+    <type>GameOfLife</type>
+
+    <!-- Title shown at the top -->
+    <title>Game Of Life</title>
+
+    <!-- Author line -->
+    <author>John Conway</author>
+
+    <!-- Description -->
+    <description>
+        This is a sample Game of Life configuration demonstrating a simple empty grid.
+    </description>
+
+    <!-- Grid dimensions -->
+    <grid>
+        <rows>6</rows>
+        <columns>16</columns>
+
+        <!-- Initial cell states -->
+        <!-- 0 = DEAD, 1 = ALIVE -->
+        <cells>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+        </cells>
+    </grid>
+
+    <!-- Simulation parameters -->
+    <parameters>
+        <speed>5</speed>
+        <states>
+            <state id="0" name="DEAD" color="#FFFFFF"/>
+            <state id="1" name="ALIVE" color="#2ECC71"/>
+        </states>
+    </parameters>
+</simulation>
+
+
+This is what our configuration file (XML) would look like:
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<simulation>
+    <!-- What kind of simulation this is -->
+    <type>ForestFire</type>
+
+    <!-- Title shown at the top -->
+    <title>Forest Fire Model</title>
+
+    <!-- Author line -->
+    <author>Angela Shiflet</author>
+
+    <!-- Description -->
+    <description>
+        A forest fire configuration with a small cluster of burning trees near the center. Trees adjacent to fire may ignite based on probCatch; empty cells may regrow trees based on probGrow.
+    </description>
+
+    <!-- Grid dimensions -->
+    <grid>
+        <rows>10</rows>
+        <columns>16</columns>
+
+        <!-- Initial cell states -->
+        <!-- 0 = DEAD, 1 = ALIVE -->
+           <cells>
+      <row>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</row>
+      <row>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</row>
+      <row>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</row>
+      <row>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</row>
+      <row>1 1 1 1 1 1 1 2 2 1 1 1 1 1 1 1</row>
+      <row>1 1 1 1 1 1 1 2 2 1 1 1 1 1 1 1</row>
+      <row>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</row>
+      <row>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</row>
+      <row>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</row>
+      <row>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</row>
+    </cells>
+
+    </grid>
+
+    <!-- Simulation parameters -->
+    <parameters>
+        <speed>5</speed>
+        <probCatch>0.60</probCatch>
+        <probGrow>0.02</probGrow>
+
+        <states>
+            <state id="0" name="EMPTY" color="#FFFFFF"/>
+            <state id="1" name="TREE" color="#2ECC71"/>
+            <state id="2" name="BURNING" color="#E74C3C"/>
+        </states>
+
+    </parameters>
+</simulation>
 
 ## Design Details
 
