@@ -19,7 +19,7 @@ taken from [Brilliant Examples of Sketched UI Wireframes and Mock-Ups](https://o
 
 
 
-## Overview
+## Introduction
 The primary design goals of this project is to be able to make a framework that can run various simulations of cellular automata on a 2-d grid. The designs that are most flexible are the user interface (since you can design/decorate however you want), and the primary architecture of this design centers on transitioning states within each cell of the GUI. Any user input will be private, and the screen is also private. The classes that could be public are the different game mode files, since they all may need to communicate with the Main class in order to actually run the simulation.
 
 
@@ -100,7 +100,7 @@ This is what our configuration file (XML) would look like:
         <columns>16</columns>
 
         <!-- Initial cell states -->
-        <!-- 0 = DEAD, 1 = ALIVE -->
+        <!-- 0 = EMPTY, 1 = TREE, 2 = BURNING -->
            <cells>
       <row>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</row>
       <row>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</row>
@@ -127,12 +127,23 @@ This is what our configuration file (XML) would look like:
             <state id="1" name="TREE" color="#2ECC71"/>
             <state id="2" name="BURNING" color="#E74C3C"/>
         </states>
-
     </parameters>
 </simulation>
 
+## Design Overview
+![alt text](image-1.png)
+
 ## Design Details
 
+Comment: need to figure out how game type gets piped into initializing its own games
+Also UI class design (?)
+
+Main class: 
+updateGame() updates the visual components of the GUI according to the parameters, user input.
+
+loadConfigFile() loads the XML configuration file. It will determine certain instance variables like SIZE
+
+writeConfigFile() should be called to save a XML configuration file based on the state of the game, recording.
 
 ## Use Cases
 
