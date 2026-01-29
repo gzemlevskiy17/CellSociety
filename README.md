@@ -1,13 +1,12 @@
 # cell society
-## TEAM NUMBER
-## NAMES
-
+## TEAM NUMBER: 1
+## NAMES: Joseph Wang, Georgiy Zemlevskiy, Michael Li
 
 This project implements a cellular automata simulator.
 
 ### Timeline
 
- * Start Date: 
+ * Start Date: January 22, 2026
 
  * Finish Date: 
 
@@ -18,8 +17,10 @@ This project implements a cellular automata simulator.
 ### Attributions
 
  * Resources used for learning (including AI assistance)
+   * Cursor 
  
  * Resources used directly (including AI assistance)
+   * Cursor
 
 
 ### Running the Program
