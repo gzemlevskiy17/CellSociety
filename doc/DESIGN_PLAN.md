@@ -131,7 +131,7 @@ This is what our configuration file (XML) would look like:
 </simulation>
 
 ## Design Overview
-![alt text](image-2.png)
+![alt text](image-3.png)
 
 
 ## Design Details
@@ -228,7 +228,6 @@ writeConfigFile() should be called to save a XML configuration file based on the
 1. The design consideration of what we should store in Grid to support multiple potential states or undefined states. We decided to store in the Grid class a 2D grid of Object Cell. in order to enable quickly calling any methods needed that are in Cell class. This has a con of needing more storage.
 
 2. We also discussed different ways of implementing the screens whether to create multiple classes or have different methods in one class. We decided to have each screen be a method in the same class. This was to enable sharing of data. The cons is that creating new screens will not be abstracted.
-
 
 ## Team Responsibilities
 
