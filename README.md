@@ -17,10 +17,10 @@ This project implements a cellular automata simulator.
 ### Attributions
 
  * Resources used for learning (including AI assistance)
-   * Cursor 
+   *  
  
  * Resources used directly (including AI assistance)
-   * Cursor
+   * 
 
 
 ### Running the Program
