@@ -10,6 +10,14 @@
         <project.build.java.version>25</project.build.java.version>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.7.0</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <!-- compiles project source code using correct version and flags -->
