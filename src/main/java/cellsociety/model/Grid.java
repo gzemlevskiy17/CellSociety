@@ -28,7 +28,8 @@ public class Grid {
 
       if (isInBounds(nr, nc)) {
         neighbors.add(cells[nr][nc]);
-
+      }
+    }
     return neighbors;
   }
 
@@ -45,7 +46,6 @@ public class Grid {
   }
 
   // TODO: set cell state?
-=======
   public void defaultInitializeCells() {
     for (int i = 0; i < cells.length; i++) {
       for (int j = 0; j < cells[i].length; j++) {
