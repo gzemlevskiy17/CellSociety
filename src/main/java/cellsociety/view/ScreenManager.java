@@ -16,7 +16,7 @@ public class ScreenManager {
     }
 
     public void gameScreen() throws Exception {
-        gridView.start(stageLive);
+        // gridView.start(stageLive);
     }
 
     public void startScreen() {

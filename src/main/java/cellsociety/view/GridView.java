@@ -24,7 +24,7 @@ import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public abstract class GridView extends Application {
+public abstract class GridView {
 
     private HashMap<Integer, Color> gridColors = new HashMap<Integer, Color>();
     protected Game gameStored;
@@ -38,13 +38,9 @@ public abstract class GridView extends Application {
     public GridView(Game gameToDisplay) {
         gameStored = gameToDisplay;
         initializeGridPane();
-        launch();
     }
 
     public abstract void initializeGridPane();
 
     public abstract Scene render();
-
-    @Override
-    public abstract void start(Stage stage) throws Exception;
 }
