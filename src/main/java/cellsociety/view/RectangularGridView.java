@@ -1,18 +1,20 @@
 package cellsociety.view;
 
+import java.util.HashMap;
+
 import cellsociety.model.Game;
 import javafx.scene.Scene;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class RectangularGridView extends GridView {
 
-    public RectangularGridView(Game gameToDisplay) {
-        super(gameToDisplay);
+    private Rectangle[][] RectArray;
+
+    public RectangularGridView(String gameName, HashMap<Integer, Color> colors, int x, int y) {
+        super(gameName, colors, x, y);
     }
 
     @Override
@@ -45,5 +47,17 @@ public class RectangularGridView extends GridView {
 
         // Add the Rectangle to the grid at the col/row.
         mainPane.add(cellRect, col, row);
+    }
+
+    @Override
+    public void initializeBorderPane() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'initializeBorderPane'");
+    }
+
+    @Override
+    public void initializeScene() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'initializeScene'");
     }
 }

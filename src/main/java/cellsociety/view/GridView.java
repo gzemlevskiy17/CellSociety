@@ -26,21 +26,35 @@ import javafx.stage.Stage;
 
 public abstract class GridView {
 
-    private HashMap<Integer, Color> gridColors = new HashMap<Integer, Color>();
-    protected Game gameStored;
+    protected HashMap<Integer, Color> gridColors = new HashMap<Integer, Color>();
+    protected String gameName;
 
+    protected Scene mainScene;
     protected GridPane mainPane;
     protected BorderPane bottomPane;
-    protected int cellSize = 30;
-    protected int gridSize = 6;
+    protected int gridRowNum;
+    protected int gridColNum;
 
     // going to assume the Game will include the colors
-    public GridView(Game gameToDisplay) {
-        gameStored = gameToDisplay;
+    public GridView(String gameName, HashMap<Integer, Color> colors, int x, int y) {
+        this.gameName = gameName;
+        gridRowNum = y;
+        gridColNum = x;
+        gridColors = colors;
         initializeGridPane();
+        initializeBorderPane();
+        initializeScene();
     }
 
-    public abstract void initializeGridPane();
+    protected abstract void initializeGridPane();
+
+    protected abstract void initializeBorderPane();
+
+    protected abstract void initializeScene();
 
     public abstract Scene render();
+
+    public Scene getMainScene() {
+        return mainScene;
+    }
 }
