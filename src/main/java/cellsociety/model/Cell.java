@@ -22,6 +22,10 @@ public class Cell {
     this.nextState = state;
   }
 
+  public int getNextState() {
+    return nextState;
+  }
+
   public int getState() {
     return state;
   }
