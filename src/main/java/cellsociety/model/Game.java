@@ -1,7 +1,5 @@
 package cellsociety.model;
 
-import java.util.*;
-
 public abstract class Game {
     protected Grid grid;
 
