@@ -19,5 +19,8 @@ public abstract class GridView extends Application {
         gameStored = gameToDisplay;
     }
 
-    public abstract void render();
+    public abstract Scene render();
+
+    @Override
+    public abstract void start(Stage stage) throws Exception;
 }

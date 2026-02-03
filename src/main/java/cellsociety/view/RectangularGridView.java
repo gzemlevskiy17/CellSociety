@@ -11,15 +11,14 @@ public class RectangularGridView extends GridView {
     }
 
     @Override
-    public void render() {
-
+    public Scene render() {
+        return new Scene();
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        Scene scene = new Scene();
         stage.setTitle("Grid");
-        stage.setScene(scene);
+        stage.setScene(render());
         stage.show();
     }
 
