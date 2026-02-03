@@ -13,11 +13,7 @@ public class Grid {
 
   public Grid(int numRows, int numCols) {
     cells = new Cell[numRows][numCols];
-    for (int i = 0; i < numRows; i++) {
-      for (int j = 0; j < numCols; j++) {
-        cells[i][j] = new Cell(0);
-      }
-    }
+    defaultInitializeCells();
   }
 
   public Cell getCell(int row, int col) {
@@ -32,8 +28,7 @@ public class Grid {
 
       if (isInBounds(nr, nc)) {
         neighbors.add(cells[nr][nc]);
-      }
-    }
+
     return neighbors;
   }
 
@@ -50,4 +45,13 @@ public class Grid {
   }
 
   // TODO: set cell state?
+=======
+  public void defaultInitializeCells() {
+    for (int i = 0; i < cells.length; i++) {
+      for (int j = 0; j < cells[i].length; j++) {
+        cells[i][j] = new Cell(0);
+      }
+    }
+  }
+
 }
