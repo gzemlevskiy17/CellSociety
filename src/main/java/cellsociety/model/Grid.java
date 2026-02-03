@@ -35,7 +35,7 @@ public class Grid {
 
   public void defaultInitializeCells() {
     for (int i = 0; i < cells.length; i++) {
-      for (int j = 0; j < cells[j].length; j++) {
+      for (int j = 0; j < cells[i].length; j++) {
         cells[i][j] = new Cell(0);
       }
     }
