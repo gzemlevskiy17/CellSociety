@@ -15,7 +15,19 @@ public class ScreenManager {
         gridView = gridToUse;
     }
 
-    public void showGridView() {
+    public void gameScreen() throws Exception {
         gridView.start(stageLive);
+    }
+
+    public void startScreen() {
+
+    }
+
+    public void editSaveScreen() {
+
+    }
+
+    public void endScreen() {
+
     }
 }

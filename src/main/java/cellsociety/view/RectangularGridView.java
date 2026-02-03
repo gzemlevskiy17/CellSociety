@@ -2,6 +2,7 @@ package cellsociety.view;
 
 import cellsociety.model.Game;
 import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class RectangularGridView extends GridView {
@@ -12,7 +13,8 @@ public class RectangularGridView extends GridView {
 
     @Override
     public Scene render() {
-        return new Scene();
+        GridPane grid = new GridPane();
+        return new Scene(grid);
     }
 
     @Override
