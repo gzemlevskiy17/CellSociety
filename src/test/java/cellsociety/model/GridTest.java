@@ -1,3 +1,4 @@
+package cellsociety.model;
 
 class GridTest {
 
