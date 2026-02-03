@@ -9,7 +9,7 @@ public class Cell {
     this.nextState = state;
   }
 
-  public void updateState() {
+  public void setState() {
     this.state = this.nextState;
   }
 
