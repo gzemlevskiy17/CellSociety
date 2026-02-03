@@ -5,6 +5,11 @@ import java.util.List;
 
 public class Grid {
   private Cell[][] cells;
+  private int[][] directions = {
+      { -1, -1 }, { -1, 0 }, { -1, 1 },
+      { 0, -1 }, { 0, 1 },
+      { 1, -1 }, { 1, 0 }, { 1, 1 }
+  };
 
   public Grid(int numRows, int numCols) {
     cells = new Cell[numRows][numCols];
@@ -19,14 +24,14 @@ public class Grid {
     return cells[row][col];
   }
 
-
   public List<Cell> getNeighbors(int row, int col) {
     List<Cell> neighbors = new ArrayList<>();
-    for (int i = row - 1; i <= row + 1; i++) {
-      for (int j = col - 1; j <= col + 1; j++) {
-        if (isInBounds(i, j)) {
-          neighbors.add(cells[i][j]);
-        }
+    for (int[] direction : directions) {
+      int nr = row + direction[0];
+      int nc = col + direction[1];
+
+      if (isInBounds(nr, nc)) {
+        neighbors.add(cells[nr][nc]);
       }
     }
     return neighbors;
@@ -36,5 +41,13 @@ public class Grid {
     return row >= 0 && row < cells.length && col >= 0 && col < cells[0].length;
   }
 
-  //TODO: set cell state?
+  public int getRows() {
+    return cells.length;
+  }
+
+  public int getCols() {
+    return cells[0].length;
+  }
+
+  // TODO: set cell state?
 }
