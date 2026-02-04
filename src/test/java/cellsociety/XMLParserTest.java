@@ -25,4 +25,20 @@ class XMLParserTest {
         File file = new File("data/BadData.xml");
         assertThrows(IllegalArgumentException.class, () -> XMLParser.parse(file));
     }
+    
+    @Test
+    void testParseActualFile() throws Exception {
+        File file = new File("data/GameOfLifeSimple.xml");
+        ParseResult result = XMLParser.parse(file);
+
+        assertEquals("GameOfLife", result.getGameType());
+        assertEquals(3, result.getRows());
+        assertEquals(3, result.getCols());
+        
+        // Verify the specific cell at (1,1) is 1 (ALIVE)
+        int[][] cells = result.getCells();
+        assertEquals(1, cells[1][1]);
+        assertEquals(0, cells[0][0]);
+    }
 }
+
