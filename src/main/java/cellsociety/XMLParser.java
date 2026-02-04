@@ -2,6 +2,7 @@ package cellsociety;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
@@ -15,8 +16,8 @@ import org.xml.sax.SAXException;
  */
 public class XMLParser {
 
-    public static ParseResult parse(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
-        Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlFile);
+    public static ParseResult parse(InputStream inputStream) throws ParserConfigurationException, SAXException, IOException {
+        Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputStream);
         Element root = xmlDocument.getDocumentElement();
 
         String gameType = getTextValue(root, "type");
