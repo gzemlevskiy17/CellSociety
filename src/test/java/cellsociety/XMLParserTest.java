@@ -39,6 +39,11 @@ class XMLParserTest {
         int[][] cells = result.getCells();
         assertEquals(1, cells[1][1]);
         assertEquals(0, cells[0][0]);
+
+        // Verify colors are parsed
+        java.util.Map<Integer, String> colors = result.getColorMap();
+        assertEquals("#FFFFFF", colors.get(0));
+        assertEquals("#2ECC71", colors.get(1));
     }
 }
 

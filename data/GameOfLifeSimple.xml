@@ -15,5 +15,9 @@
     </grid>
     <parameters>
         <speed>5</speed>
+        <states>
+            <state id="0" name="DEAD" color="#FFFFFF"/>
+            <state id="1" name="ALIVE" color="#2ECC71"/>
+        </states>
     </parameters>
 </simulation>

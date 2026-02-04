@@ -92,7 +92,21 @@ public class XMLParser {
             }
         }
 
-        return new ParseResult(rows, cols, gameType, cells, probCatch, probGrow);
+        // Parse color mapping
+        java.util.Map<Integer, String> colorMap = new java.util.HashMap<>();
+        NodeList stateNodes = root.getElementsByTagName("state");
+        for (int i = 0; i < stateNodes.getLength(); i++) {
+            Element stateEl = (Element) stateNodes.item(i);
+            String idText = stateEl.getAttribute("id");
+            String colorText = stateEl.getAttribute("color");
+            if (!idText.isEmpty() && !colorText.isEmpty()) {
+                try {
+                    colorMap.put(Integer.parseInt(idText), colorText);
+                } catch (NumberFormatException ignored) {}
+            }
+        }
+
+        return new ParseResult(rows, cols, gameType, cells, probCatch, probGrow, colorMap);
     }
 
     private static String getTextValue(Element e, String tagName) {
