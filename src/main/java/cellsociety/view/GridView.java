@@ -1,6 +1,8 @@
 package cellsociety.view;
 
 import java.util.HashMap;
+import java.util.Map;
+
 import cellsociety.model.Game;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -8,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.effect.Light.Point;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
@@ -50,22 +53,18 @@ public abstract class GridView {
 
         gridRowNum = y;
         gridColNum = x;
-        width = MAX_GRID_WIDTH/gridColNum;
-        height = MAX_GRID_HEIGHT/gridRowNum;
+        width = MAX_GRID_WIDTH / gridColNum;
+        height = MAX_GRID_HEIGHT / gridRowNum;
 
         gridColors = colors;
         initializeGridPane();
-        initializeBorderPane();
-        initializeScene();
     }
 
     protected abstract void initializeGridPane();
 
-    protected abstract void initializeBorderPane();
-
-    protected abstract void initializeScene();
-
-    public abstract Scene render();
-
     public abstract void updateGrid(Map<Point, Integer> updateMap);
+
+    public GridPane getGridPane() {
+        return mainPane;
+    }
 }

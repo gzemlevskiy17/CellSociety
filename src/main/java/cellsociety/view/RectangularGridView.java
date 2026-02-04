@@ -1,9 +1,12 @@
 package cellsociety.view;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import cellsociety.model.Game;
+import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.effect.Light.Point;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -18,18 +21,13 @@ public class RectangularGridView extends GridView {
     }
 
     @Override
-    public Scene render() {
-        return new Scene(grid);
-    }
-
-    @Override
     public void initializeGridPane() {
-        RectArray = newRectangle[gridRowNum][gridColNum]
+        RectArray = new Rectangle[gridRowNum][gridColNum];
 
-        double  y = 0;
-        for (int i = 0; i < gridSize; i++) {
+        double y = 0;
+        for (int i = 0; i < gridRowNum; i++) {
             double x = 0;
-            for (int j = 0; j < gridSize; j++) {
+            for (int j = 0; j < gridColNum; j++) {
                 initializeGridRectangles(i, j, x, y);
                 x += width;
             }
@@ -45,27 +43,18 @@ public class RectangularGridView extends GridView {
         cellRect.setLayoutX(x);
         cellRect.setLayoutY(y);
         cellRect.setFill(gridColors.get(Integer.valueOf(state)));
-        rect.setStroke(Color.BLACK);
-        rect.setStrokeWidth(2);
+        cellRect.setStroke(Color.BLACK);
+        cellRect.setStrokeWidth(2);
 
         // Add the Rectangle to the grid at the col/row.
         RectArray[row][col] = cellRect;
         mainPane.add(cellRect, col, row);
     }
 
+    @Override
     public void updateGrid(Map<Point, Integer> updateMap) {
-        for(Point p: updatedMap.keySet()){
-            grid[p.getY()][p.getX()].setFill(gridColors.get(updatedMap.get(p)));
+        for (Point p : updateMap.keySet()) {
+            RectArray[(int) p.getY()][(int) p.getX()].setFill(gridColors.get(updateMap.get(p)));
         }
-    }
-
-    @Override
-    public void initializeBorderPane() {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void initializeScene() {
-        mainPane = newScene(mainPane, 400, 400);
     }
 }
