@@ -1,6 +1,5 @@
 package cellsociety;
 
-import cellsociety.model.Game;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
