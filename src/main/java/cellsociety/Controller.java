@@ -5,12 +5,20 @@ import cellsociety.model.Game;
 import cellsociety.view.GridView;
 import cellsociety.view.RectangularGridView;
 import cellsociety.view.ScreenManager;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+import javafx.util.Duration;
 
 public class Controller {
 
   private Game game;
   private ScreenManager screenManager;
   private GridView gridView;
+  private Timeline gameLoop;
+  private Timeline animation;
+
+  private static final int FRAMES_PER_SECOND = 60;
+  private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 
   private boolean running;
   private double gameSpeed;
@@ -21,16 +29,16 @@ public class Controller {
     this.screenManager = screenManager;
     this.gridView = gridView;
     gameSpeed = 1;
+    gameLoop = new Timeline(new KeyFrame(Duration.seconds(2), e -> loop()));
+    gameLoop.setCycleCount(Timeline.INDEFINITE);
+    gameLoop.play();
+    System.out.println("True");
   }
 
   public void loop() {
-    if (running) {
-      game.step();
-      updateGrid();
-      // TODO: method calls await implementation
-      // TODO: outsource methods
-      generations++;
-    }
+    game.step();
+    updateGrid();
+    generations++;
   }
 
   private void updateGrid() {
@@ -45,6 +53,7 @@ public class Controller {
   }
 
   public void pause() {
+    gameLoop.stop();
     running = false;
   }
 
@@ -71,6 +80,9 @@ public class Controller {
 
   public void setGameSpeed(double gameSpeed) {
     this.gameSpeed = gameSpeed;
+    if (animation != null) {
+      animation.setRate(this.gameSpeed);
+    }
   }
 
   public int getGenerations() {
