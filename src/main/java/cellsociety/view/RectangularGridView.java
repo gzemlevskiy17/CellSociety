@@ -24,40 +24,48 @@ public class RectangularGridView extends GridView {
 
     @Override
     public void initializeGridPane() {
-        // Set up the rows and columns.
-        for (int i = 0; i < gridSize; i++) {
-            mainPane.getColumnConstraints().add(new ColumnConstraints(cellSize));
-            mainPane.getRowConstraints().add(new RowConstraints(cellSize));
-        }
+        RectArray = newRectangle[gridRowNum][gridColNum]
 
+        double  y = 0;
         for (int i = 0; i < gridSize; i++) {
+            double x = 0;
             for (int j = 0; j < gridSize; j++) {
-                initializeGridRectangles(i, j);
+                initializeGridRectangles(i, j, x, y);
+                x += width;
             }
+            y += height;
         }
     }
 
-    private void initializeGridRectangles(int row, int col) {
-
+    private void initializeGridRectangles(int row, int col, double x, double y) {
         // All cells will initially be dead, build a Rectangle for each.
-        Rectangle cellRect = new Rectangle();
-        cellRect.setHeight(cellSize);
-        cellRect.setWidth(cellSize);
-        cellRect.setFill(Color.WHITE);
+        int state = 0;
+
+        Rectangle cellRect = new Rectangle(width, height);
+        cellRect.setLayoutX(x);
+        cellRect.setLayoutY(y);
+        cellRect.setFill(gridColors.get(Integer.valueOf(state)));
+        rect.setStroke(Color.BLACK);
+        rect.setStrokeWidth(2);
 
         // Add the Rectangle to the grid at the col/row.
+        RectArray[row][col] = cellRect;
         mainPane.add(cellRect, col, row);
+    }
+
+    public void updateGrid(Map<Point, Integer> updateMap) {
+        for(Point p: updatedMap.keySet()){
+            grid[p.getY()][p.getX()].setFill(gridColors.get(updatedMap.get(p)));
+        }
     }
 
     @Override
     public void initializeBorderPane() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'initializeBorderPane'");
     }
 
     @Override
     public void initializeScene() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'initializeScene'");
+        mainPane = newScene(mainPane, 400, 400);
     }
 }
