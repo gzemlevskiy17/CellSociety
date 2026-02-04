@@ -1,32 +1,12 @@
 package cellsociety.view;
 
+import cellsociety.Controller;
 import java.util.HashMap;
-import java.util.Map;
-
-import cellsociety.model.Game;
-import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.effect.Light.Point;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeType;
-import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
 public abstract class GridView {
 
@@ -62,9 +42,17 @@ public abstract class GridView {
 
     protected abstract void initializeGridPane();
 
-    public abstract void updateGrid(Map<Point, Integer> updateMap);
+    public abstract void updateCell(int row, int col, int state);
 
     public GridPane getGridPane() {
         return mainPane;
+    }
+
+    public int getNumRows() {
+        return gridRowNum;
+    }
+
+    public int getNumCols() {
+        return gridColNum;
     }
 }

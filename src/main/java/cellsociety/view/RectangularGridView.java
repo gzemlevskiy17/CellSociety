@@ -1,16 +1,9 @@
 package cellsociety.view;
 
+import cellsociety.Controller;
 import java.util.HashMap;
-import java.util.Map;
-
-import cellsociety.model.Game;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.effect.Light.Point;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 
 public class RectangularGridView extends GridView {
 
@@ -42,7 +35,7 @@ public class RectangularGridView extends GridView {
         Rectangle cellRect = new Rectangle(width, height);
         cellRect.setLayoutX(x);
         cellRect.setLayoutY(y);
-        cellRect.setFill(gridColors.get(Integer.valueOf(state)));
+        cellRect.setFill(gridColors.get(state));
         cellRect.setStroke(Color.BLACK);
         cellRect.setStrokeWidth(2);
 
@@ -52,9 +45,7 @@ public class RectangularGridView extends GridView {
     }
 
     @Override
-    public void updateGrid(Map<Point, Integer> updateMap) {
-        for (Point p : updateMap.keySet()) {
-            RectArray[(int) p.getY()][(int) p.getX()].setFill(gridColors.get(updateMap.get(p)));
-        }
+    public void updateCell(int row, int col, int state) {
+        RectArray[row][col].setFill(gridColors.get(state));
     }
 }
