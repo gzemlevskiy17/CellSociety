@@ -23,20 +23,6 @@ public class GameEngine {
     // setupView();
   }
 
-  public void start() {
-    // root = new Group();
-    // Scene myScene = new Scene(root, SIZE, SIZE, Color.DARKBLUE);
-    //
-    // initializeLevel();
-    // displayStartScreen();
-    //
-    // stage.setScene(myScene);
-    // stage.setTitle(TITLE);
-    // stage.show();
-
-    // myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-  }
-
   private void setup(Stage primaryStage) {
     gameFactory = new GameFactory();
     ParseResult parseResult = null;

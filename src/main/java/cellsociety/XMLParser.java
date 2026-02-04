@@ -1,8 +1,9 @@
 package cellsociety;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
@@ -12,7 +13,6 @@ import org.xml.sax.SAXException;
 
 /**
  * Simple XML parser that reads basic simulation configuration.
- * Expected elements: <width>, <height>, optional <game>
  */
 public class XMLParser {
 
@@ -21,23 +21,36 @@ public class XMLParser {
         Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputStream);
         Element root = xmlDocument.getDocumentElement();
 
+        // 1. Root Level Metadata
         String gameType = getTextValue(root, "type");
-        int[] dimensions = parseDimensions(root);
+
+        // 2. Section Elements
+        Element gridEl = getFirstElement(root, "grid");
+        Element paramEl = getFirstElement(root, "parameters");
+
+        // 3. Grid Dimensions (fallback to root if not in <grid>)
+        int[] dimensions = parseDimensions(gridEl != null ? gridEl : root);
         int rows = dimensions[0];
         int cols = dimensions[1];
 
-        int[][] cells = parseGrid(root, rows, cols);
-        double[] params = parseParameters(root);
-        java.util.Map<Integer, String> colorMap = parseColors(root);
+        // 4. Detailed Data
+        int[][] cells = (gridEl != null) ? parseCells(gridEl, rows, cols) : null;
+        double[] params = (paramEl != null) ? parseParameters(paramEl) : new double[] { 0.0, 0.0 };
+        Map<Integer, String> colorMap = parseColors(root); // Search root for all <state> tags
 
         return new ParseResult(rows, cols, gameType, cells, params[0], params[1], colorMap);
     }
 
-    private static int[] parseDimensions(Element root) {
-        String rowsText = getTextValue(root, "rows");
-        String colsText = getTextValue(root, "columns");
-        String widthText = getTextValue(root, "width");
-        String heightText = getTextValue(root, "height");
+    private static Element getFirstElement(Element parent, String tagName) {
+        NodeList nodeList = parent.getElementsByTagName(tagName);
+        return (nodeList.getLength() > 0) ? (Element) nodeList.item(0) : null;
+    }
+
+    private static int[] parseDimensions(Element container) {
+        String rowsText = getTextValue(container, "rows");
+        String colsText = getTextValue(container, "columns");
+        String widthText = getTextValue(container, "width");
+        String heightText = getTextValue(container, "height");
 
         try {
             if (!rowsText.isEmpty() && !colsText.isEmpty()) {
@@ -51,29 +64,23 @@ public class XMLParser {
         throw new IllegalArgumentException("Missing grid dimensions in XML");
     }
 
-    private static int[][] parseGrid(Element root, int rows, int cols) {
-        NodeList gridNodes = root.getElementsByTagName("grid");
-        if (gridNodes.getLength() == 0)
+    private static int[][] parseCells(Element gridEl, int rows, int cols) {
+        Element cellsEl = getFirstElement(gridEl, "cells");
+        if (cellsEl == null)
             return null;
 
-        Element gridEl = (Element) gridNodes.item(0);
-        NodeList cellsNodes = gridEl.getElementsByTagName("cells");
-        if (cellsNodes.getLength() == 0)
-            return null;
-
-        Element cellsEl = (Element) cellsNodes.item(0);
         NodeList rowNodes = cellsEl.getElementsByTagName("row");
         if (rowNodes.getLength() == 0)
             return null;
 
         int[][] cells = new int[rows][cols];
         for (int r = 0; r < Math.min(rowNodes.getLength(), rows); r++) {
-            parseRow(rowNodes.item(r).getTextContent().trim(), cells[r], cols);
+            parseRowContent(rowNodes.item(r).getTextContent().trim(), cells[r], cols);
         }
         return cells;
     }
 
-    private static void parseRow(String rowText, int[] rowArray, int cols) {
+    private static void parseRowContent(String rowText, int[] rowArray, int cols) {
         if (rowText.isEmpty())
             return;
         String[] parts = rowText.split("\\s+");
@@ -86,21 +93,15 @@ public class XMLParser {
         }
     }
 
-    private static double[] parseParameters(Element root) {
-        double probCatch = 0.0;
-        double probGrow = 0.0;
-        NodeList paramNodes = root.getElementsByTagName("parameters");
-        if (paramNodes.getLength() > 0) {
-            Element paramEl = (Element) paramNodes.item(0);
-            probCatch = parseDouble(getTextValue(paramEl, "probCatch"), 0.0);
-            probGrow = parseDouble(getTextValue(paramEl, "probGrow"), 0.0);
-        }
+    private static double[] parseParameters(Element paramEl) {
+        double probCatch = parseDouble(getTextValue(paramEl, "probCatch"), 0.0);
+        double probGrow = parseDouble(getTextValue(paramEl, "probGrow"), 0.0);
         return new double[] { probCatch, probGrow };
     }
 
-    private static java.util.Map<Integer, String> parseColors(Element root) {
-        java.util.Map<Integer, String> colorMap = new java.util.HashMap<>();
-        NodeList stateNodes = root.getElementsByTagName("state");
+    private static Map<Integer, String> parseColors(Element container) {
+        Map<Integer, String> colorMap = new HashMap<>();
+        NodeList stateNodes = container.getElementsByTagName("state");
         for (int i = 0; i < stateNodes.getLength(); i++) {
             Element stateEl = (Element) stateNodes.item(i);
             String idText = stateEl.getAttribute("id");
@@ -127,6 +128,6 @@ public class XMLParser {
 
     private static String getTextValue(Element e, String tagName) {
         NodeList nodeList = e.getElementsByTagName(tagName);
-        return (nodeList.getLength() > 0) ? nodeList.item(0).getTextContent() : "";
+        return (nodeList.getLength() > 0) ? nodeList.item(0).getTextContent().trim() : "";
     }
 }

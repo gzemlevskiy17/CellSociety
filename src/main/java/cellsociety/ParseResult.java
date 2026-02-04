@@ -9,7 +9,8 @@ public class ParseResult {
     private final double probGrow;
     private final java.util.Map<Integer, String> colorMap;
 
-    public ParseResult(int rows, int cols, String gameType, int[][] cells, double probCatch, double probGrow, java.util.Map<Integer, String> colorMap) {
+    public ParseResult(int rows, int cols, String gameType, int[][] cells, double probCatch, double probGrow,
+            java.util.Map<Integer, String> colorMap) {
         this.rows = rows;
         this.cols = cols;
         this.gameType = gameType;
