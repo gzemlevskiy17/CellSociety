@@ -16,84 +16,89 @@ import org.xml.sax.SAXException;
  */
 public class XMLParser {
 
-    public static ParseResult parse(InputStream inputStream) throws ParserConfigurationException, SAXException, IOException {
+    public static ParseResult parse(InputStream inputStream)
+            throws ParserConfigurationException, SAXException, IOException {
         Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputStream);
         Element root = xmlDocument.getDocumentElement();
 
         String gameType = getTextValue(root, "type");
+        int[] dimensions = parseDimensions(root);
+        int rows = dimensions[0];
+        int cols = dimensions[1];
 
+        int[][] cells = parseGrid(root, rows, cols);
+        double[] params = parseParameters(root);
+        java.util.Map<Integer, String> colorMap = parseColors(root);
+
+        return new ParseResult(rows, cols, gameType, cells, params[0], params[1], colorMap);
+    }
+
+    private static int[] parseDimensions(Element root) {
         String rowsText = getTextValue(root, "rows");
         String colsText = getTextValue(root, "columns");
         String widthText = getTextValue(root, "width");
         String heightText = getTextValue(root, "height");
 
-        int rows = -1;
-        int cols = -1;
-
-        if (!rowsText.isEmpty() && !colsText.isEmpty()) {
-            try {
-                rows = Integer.parseInt(rowsText.trim());
-                cols = Integer.parseInt(colsText.trim());
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid numeric value in XML", e);
+        try {
+            if (!rowsText.isEmpty() && !colsText.isEmpty()) {
+                return new int[] { Integer.parseInt(rowsText.trim()), Integer.parseInt(colsText.trim()) };
+            } else if (!widthText.isEmpty() && !heightText.isEmpty()) {
+                return new int[] { Integer.parseInt(widthText.trim()), Integer.parseInt(heightText.trim()) };
             }
-        } else if (!widthText.isEmpty() && !heightText.isEmpty()) {
-            try {
-                rows = Integer.parseInt(widthText.trim());
-                cols = Integer.parseInt(heightText.trim());
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid numeric value in XML", e);
-            }
-        } else {
-            throw new IllegalArgumentException("Missing grid dimensions in XML");
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid numeric value for dimensions in XML", e);
         }
+        throw new IllegalArgumentException("Missing grid dimensions in XML");
+    }
 
-        int[][] cells = null;
+    private static int[][] parseGrid(Element root, int rows, int cols) {
         NodeList gridNodes = root.getElementsByTagName("grid");
-        if (gridNodes.getLength() > 0) {
-            Element gridEl = (Element) gridNodes.item(0);
-            NodeList cellsNodes = gridEl.getElementsByTagName("cells");
-            if (cellsNodes.getLength() > 0) {
-                Element cellsEl = (Element) cellsNodes.item(0);
-                NodeList rowNodes = cellsEl.getElementsByTagName("row");
-                if (rowNodes.getLength() > 0) {
-                    cells = new int[rows][cols];
-                    for (int r = 0; r < Math.min(rowNodes.getLength(), rows); r++) {
-                        String rowText = rowNodes.item(r).getTextContent().trim();
-                        if (rowText.isEmpty())
-                            continue;
-                        String[] parts = rowText.split("\\s+");
-                        for (int c = 0; c < Math.min(parts.length, cols); c++) {
-                            try {
-                                cells[r][c] = Integer.parseInt(parts[c]);
-                            } catch (NumberFormatException ex) {
-                                throw new IllegalArgumentException("Invalid cell state in XML", ex);
-                            }
-                        }
-                    }
-                }
+        if (gridNodes.getLength() == 0)
+            return null;
+
+        Element gridEl = (Element) gridNodes.item(0);
+        NodeList cellsNodes = gridEl.getElementsByTagName("cells");
+        if (cellsNodes.getLength() == 0)
+            return null;
+
+        Element cellsEl = (Element) cellsNodes.item(0);
+        NodeList rowNodes = cellsEl.getElementsByTagName("row");
+        if (rowNodes.getLength() == 0)
+            return null;
+
+        int[][] cells = new int[rows][cols];
+        for (int r = 0; r < Math.min(rowNodes.getLength(), rows); r++) {
+            parseRow(rowNodes.item(r).getTextContent().trim(), cells[r], cols);
+        }
+        return cells;
+    }
+
+    private static void parseRow(String rowText, int[] rowArray, int cols) {
+        if (rowText.isEmpty())
+            return;
+        String[] parts = rowText.split("\\s+");
+        for (int c = 0; c < Math.min(parts.length, cols); c++) {
+            try {
+                rowArray[c] = Integer.parseInt(parts[c]);
+            } catch (NumberFormatException ex) {
+                throw new IllegalArgumentException("Invalid cell state in XML", ex);
             }
         }
+    }
 
-        // Parse parameters for game-specific settings
-        double probCatch = 0.0; // defaults
+    private static double[] parseParameters(Element root) {
+        double probCatch = 0.0;
         double probGrow = 0.0;
-
         NodeList paramNodes = root.getElementsByTagName("parameters");
         if (paramNodes.getLength() > 0) {
             Element paramEl = (Element) paramNodes.item(0);
-            String probCatchText = getTextValue(paramEl, "probCatch");
-            String probGrowText = getTextValue(paramEl, "probGrow");
-
-            if (!probCatchText.isEmpty()) {
-                probCatch = Double.parseDouble(probCatchText.trim());
-            }
-            if (!probGrowText.isEmpty()) {
-                probGrow = Double.parseDouble(probGrowText.trim());
-            }
+            probCatch = parseDouble(getTextValue(paramEl, "probCatch"), 0.0);
+            probGrow = parseDouble(getTextValue(paramEl, "probGrow"), 0.0);
         }
+        return new double[] { probCatch, probGrow };
+    }
 
-        // Parse color mapping
+    private static java.util.Map<Integer, String> parseColors(Element root) {
         java.util.Map<Integer, String> colorMap = new java.util.HashMap<>();
         NodeList stateNodes = root.getElementsByTagName("state");
         for (int i = 0; i < stateNodes.getLength(); i++) {
@@ -103,19 +108,25 @@ public class XMLParser {
             if (!idText.isEmpty() && !colorText.isEmpty()) {
                 try {
                     colorMap.put(Integer.parseInt(idText), colorText);
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
         }
+        return colorMap;
+    }
 
-        return new ParseResult(rows, cols, gameType, cells, probCatch, probGrow, colorMap);
+    private static double parseDouble(String value, double defaultValue) {
+        if (value.isEmpty())
+            return defaultValue;
+        try {
+            return Double.parseDouble(value.trim());
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
     private static String getTextValue(Element e, String tagName) {
         NodeList nodeList = e.getElementsByTagName(tagName);
-        if (nodeList.getLength() > 0) {
-            return nodeList.item(0).getTextContent();
-        } else {
-            return "";
-        }
+        return (nodeList.getLength() > 0) ? nodeList.item(0).getTextContent() : "";
     }
 }
