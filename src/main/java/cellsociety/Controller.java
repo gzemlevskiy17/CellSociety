@@ -23,13 +23,12 @@ public class Controller {
     gameSpeed = 1;
   }
 
-
   public void loop() {
     if (running) {
       game.step();
       updateGrid();
-      //TODO: method calls await implementation
-      //TODO: outsource methods
+      // TODO: method calls await implementation
+      // TODO: outsource methods
       generations++;
     }
   }
@@ -45,7 +44,6 @@ public class Controller {
     }
   }
 
-
   public void pause() {
     running = false;
   }
@@ -55,7 +53,7 @@ public class Controller {
   }
 
   public void reset() {
-//    game.defaultInitializeGrid(); //TODO: method call awaits implementation
+    // game.defaultInitializeGrid(); //TODO: method call awaits implementation
     generations = 0;
     running = false;
     gameSpeed = 1.0;
@@ -64,7 +62,7 @@ public class Controller {
   public void edit() {
   }
 
-  public void writeConfigFile(/*String path*/) {
+  public void writeConfigFile(/* String path */) {
   }
 
   public double getGameSpeed() {

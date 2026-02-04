@@ -19,22 +19,22 @@ public class GameEngine {
   private GridView gridView;
 
   public GameEngine(Stage primaryStage) {
-    setup(primaryStage); //TODO: get grid type, size, colors.
-//    setupView();
+    setup(primaryStage); // TODO: get grid type, size, colors.
+    // setupView();
   }
 
   public void start() {
-//    root = new Group();
-//    Scene myScene = new Scene(root, SIZE, SIZE, Color.DARKBLUE);
-//
-//    initializeLevel();
-//    displayStartScreen();
-//
-//    stage.setScene(myScene);
-//    stage.setTitle(TITLE);
-//    stage.show();
+    // root = new Group();
+    // Scene myScene = new Scene(root, SIZE, SIZE, Color.DARKBLUE);
+    //
+    // initializeLevel();
+    // displayStartScreen();
+    //
+    // stage.setScene(myScene);
+    // stage.setTitle(TITLE);
+    // stage.show();
 
-//    myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+    // myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
   }
 
   private void setup(Stage primaryStage) {
@@ -61,5 +61,6 @@ public class GameEngine {
 
   }
 
-  private void handleKeyInput(KeyCode code) {}
+  private void handleKeyInput(KeyCode code) {
+  }
 }

@@ -11,12 +11,13 @@ public class ScreenManager {
   public ScreenManager(Stage stage, GridView gridToUse) {
     stageLive = stage;
     gridView = gridToUse;
+    gameScreen();
+    stage.show();
   }
 
-  public void gameScreen() throws Exception {
+  public void gameScreen() {
     Scene scene = new Scene(gridView.getGridPane(), 400, 400);
     stageLive.setScene(scene);
-//  gridView.start(stageLive);
   }
 
   public void startScreen() {
