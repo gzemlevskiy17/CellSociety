@@ -7,10 +7,16 @@ public class ScreenManager {
 
   private Stage stageLive;
   private GridView gridView;
+  private String gameName;
+  private String author;
+  private String description;
 
-  public ScreenManager(Stage stage, GridView gridToUse) {
+  public ScreenManager(Stage stage, GridView gridToUse, String gameName, String author) {
     stageLive = stage;
     gridView = gridToUse;
+    gameName = gameName;
+    author = author;
+    description = description;
     gameScreen();
     stage.show();
   }

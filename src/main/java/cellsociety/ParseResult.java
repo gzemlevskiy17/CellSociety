@@ -8,12 +8,19 @@ public class ParseResult {
     private final double probCatch;
     private final double probGrow;
     private final java.util.Map<Integer, String> colorMap;
+    private final String author;
+    private final String title;
+    private final String description;
 
-    public ParseResult(int rows, int cols, String gameType, int[][] cells, double probCatch, double probGrow,
+    public ParseResult(int rows, int cols, String gameType, String title, String author, String description,
+            int[][] cells, double probCatch, double probGrow,
             java.util.Map<Integer, String> colorMap) {
         this.rows = rows;
         this.cols = cols;
         this.gameType = gameType;
+        this.title = title;
+        this.author = author;
+        this.description = description;
         this.cells = cells;
         this.probCatch = probCatch;
         this.probGrow = probGrow;
@@ -34,6 +41,18 @@ public class ParseResult {
 
     public String getGameType() {
         return gameType;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public int[][] getCells() {

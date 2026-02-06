@@ -24,6 +24,12 @@
  * Improved embodiment of principles: This could also have interface allowing for Liskov Substitution and utilize the idea that 
 
 
+#### Abstraction #3
+ * Current embodiment of principles: 
+
+ * Improved embodiment of principles: 
+
+
 ### New Abstractions
 
 #### Abstraction #1
@@ -33,6 +39,9 @@
  
 
 #### Abstraction #2
- * Description: We could create an abstract `` class
+ * Description: We could create an abstract `ErroReport` class that could format differently based on the error types given.
 
- * How it supports making it easier to implement new features
+ * How it supports making it easier to implement new features: Errors
+
+#### Abstraction #1
+3
