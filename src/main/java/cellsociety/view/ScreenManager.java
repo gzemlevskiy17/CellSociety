@@ -6,11 +6,13 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -52,12 +54,22 @@ public class ScreenManager {
 
     Button addSpeedButton = new Button("+");
     Button minusSpeedButton = new Button("--");
+    Slider speedSlider = new Slider(0, 60, 1);
+    speedSlider.setPrefWidth(400);
+    speedSlider.setMaxWidth(400);
+    speedSlider.setShowTickMarks(true);
+    speedSlider.setMajorTickUnit(7);
+    speedSlider.setSnapToTicks(true);
 
+    VBox simulationControl = new VBox(15);
     HBox hbox = new HBox(30);
     hbox.setAlignment(Pos.BOTTOM_CENTER);
+    hbox.setPadding(new Insets(0, 0, 30, 0));
     hbox.getChildren().addAll(resetButton, saveButton, clearButton,
         loadButton, startstopButton, addSpeedButton, minusSpeedButton);
-    mainScreen.setBottom(hbox);
+    simulationControl.getChildren().addAll(speedSlider, hbox);
+    simulationControl.setAlignment(Pos.CENTER);
+    mainScreen.setBottom(simulationControl);
 
     Scene scene = new Scene(mainScreen, 1000, 800);
     String titleOfWindow = "Cell Society: Running " + gridView.gameName;
