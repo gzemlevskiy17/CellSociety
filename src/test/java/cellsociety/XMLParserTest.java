@@ -3,14 +3,14 @@ package cellsociety;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import cellsociety.controller.GameEngine;
+import cellsociety.model.XMLParser;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
-
-import cellsociety.GameEngine;
 
 class XMLParserTest {
 

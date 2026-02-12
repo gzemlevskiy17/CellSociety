@@ -1,6 +1,5 @@
 package cellsociety.view;
 
-import cellsociety.Controller;
 import java.util.HashMap;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
