@@ -45,7 +45,16 @@ public class Grid {
     return cells[0].length;
   }
 
-  // TODO: set cell state?
+  public int[][] getCellStates() {
+    int[][] states = new int[getRows()][getCols()];
+    for (int i = 0; i < getRows(); i++) {
+      for (int j = 0; j < getCols(); j++) {
+        states[i][j] = cells[i][j].getState();
+      }
+    }
+    return states;
+  }
+
   public void defaultInitializeCells() {
     for (int i = 0; i < cells.length; i++) {
       for (int j = 0; j < cells[i].length; j++) {

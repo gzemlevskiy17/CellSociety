@@ -28,12 +28,21 @@ public class ScreenManager {
   private static final String[] langChoices = { "English" };
   private static final String DEFAULT_LANGUAGE = "English";
   private String choosenLang = "";
+  private Runnable onSave;
+  private Runnable onLoad;
 
-  public ScreenManager(Stage stage, GridView gridToUse) {
+  public ScreenManager(Stage stage, GridView gridToUse, Runnable onSave, Runnable onLoad) {
     stageLive = stage;
     gridView = gridToUse;
+    this.onSave = onSave;
+    this.onLoad = onLoad;
     gameScreen();
     stage.show();
+  }
+
+  public void setGridView(GridView newGridView) {
+    gridView = newGridView;
+    gameScreen();
   }
 
   public void gameScreen() {
@@ -60,6 +69,9 @@ public class ScreenManager {
     speedSlider.setShowTickMarks(true);
     speedSlider.setMajorTickUnit(7);
     speedSlider.setSnapToTicks(true);
+
+    saveButton.setOnAction(e -> { if (onSave != null) onSave.run(); });
+    loadButton.setOnAction(e -> { if (onLoad != null) onLoad.run(); });
 
     VBox simulationControl = new VBox(15);
     HBox hbox = new HBox(30);
@@ -119,9 +131,6 @@ public class ScreenManager {
     return selectedFile;
   }
 
-  public void editSaveScreen() {
-
-  }
 
   public void endScreen() {
 
