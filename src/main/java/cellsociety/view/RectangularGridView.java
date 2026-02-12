@@ -1,6 +1,5 @@
 package cellsociety.view;
 
-import cellsociety.Controller;
 import java.util.HashMap;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;

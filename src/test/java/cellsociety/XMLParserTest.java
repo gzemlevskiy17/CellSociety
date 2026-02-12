@@ -3,14 +3,14 @@ package cellsociety;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import cellsociety.controller.GameEngine;
+import cellsociety.model.XMLParser;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
-
-import cellsociety.GameEngine;
 
 class XMLParserTest {
 
@@ -36,7 +36,7 @@ class XMLParserTest {
 
     @Test
     void testParseActualFile() throws Exception {
-        try (InputStream is = GameEngine.class.getResourceAsStream("/GameOfLifeSimple.xml")) {
+        try (InputStream is = GameEngine.class.getResourceAsStream("/data/GameOfLifeSimple.xml")) {
             ParseResult result = XMLParser.parse(is);
 
             assertEquals("GameOfLife", result.getGameType());

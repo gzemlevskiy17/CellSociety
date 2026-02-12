@@ -1,6 +1,5 @@
 package cellsociety.view;
 
-import cellsociety.Controller;
 import java.util.HashMap;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,8 +17,8 @@ public abstract class GridView {
     protected BorderPane bottomPane;
     protected int gridRowNum;
     protected int gridColNum;
-    protected double MAX_GRID_WIDTH = 350.0;
-    protected double MAX_GRID_HEIGHT = 350.0;
+    protected double MAX_GRID_WIDTH = 800.0;
+    protected double MAX_GRID_HEIGHT = 500.0;
     protected double width;
     protected double height;
 
