@@ -4,10 +4,20 @@ import cellsociety.ParseResult;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -17,7 +27,6 @@ import org.xml.sax.SAXException;
  * Simple XML parser that reads basic simulation configuration.
  */
 public class XMLParser {
-
   public static ParseResult parse(File file)
       throws ParserConfigurationException, SAXException, IOException {
     Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder()
@@ -41,10 +50,98 @@ public class XMLParser {
 
     // 4. Detailed Data
     int[][] cells = (gridEl != null) ? parseCells(gridEl, rows, cols) : null;
-    double[] params = (paramEl != null) ? parseParameters(paramEl) : new double[]{0.0, 0.0};
+    double[] params = (paramEl != null) ? parseParameters(paramEl) : new double[] { 0.0, 0.0 };
     Map<Integer, String> colorMap = parseColors(root); // Search root for all <state> tags
 
     return new ParseResult(rows, cols, gameType, title, author, description, cells, params[0], params[1], colorMap);
+  }
+
+  /**
+   * Opens a save dialog and saves the ParseResult to the chosen XML file.
+   *
+   * @param result the ParseResult to save
+   * @param stage  the owner stage for the FileChooser dialog
+   */
+  public static void save(ParseResult result, Stage stage)
+      throws ParserConfigurationException, TransformerException {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Save Simulation As");
+    File dataDir = new File(
+        Paths.get(".").toAbsolutePath().normalize().resolve("data").toString());
+    if (dataDir.exists()) {
+      fileChooser.setInitialDirectory(dataDir);
+    }
+    fileChooser.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
+    fileChooser.setInitialFileName("simulation.xml");
+    File outputFile = fileChooser.showSaveDialog(stage);
+    if (outputFile == null) {
+      return;
+    }
+
+    Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+
+    Element root = doc.createElement("simulation");
+    doc.appendChild(root);
+
+    appendTextElement(doc, root, "type", result.getGameType());
+    appendTextElement(doc, root, "title", result.getTitle());
+    appendTextElement(doc, root, "author", result.getAuthor());
+    appendTextElement(doc, root, "description", result.getDescription());
+
+    Element gridEl = doc.createElement("grid");
+    root.appendChild(gridEl);
+    appendTextElement(doc, gridEl, "rows", String.valueOf(result.getRows()));
+    appendTextElement(doc, gridEl, "columns", String.valueOf(result.getCols()));
+
+    if (result.getCells() != null) {
+      Element cellsEl = doc.createElement("cells");
+      gridEl.appendChild(cellsEl);
+      for (int[] row : result.getCells()) {
+        StringBuilder sb = new StringBuilder();
+        for (int c = 0; c < row.length; c++) {
+          if (c > 0) {
+            sb.append(" ");
+          }
+          sb.append(row[c]);
+        }
+        appendTextElement(doc, cellsEl, "row", sb.toString());
+      }
+    }
+
+    Element paramEl = doc.createElement("parameters");
+    root.appendChild(paramEl);
+    if (result.getProbCatch() != 0.0) {
+      appendTextElement(doc, paramEl, "probCatch", String.valueOf(result.getProbCatch()));
+    }
+    if (result.getProbGrow() != 0.0) {
+      appendTextElement(doc, paramEl, "probGrow", String.valueOf(result.getProbGrow()));
+    }
+
+    if (result.getColorMap() != null && !result.getColorMap().isEmpty()) {
+      Element statesEl = doc.createElement("states");
+      paramEl.appendChild(statesEl);
+      for (Map.Entry<Integer, String> entry : result.getColorMap().entrySet()) {
+        Element stateEl = doc.createElement("state");
+        stateEl.setAttribute("id", String.valueOf(entry.getKey()));
+        stateEl.setAttribute("color", entry.getValue());
+        statesEl.appendChild(stateEl);
+      }
+    }
+
+    Transformer transformer = TransformerFactory.newInstance().newTransformer();
+    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+    transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+    transformer.transform(new DOMSource(doc), new StreamResult(outputFile));
+  }
+
+  private static void appendTextElement(Document doc, Element parent, String tagName,
+      String textContent) {
+    if (textContent == null || textContent.isEmpty()) {
+      return;
+    }
+    Element el = doc.createElement(tagName);
+    el.setTextContent(textContent);
+    parent.appendChild(el);
   }
 
   private static Element getFirstElement(Element parent, String tagName) {
@@ -60,9 +157,9 @@ public class XMLParser {
 
     try {
       if (!rowsText.isEmpty() && !colsText.isEmpty()) {
-        return new int[]{Integer.parseInt(rowsText.trim()), Integer.parseInt(colsText.trim())};
+        return new int[] { Integer.parseInt(rowsText.trim()), Integer.parseInt(colsText.trim()) };
       } else if (!widthText.isEmpty() && !heightText.isEmpty()) {
-        return new int[]{Integer.parseInt(widthText.trim()), Integer.parseInt(heightText.trim())};
+        return new int[] { Integer.parseInt(widthText.trim()), Integer.parseInt(heightText.trim()) };
       }
     } catch (NumberFormatException e) {
       throw new IllegalArgumentException("Invalid numeric value for dimensions in XML", e);
@@ -72,14 +169,14 @@ public class XMLParser {
 
   private static int[][] parseCells(Element gridEl, int rows, int cols) {
     Element cellsEl = getFirstElement(gridEl, "cells");
-      if (cellsEl == null) {
-          return null;
-      }
+    if (cellsEl == null) {
+      return null;
+    }
 
     NodeList rowNodes = cellsEl.getElementsByTagName("row");
-      if (rowNodes.getLength() == 0) {
-          return null;
-      }
+    if (rowNodes.getLength() == 0) {
+      return null;
+    }
 
     int[][] cells = new int[rows][cols];
     for (int r = 0; r < Math.min(rowNodes.getLength(), rows); r++) {
@@ -89,9 +186,9 @@ public class XMLParser {
   }
 
   private static void parseRowContent(String rowText, int[] rowArray, int cols) {
-      if (rowText.isEmpty()) {
-          return;
-      }
+    if (rowText.isEmpty()) {
+      return;
+    }
     String[] parts = rowText.split("\\s+");
     for (int c = 0; c < Math.min(parts.length, cols); c++) {
       try {
@@ -105,7 +202,7 @@ public class XMLParser {
   private static double[] parseParameters(Element paramEl) {
     double probCatch = parseDouble(getTextValue(paramEl, "probCatch"), 0.0);
     double probGrow = parseDouble(getTextValue(paramEl, "probGrow"), 0.0);
-    return new double[]{probCatch, probGrow};
+    return new double[] { probCatch, probGrow };
   }
 
   private static Map<Integer, String> parseColors(Element container) {
@@ -126,9 +223,9 @@ public class XMLParser {
   }
 
   private static double parseDouble(String value, double defaultValue) {
-      if (value.isEmpty()) {
-          return defaultValue;
-      }
+    if (value.isEmpty()) {
+      return defaultValue;
+    }
     try {
       return Double.parseDouble(value.trim());
     } catch (NumberFormatException e) {
