@@ -31,7 +31,7 @@ public class GameEngine {
     gameFactory = new GameFactory();
     ParseResult parseResult = null;
     try {
-      parseResult = XMLParser.parse(new File(DATA_PATH + "/data/GameOfLifeSimple.xml"));
+      parseResult = XMLParser.parse(new File(DATA_PATH + "GameOfLifeSimple.xml"));
     } catch (ParserConfigurationException e) {
       throw new RuntimeException(e);
     } catch (SAXException e) {
