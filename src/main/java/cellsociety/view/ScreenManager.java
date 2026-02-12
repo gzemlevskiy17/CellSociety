@@ -25,22 +25,13 @@ public class ScreenManager {
 
   private Stage stageLive;
   private GridView gridView;
-<<<<<<< HEAD
-  private String gameName;
-  private String author;
-  private String description;
-=======
   private static final String[] langChoices = { "English" };
   private static final String DEFAULT_LANGUAGE = "English";
   private String choosenLang = "";
->>>>>>> 1d38649086d7f1c1106494fd66d9b9115dbe6793
 
   public ScreenManager(Stage stage, GridView gridToUse, String gameName, String author) {
     stageLive = stage;
     gridView = gridToUse;
-    gameName = gameName;
-    author = author;
-    description = description;
     gameScreen();
     stage.show();
   }
