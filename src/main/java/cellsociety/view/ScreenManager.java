@@ -119,8 +119,16 @@ public class ScreenManager {
     return selectedFile;
   }
 
-  public void editSaveScreen() {
-
+  public File editSaveScreen() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Save Simulation As");
+    File dataDir = new File(Paths.get(".").toAbsolutePath().normalize().resolve("data").toString());
+    if (dataDir.exists()) {
+      fileChooser.setInitialDirectory(dataDir);
+    }
+    fileChooser.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
+    fileChooser.setInitialFileName("simulation.xml");
+    return fileChooser.showSaveDialog(stageLive);
   }
 
   public void endScreen() {
