@@ -23,7 +23,7 @@ public class GameEngine {
   private GridView gridView;
 
   public GameEngine(Stage primaryStage) {
-    setup(primaryStage); // TODO: get grid type, size, colors.
+    setup(primaryStage);
     // setupView();
   }
 

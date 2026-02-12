@@ -26,6 +26,9 @@ public class XMLParser {
 
     // 1. Root Level Metadata
     String gameType = getTextValue(root, "type");
+    String title = getTextValue(root, "title");
+    String author = getTextValue(root, "author");
+    String description = getTextValue(root, "description");
 
     // 2. Section Elements
     Element gridEl = getFirstElement(root, "grid");
@@ -41,7 +44,7 @@ public class XMLParser {
     double[] params = (paramEl != null) ? parseParameters(paramEl) : new double[]{0.0, 0.0};
     Map<Integer, String> colorMap = parseColors(root); // Search root for all <state> tags
 
-    return new ParseResult(rows, cols, gameType, cells, params[0], params[1], colorMap);
+    return new ParseResult(rows, cols, gameType, title, author, description, cells, params[0], params[1], colorMap);
   }
 
   private static Element getFirstElement(Element parent, String tagName) {

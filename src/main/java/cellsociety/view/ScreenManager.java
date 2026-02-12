@@ -29,7 +29,7 @@ public class ScreenManager {
   private static final String DEFAULT_LANGUAGE = "English";
   private String choosenLang = "";
 
-  public ScreenManager(Stage stage, GridView gridToUse) {
+  public ScreenManager(Stage stage, GridView gridToUse, String gameName, String author) {
     stageLive = stage;
     gridView = gridToUse;
     gameScreen();

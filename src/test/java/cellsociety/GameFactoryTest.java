@@ -12,7 +12,7 @@ class GameFactoryTest {
 
     @Test
     void createGameOfLifeReturnsCorrectType() {
-        ParseResult result = new ParseResult(5, 5, "GameOfLife", null, 0.0, 0.0, new HashMap<>());
+        ParseResult result = new ParseResult(5, 5, "GameOfLife", "GameOfLife", "Author", "Description", null, 0.0, 0.0, new HashMap<>());
         GameFactory factory = new GameFactory();
         Game game = factory.createGame(result);
 
@@ -21,7 +21,7 @@ class GameFactoryTest {
 
     @Test
     void createForestFireReturnsCorrectType() {
-        ParseResult result = new ParseResult(5, 5, "ForestFire", null, 0.6, 0.02, new HashMap<>());
+        ParseResult result = new ParseResult(5, 5, "ForestFire", "ForestFire", "Author", "Description", null, 0.6, 0.02, new HashMap<>());
         GameFactory factory = new GameFactory();
         Game game = factory.createGame(result);
 
@@ -35,7 +35,7 @@ class GameFactoryTest {
                 { 1, 0, 1 },
                 { 0, 1, 0 }
         };
-        ParseResult result = new ParseResult(3, 3, "GameOfLife", initialCells, 0.0, 0.0, new HashMap<>());
+        ParseResult result = new ParseResult(3, 3, "GameOfLife", "GameOfLife", "Author", "Description", initialCells, 0.0, 0.0, new HashMap<>());
         GameFactory factory = new GameFactory();
         Game game = factory.createGame(result);
 
@@ -52,7 +52,7 @@ class GameFactoryTest {
 
     @Test
     void createGameWithUnknownTypeThrows() {
-        ParseResult result = new ParseResult(5, 5, "UnknownGame", null, 0.0, 0.0, new HashMap<>());
+        ParseResult result = new ParseResult(5, 5, "UnknownGame", "UnknownGame", "Author", "Description", null, 0.0, 0.0, new HashMap<>());
         GameFactory factory = new GameFactory();
 
         assertThrows(IllegalArgumentException.class, () -> factory.createGame(result));
@@ -63,7 +63,7 @@ class GameFactoryTest {
         Map<Integer, String> colorMap = new HashMap<>();
         colorMap.put(0, "#FFFFFF");
         colorMap.put(1, "#2ECC71");
-        ParseResult result = new ParseResult(3, 3, "GameOfLife", null, 0.0, 0.0, colorMap);
+        ParseResult result = new ParseResult(3, 3, "GameOfLife", "GameOfLife", "Author", "Description", null, 0.0, 0.0, colorMap);
         GameFactory factory = new GameFactory();
         
         cellsociety.view.GridView view = factory.createView(result);
