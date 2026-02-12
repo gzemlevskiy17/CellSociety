@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<simulation>
+    <type>GameOfLife</type>
+    <title>Game Of Life Simple</title>
+    <author>John Conway</author>
+    <description>A simple 3x3 test grid.</description>
+    <grid>
+        <rows>3</rows>
+        <columns>3</columns>
+        <cells>
+            <row>0 0 0</row>
+            <row>0 0 0</row>
+            <row>0 0 0</row>
+        </cells>
+    </grid>
+    <parameters>
+        <states>
+            <state color="#FFFFFF" id="0"/>
+            <state color="#2ECC71" id="1"/>
+        </states>
+    </parameters>
+</simulation>

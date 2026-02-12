@@ -11,20 +11,23 @@ import java.io.IOException;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 
 public class GameEngine {
   public static final String DATA_PATH = "data/";
 
+  private Stage primaryStage;
   private ScreenManager screenManager;
   private GameFactory gameFactory;
   private Game game;
   private Controller controller;
   private GridView gridView;
+  private ParseResult currentParseResult;
 
   public GameEngine(Stage primaryStage) {
+    this.primaryStage = primaryStage;
     setup(primaryStage);
-    // setupView();
   }
 
   private void setup(Stage primaryStage) {
@@ -32,23 +35,58 @@ public class GameEngine {
     ParseResult parseResult = null;
     try {
       parseResult = XMLParser.parse(new File(DATA_PATH + "GameOfLifeSimple.xml"));
-    } catch (ParserConfigurationException e) {
-      throw new RuntimeException(e);
-    } catch (SAXException e) {
-      throw new RuntimeException(e);
-    } catch (IOException e) {
+    } catch (ParserConfigurationException | SAXException | IOException e) {
       throw new RuntimeException(e);
     }
+    currentParseResult = parseResult;
     game = gameFactory.createGame(parseResult);
     gridView = gameFactory.createView(parseResult);
-    screenManager = new ScreenManager(primaryStage, gridView);
+    screenManager = new ScreenManager(primaryStage, gridView, this::handleSave, this::handleLoad);
     controller = new Controller(game, screenManager, gridView);
     controller.play();
     controller.loop();
   }
 
-  private void setupView() {
+  private void handleSave() {
+    controller.pause();
+    int[][] currentCells = game.getGrid().getCellStates();
+    ParseResult snapshot = new ParseResult(
+        currentParseResult.getRows(),
+        currentParseResult.getCols(),
+        currentParseResult.getGameType(),
+        currentParseResult.getTitle(),
+        currentParseResult.getAuthor(),
+        currentParseResult.getDescription(),
+        currentCells,
+        currentParseResult.getProbCatch(),
+        currentParseResult.getProbGrow(),
+        currentParseResult.getColorMap()
+    );
+    try {
+      XMLParser.save(snapshot, primaryStage);
+    } catch (ParserConfigurationException | TransformerException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
+  private void handleLoad() {
+    controller.pause();
+    File file = screenManager.startScreen(primaryStage);
+    if (file == null) {
+      return;
+    }
+    try {
+      ParseResult parseResult = XMLParser.parse(file);
+      currentParseResult = parseResult;
+      game = gameFactory.createGame(parseResult);
+      gridView = gameFactory.createView(parseResult);
+      screenManager.setGridView(gridView);
+      controller = new Controller(game, screenManager, gridView);
+      controller.play();
+      controller.loop();
+    } catch (ParserConfigurationException | SAXException | IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private void handleKeyInput(KeyCode code) {

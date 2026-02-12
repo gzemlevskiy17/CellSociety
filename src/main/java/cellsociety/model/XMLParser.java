@@ -4,6 +4,7 @@ import cellsociety.ParseResult;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,6 +15,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -23,7 +27,6 @@ import org.xml.sax.SAXException;
  * Simple XML parser that reads basic simulation configuration.
  */
 public class XMLParser {
-
   public static ParseResult parse(File file)
       throws ParserConfigurationException, SAXException, IOException {
     Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder()
@@ -47,20 +50,34 @@ public class XMLParser {
 
     // 4. Detailed Data
     int[][] cells = (gridEl != null) ? parseCells(gridEl, rows, cols) : null;
-    double[] params = (paramEl != null) ? parseParameters(paramEl) : new double[]{0.0, 0.0};
+    double[] params = (paramEl != null) ? parseParameters(paramEl) : new double[] { 0.0, 0.0 };
     Map<Integer, String> colorMap = parseColors(root); // Search root for all <state> tags
 
     return new ParseResult(rows, cols, gameType, title, author, description, cells, params[0], params[1], colorMap);
   }
 
   /**
-   * Saves a ParseResult to the given XML file.
+   * Opens a save dialog and saves the ParseResult to the chosen XML file.
    *
-   * @param result     the ParseResult to save
-   * @param outputFile the destination file (e.g. chosen by a FileChooser)
+   * @param result the ParseResult to save
+   * @param stage  the owner stage for the FileChooser dialog
    */
-  public static void save(ParseResult result, File outputFile)
+  public static void save(ParseResult result, Stage stage)
       throws ParserConfigurationException, TransformerException {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Save Simulation As");
+    File dataDir = new File(
+        Paths.get(".").toAbsolutePath().normalize().resolve("data").toString());
+    if (dataDir.exists()) {
+      fileChooser.setInitialDirectory(dataDir);
+    }
+    fileChooser.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
+    fileChooser.setInitialFileName("simulation.xml");
+    File outputFile = fileChooser.showSaveDialog(stage);
+    if (outputFile == null) {
+      return;
+    }
+
     Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 
     Element root = doc.createElement("simulation");
@@ -140,9 +157,9 @@ public class XMLParser {
 
     try {
       if (!rowsText.isEmpty() && !colsText.isEmpty()) {
-        return new int[]{Integer.parseInt(rowsText.trim()), Integer.parseInt(colsText.trim())};
+        return new int[] { Integer.parseInt(rowsText.trim()), Integer.parseInt(colsText.trim()) };
       } else if (!widthText.isEmpty() && !heightText.isEmpty()) {
-        return new int[]{Integer.parseInt(widthText.trim()), Integer.parseInt(heightText.trim())};
+        return new int[] { Integer.parseInt(widthText.trim()), Integer.parseInt(heightText.trim()) };
       }
     } catch (NumberFormatException e) {
       throw new IllegalArgumentException("Invalid numeric value for dimensions in XML", e);
@@ -152,14 +169,14 @@ public class XMLParser {
 
   private static int[][] parseCells(Element gridEl, int rows, int cols) {
     Element cellsEl = getFirstElement(gridEl, "cells");
-      if (cellsEl == null) {
-          return null;
-      }
+    if (cellsEl == null) {
+      return null;
+    }
 
     NodeList rowNodes = cellsEl.getElementsByTagName("row");
-      if (rowNodes.getLength() == 0) {
-          return null;
-      }
+    if (rowNodes.getLength() == 0) {
+      return null;
+    }
 
     int[][] cells = new int[rows][cols];
     for (int r = 0; r < Math.min(rowNodes.getLength(), rows); r++) {
@@ -169,9 +186,9 @@ public class XMLParser {
   }
 
   private static void parseRowContent(String rowText, int[] rowArray, int cols) {
-      if (rowText.isEmpty()) {
-          return;
-      }
+    if (rowText.isEmpty()) {
+      return;
+    }
     String[] parts = rowText.split("\\s+");
     for (int c = 0; c < Math.min(parts.length, cols); c++) {
       try {
@@ -185,7 +202,7 @@ public class XMLParser {
   private static double[] parseParameters(Element paramEl) {
     double probCatch = parseDouble(getTextValue(paramEl, "probCatch"), 0.0);
     double probGrow = parseDouble(getTextValue(paramEl, "probGrow"), 0.0);
-    return new double[]{probCatch, probGrow};
+    return new double[] { probCatch, probGrow };
   }
 
   private static Map<Integer, String> parseColors(Element container) {
@@ -206,9 +223,9 @@ public class XMLParser {
   }
 
   private static double parseDouble(String value, double defaultValue) {
-      if (value.isEmpty()) {
-          return defaultValue;
-      }
+    if (value.isEmpty()) {
+      return defaultValue;
+    }
     try {
       return Double.parseDouble(value.trim());
     } catch (NumberFormatException e) {
