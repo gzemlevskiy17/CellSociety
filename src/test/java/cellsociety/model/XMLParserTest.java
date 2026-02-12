@@ -1,9 +1,9 @@
-package cellsociety;
+package cellsociety.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import cellsociety.model.XMLParser;
+import cellsociety.ParseResult;
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
