@@ -36,7 +36,7 @@ class XMLParserTest {
 
     @Test
     void testParseActualFile() throws Exception {
-        try (InputStream is = GameEngine.class.getResourceAsStream("/GameOfLifeSimple.xml")) {
+        try (InputStream is = GameEngine.class.getResourceAsStream("/data/GameOfLifeSimple.xml")) {
             ParseResult result = XMLParser.parse(is);
 
             assertEquals("GameOfLife", result.getGameType());

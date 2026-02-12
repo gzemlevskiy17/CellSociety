@@ -1,6 +1,7 @@
 package cellsociety.model;
 
 import cellsociety.ParseResult;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -17,10 +18,10 @@ import org.xml.sax.SAXException;
  */
 public class XMLParser {
 
-  public static ParseResult parse(InputStream inputStream)
+  public static ParseResult parse(File file)
       throws ParserConfigurationException, SAXException, IOException {
     Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-        .parse(inputStream);
+        .parse(file);
     Element root = xmlDocument.getDocumentElement();
 
     // 1. Root Level Metadata

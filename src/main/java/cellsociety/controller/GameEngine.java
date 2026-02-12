@@ -6,6 +6,7 @@ import cellsociety.model.Game;
 import cellsociety.model.XMLParser;
 import cellsociety.view.GridView;
 import cellsociety.view.ScreenManager;
+import java.io.File;
 import java.io.IOException;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -13,7 +14,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 public class GameEngine {
-  public static final String DATA_PATH = "resources/";
+  public static final String DATA_PATH = "data/";
 
   private ScreenManager screenManager;
   private GameFactory gameFactory;
@@ -30,7 +31,7 @@ public class GameEngine {
     gameFactory = new GameFactory();
     ParseResult parseResult = null;
     try {
-      parseResult = XMLParser.parse(GameEngine.class.getResourceAsStream("/GameOfLifeSimple.xml"));
+      parseResult = XMLParser.parse(new File(DATA_PATH + "/data/GameOfLifeSimple.xml"));
     } catch (ParserConfigurationException e) {
       throw new RuntimeException(e);
     } catch (SAXException e) {
