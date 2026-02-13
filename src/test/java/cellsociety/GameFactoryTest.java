@@ -3,6 +3,8 @@ package cellsociety;
 import cellsociety.model.ForestFire;
 import cellsociety.model.Game;
 import cellsociety.model.GameOfLife;
+import cellsociety.model.ModelFactory;
+import cellsociety.view.ViewFactory;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import java.util.HashMap;
@@ -13,7 +15,7 @@ class GameFactoryTest {
     @Test
     void createGameOfLifeReturnsCorrectType() {
         ParseResult result = new ParseResult(5, 5, "GameOfLife", "GameOfLife", "Author", "Description", null, 0.0, 0.0, new HashMap<>());
-        GameFactory factory = new GameFactory();
+        ModelFactory factory = new ModelFactory();
         Game game = factory.createGame(result);
 
         assertInstanceOf(GameOfLife.class, game);
@@ -22,7 +24,7 @@ class GameFactoryTest {
     @Test
     void createForestFireReturnsCorrectType() {
         ParseResult result = new ParseResult(5, 5, "ForestFire", "ForestFire", "Author", "Description", null, 0.6, 0.02, new HashMap<>());
-        GameFactory factory = new GameFactory();
+        ModelFactory factory = new ModelFactory();
         Game game = factory.createGame(result);
 
         assertInstanceOf(ForestFire.class, game);
@@ -36,7 +38,7 @@ class GameFactoryTest {
                 { 0, 1, 0 }
         };
         ParseResult result = new ParseResult(3, 3, "GameOfLife", "GameOfLife", "Author", "Description", initialCells, 0.0, 0.0, new HashMap<>());
-        GameFactory factory = new GameFactory();
+        ModelFactory factory = new ModelFactory();
         Game game = factory.createGame(result);
 
         assertEquals(0, game.getCell(0, 0).getState());
@@ -53,7 +55,7 @@ class GameFactoryTest {
     @Test
     void createGameWithUnknownTypeThrows() {
         ParseResult result = new ParseResult(5, 5, "UnknownGame", "UnknownGame", "Author", "Description", null, 0.0, 0.0, new HashMap<>());
-        GameFactory factory = new GameFactory();
+        ModelFactory factory = new ModelFactory();
 
         assertThrows(IllegalArgumentException.class, () -> factory.createGame(result));
     }
@@ -64,8 +66,8 @@ class GameFactoryTest {
         colorMap.put(0, "#FFFFFF");
         colorMap.put(1, "#2ECC71");
         ParseResult result = new ParseResult(3, 3, "GameOfLife", "GameOfLife", "Author", "Description", null, 0.0, 0.0, colorMap);
-        GameFactory factory = new GameFactory();
-        
+        ViewFactory factory = new ViewFactory();
+
         cellsociety.view.GridView view = factory.createView(result);
         assertNotNull(view);
         assertEquals(3, view.getGridPane().getRowCount());
