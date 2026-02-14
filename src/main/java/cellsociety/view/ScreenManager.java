@@ -3,6 +3,7 @@ package cellsociety.view;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Optional;
 
 import javafx.geometry.Insets;
@@ -24,15 +25,16 @@ public class ScreenManager {
 
   private Stage stageLive;
   private GridView gridView;
-  private static final String[] langChoices = { "English" };
-  private static final String DEFAULT_LANGUAGE = "English";
-  private String choosenLang = "";
+  private ButtonCreator buttons;
+  private LanguageView languager;
   private double sliderValue = 0.0;
   private boolean onPlay;
 
   public ScreenManager(Stage stage, GridView gridToUse) {
     stageLive = stage;
     gridView = gridToUse;
+    buttons = new ButtonCreator();
+    languager = new LanguageView();
   }
 
   public void setGridView(GridView newGridView) {
@@ -52,42 +54,39 @@ public class ScreenManager {
     titleBox.setAlignment(Pos.TOP_CENTER);
     mainScreen.setTop(titleBox);
 
-    Button resetButton = new Button("Reset");
-    Button saveButton = new Button("Save");
-    Button loadButton = new Button("Load");
-    Button editButton = new Button("Edit");
-    Button clearButton = new Button("Clear");
-    Button playpauseButton = new Button("Play");
+    String[] names = { "Play", "Reset", "Clear", "Save", "Load", "Edit" };
+    for (int i = 0; i < names.length; i++) {
+      buttons.addEmptyButton(names[i]);
+    }
 
-    Button addSpeedButton = new Button("+");
-    Button minusSpeedButton = new Button("--");
     Slider speedSlider = new Slider(0, 60, 1);
     speedSlider.setPrefWidth(400);
     speedSlider.setMaxWidth(400);
     speedSlider.setShowTickMarks(true);
     speedSlider.setMajorTickUnit(6);
     speedSlider.setSnapToTicks(true);
-    resetButton.setOnAction(e -> {
+
+    buttons.addActionToButton("Reset", e -> {
       if (reset != null)
         reset.run();
     });
-    saveButton.setOnAction(e -> {
+    buttons.addActionToButton("Save", e -> {
       if (onSave != null)
         onSave.run();
     });
-    loadButton.setOnAction(e -> {
+    buttons.addActionToButton("Load", e -> {
       if (onLoad != null)
         onLoad.run();
     });
-    playpauseButton.setOnAction(e -> {
+    buttons.addActionToButton("Play", e -> {
       if (play != null && pause != null) {
         if (onPlay) {
           onPlay = false;
-          playpauseButton.setText("Pause");
+          buttons.getButton("Play").setText("Pause");
           play.run();
         } else {
           onPlay = true;
-          playpauseButton.setText("Play");
+          buttons.getButton("Play").setText("Play");
           pause.run();
         }
       }
@@ -96,17 +95,21 @@ public class ScreenManager {
     speedSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
       pause.run();
       onPlay = true;
-      playpauseButton.setText("Play");
+      buttons.getButton("Play").setText("Play");
       sliderValue = newValue.doubleValue();
       setGameSpeed.run();
     });
 
-    VBox simulationControl = new VBox(15);
     HBox hbox = new HBox(30);
     hbox.setAlignment(Pos.BOTTOM_CENTER);
     hbox.setPadding(new Insets(0, 0, 30, 0));
-    hbox.getChildren().addAll(resetButton, saveButton, clearButton,
-        loadButton, playpauseButton, addSpeedButton, minusSpeedButton);
+
+    Iterator<Button> currentButtons = buttons.returnAll();
+    while (currentButtons.hasNext()) {
+      hbox.getChildren().add(currentButtons.next());
+    }
+
+    VBox simulationControl = new VBox(15);
     simulationControl.getChildren().addAll(speedSlider, hbox);
     simulationControl.setAlignment(Pos.CENTER);
     mainScreen.setBottom(simulationControl);
@@ -117,24 +120,14 @@ public class ScreenManager {
     stageLive.setScene(scene);
   }
 
+  public void addButtons(String[] names) {
+
+  }
+
   public double getSliderValue() {
     if (sliderValue <= 0)
       return 1;
     return sliderValue;
-  }
-
-  public String languageScreen() {
-    ChoiceDialog<String> dialog = new ChoiceDialog<>(DEFAULT_LANGUAGE, Arrays.asList(langChoices));
-    dialog.setTitle("Initializing Cell Society");
-    dialog.setHeaderText("Language Setting");
-    dialog.setContentText("Choose your language:");
-    Optional<String> result = dialog.showAndWait();
-    result.ifPresentOrElse(choice -> setLang(choice), () -> setLang(DEFAULT_LANGUAGE));
-    return choosenLang;
-  }
-
-  private void setLang(String language) {
-    choosenLang = language;
   }
 
   public File startScreen(Stage stage) {
@@ -152,5 +145,9 @@ public class ScreenManager {
       fileChooser.setInitialDirectory(userHome);
     }
     return fileChooser.showOpenDialog(stage);
+  }
+
+  public String getLanguage() {
+    return languager.getLang();
   }
 }

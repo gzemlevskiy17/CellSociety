@@ -33,7 +33,7 @@ public class GameEngine {
 
   private void setup(Stage primaryStage) {
     gameFactory = new GameFactory();
-    screenManager = new ScreenManager(primaryStage, gridView);
+    screenManager = new ScreenManager(primaryStage, gridView); // in contructor also calls the language screen
     File initialStart = screenManager.startScreen(primaryStage);
     if (initialStart == null)
       return;
