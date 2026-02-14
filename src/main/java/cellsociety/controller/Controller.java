@@ -1,5 +1,7 @@
 package cellsociety.controller;
 
+import java.util.concurrent.Callable;
+
 import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.view.GridView;
@@ -14,7 +16,6 @@ public class Controller {
   private ScreenManager screenManager;
   private GridView gridView;
   private Timeline gameLoop;
-  private Timeline animation;
 
   private static final int FRAMES_PER_SECOND = 60;
   private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
@@ -27,11 +28,10 @@ public class Controller {
     this.game = game;
     this.screenManager = screenManager;
     this.gridView = gridView;
+    screenManager.setGridView(gridView);
     gameSpeed = 1;
     gameLoop = new Timeline(new KeyFrame(Duration.seconds(2), e -> loop()));
     gameLoop.setCycleCount(Timeline.INDEFINITE);
-    gameLoop.play();
-    System.out.println("True");
   }
 
   public void loop() {
@@ -52,25 +52,21 @@ public class Controller {
   }
 
   public void pause() {
-    gameLoop.stop();
+    gameLoop.pause();
     running = false;
   }
 
   public void play() {
+    gameLoop.play();
     running = true;
   }
 
   public void reset() {
     // game.defaultInitializeGrid(); //TODO: method call awaits implementation
+    gameLoop.stop();
     generations = 0;
     running = false;
     gameSpeed = 1.0;
-  }
-
-  public void edit() {
-  }
-
-  public void writeConfigFile(/* String path */) {
   }
 
   public double getGameSpeed() {
@@ -79,16 +75,21 @@ public class Controller {
 
   public void setGameSpeed(double gameSpeed) {
     this.gameSpeed = gameSpeed;
-    if (animation != null) {
-      animation.setRate(this.gameSpeed);
+    if (gameLoop != null) {
+      gameLoop.setRate(this.gameSpeed);
     }
+  }
+
+  public void findGameSpeed() {
+    setGameSpeed(screenManager.getSliderValue());
   }
 
   public int getGenerations() {
     return generations;
   }
 
-  public void setGenerations(int generations) {
-    this.generations = generations;
+  public void gameScreenShow(Runnable onSave, Runnable onLoad) {
+    screenManager.gameScreen(onSave, onLoad, this::pause, this::play, this::reset,
+        this::findGameSpeed);
   }
 }

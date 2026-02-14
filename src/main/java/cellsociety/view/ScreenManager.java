@@ -3,7 +3,6 @@ package cellsociety.view;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Optional;
 
 import javafx.geometry.Insets;
@@ -28,24 +27,22 @@ public class ScreenManager {
   private static final String[] langChoices = { "English" };
   private static final String DEFAULT_LANGUAGE = "English";
   private String choosenLang = "";
-  private Runnable onSave;
-  private Runnable onLoad;
+  private double sliderValue = 0.0;
+  private boolean onPlay;
 
-  public ScreenManager(Stage stage, GridView gridToUse, Runnable onSave, Runnable onLoad) {
+  public ScreenManager(Stage stage, GridView gridToUse) {
     stageLive = stage;
     gridView = gridToUse;
-    this.onSave = onSave;
-    this.onLoad = onLoad;
-    gameScreen();
-    stage.show();
   }
 
   public void setGridView(GridView newGridView) {
     gridView = newGridView;
-    gameScreen();
   }
 
-  public void gameScreen() {
+  public void gameScreen(Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
+      Runnable reset, Runnable setGameSpeed) {
+    onPlay = true;
+
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
     Label topLabel = new Label(gridView.gameName);
@@ -56,10 +53,11 @@ public class ScreenManager {
     mainScreen.setTop(titleBox);
 
     Button resetButton = new Button("Reset");
-    Button saveButton = new Button("Save/Edit");
-    Button clearButton = new Button("Clear");
+    Button saveButton = new Button("Save");
     Button loadButton = new Button("Load");
-    Button startstopButton = new Button("Start");
+    Button editButton = new Button("Edit");
+    Button clearButton = new Button("Clear");
+    Button playpauseButton = new Button("Play");
 
     Button addSpeedButton = new Button("+");
     Button minusSpeedButton = new Button("--");
@@ -67,18 +65,48 @@ public class ScreenManager {
     speedSlider.setPrefWidth(400);
     speedSlider.setMaxWidth(400);
     speedSlider.setShowTickMarks(true);
-    speedSlider.setMajorTickUnit(7);
+    speedSlider.setMajorTickUnit(6);
     speedSlider.setSnapToTicks(true);
+    resetButton.setOnAction(e -> {
+      if (reset != null)
+        reset.run();
+    });
+    saveButton.setOnAction(e -> {
+      if (onSave != null)
+        onSave.run();
+    });
+    loadButton.setOnAction(e -> {
+      if (onLoad != null)
+        onLoad.run();
+    });
+    playpauseButton.setOnAction(e -> {
+      if (play != null && pause != null) {
+        if (onPlay) {
+          onPlay = false;
+          playpauseButton.setText("Pause");
+          play.run();
+        } else {
+          onPlay = true;
+          playpauseButton.setText("Play");
+          pause.run();
+        }
+      }
+    });
 
-    saveButton.setOnAction(e -> { if (onSave != null) onSave.run(); });
-    loadButton.setOnAction(e -> { if (onLoad != null) onLoad.run(); });
+    speedSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
+      pause.run();
+      onPlay = true;
+      playpauseButton.setText("Play");
+      sliderValue = newValue.doubleValue();
+      setGameSpeed.run();
+    });
 
     VBox simulationControl = new VBox(15);
     HBox hbox = new HBox(30);
     hbox.setAlignment(Pos.BOTTOM_CENTER);
     hbox.setPadding(new Insets(0, 0, 30, 0));
     hbox.getChildren().addAll(resetButton, saveButton, clearButton,
-        loadButton, startstopButton, addSpeedButton, minusSpeedButton);
+        loadButton, playpauseButton, addSpeedButton, minusSpeedButton);
     simulationControl.getChildren().addAll(speedSlider, hbox);
     simulationControl.setAlignment(Pos.CENTER);
     mainScreen.setBottom(simulationControl);
@@ -87,6 +115,12 @@ public class ScreenManager {
     String titleOfWindow = "Cell Society: Running " + gridView.gameName;
     stageLive.setTitle(titleOfWindow);
     stageLive.setScene(scene);
+  }
+
+  public double getSliderValue() {
+    if (sliderValue <= 0)
+      return 1;
+    return sliderValue;
   }
 
   public String languageScreen() {
@@ -103,36 +137,20 @@ public class ScreenManager {
     choosenLang = language;
   }
 
-  private boolean checkFileNormal(File file) {
-    if (Objects.isNull(file) || file.isFile()) {
-      return false;
-    }
-    return true;
-  }
-
   public File startScreen(Stage stage) {
     FileChooser fileChooser = new FileChooser();
-    String relativePath = "resources";
-    File initialDirectory = new File(Paths.get(".").toAbsolutePath().normalize().resolve(relativePath).toString());
-    ExtensionFilter onlyXML = new ExtensionFilter("only XML", "*.xml");
+    File initialDir = new File(
+        Paths.get(".").toAbsolutePath().normalize().resolve("cellsociety_team01/data").toString());
+    ExtensionFilter onlyXML = new ExtensionFilter("*.xml", "*.xml");
 
     fileChooser.getExtensionFilters().add(onlyXML);
     fileChooser.setTitle("Open My File");
-    fileChooser.setInitialDirectory(initialDirectory);
-
-    File selectedFile = null;
-    boolean fileThere = false;
-    while (!fileThere) {
-      selectedFile = fileChooser.showOpenDialog(stage);
-      if (checkFileNormal(selectedFile)) {
-        fileThere = true;
-      }
+    if (initialDir.exists() && initialDir.isDirectory()) {
+      fileChooser.setInitialDirectory(initialDir);
+    } else {
+      File userHome = new File(System.getProperty("user.home"));
+      fileChooser.setInitialDirectory(userHome);
     }
-    return selectedFile;
-  }
-
-
-  public void endScreen() {
-
+    return fileChooser.showOpenDialog(stage);
   }
 }

@@ -15,7 +15,7 @@ import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 
 public class GameEngine {
-  public static final String DATA_PATH = "data/";
+  public static final String DATA_PATH = "cellsociety_team01/data/";
 
   private Stage primaryStage;
   private ScreenManager screenManager;
@@ -27,23 +27,27 @@ public class GameEngine {
 
   public GameEngine(Stage primaryStage) {
     this.primaryStage = primaryStage;
+    primaryStage.show();
     setup(primaryStage);
   }
 
   private void setup(Stage primaryStage) {
     gameFactory = new GameFactory();
+    screenManager = new ScreenManager(primaryStage, gridView);
+    File initialStart = screenManager.startScreen(primaryStage);
+    if (initialStart == null)
+      return;
     ParseResult parseResult = null;
     try {
-      parseResult = XMLParser.parse(new File(DATA_PATH + "GameOfLifeSimple.xml"));
+      parseResult = XMLParser.parse(initialStart);
     } catch (ParserConfigurationException | SAXException | IOException e) {
       throw new RuntimeException(e);
     }
     currentParseResult = parseResult;
     game = gameFactory.createGame(parseResult);
     gridView = gameFactory.createView(parseResult);
-    screenManager = new ScreenManager(primaryStage, gridView, this::handleSave, this::handleLoad);
     controller = new Controller(game, screenManager, gridView);
-    controller.play();
+    controller.gameScreenShow(this::handleSave, this::handleLoad);
     controller.loop();
   }
 
@@ -60,8 +64,7 @@ public class GameEngine {
         currentCells,
         currentParseResult.getProbCatch(),
         currentParseResult.getProbGrow(),
-        currentParseResult.getColorMap()
-    );
+        currentParseResult.getColorMap());
     try {
       XMLParser.save(snapshot, primaryStage);
     } catch (ParserConfigurationException | TransformerException e) {
@@ -83,7 +86,6 @@ public class GameEngine {
       screenManager.setGridView(gridView);
       controller = new Controller(game, screenManager, gridView);
       controller.play();
-      controller.loop();
     } catch (ParserConfigurationException | SAXException | IOException e) {
       throw new RuntimeException(e);
     }
