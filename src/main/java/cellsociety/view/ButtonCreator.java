@@ -15,14 +15,14 @@ public class ButtonCreator {
     private HashMap<String, Integer> buttonIndex;
     private ResourceBundle myResources;
 
-    public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.view.";
+    public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.view.Buttons.";
     public static final String DEFAULT_RESOURCE_FOLDER = "/" + DEFAULT_RESOURCE_PACKAGE.replace(".", "/");
 
     public ButtonCreator(String language) {
         size = 0;
         buttonHolder = new ArrayList<>();
         buttonIndex = new HashMap<>();
-        myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language + "Buttons"); //TODO: complete default text setting implementation
+        myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language); //TODO: complete default text setting implementation
     }
 
     //TODO: fix confusing method name. why is the button empty?

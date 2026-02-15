@@ -20,4 +20,8 @@ public abstract class Game {
     public Cell getCell(int row, int col) {
         return grid.getCell(row, col);
     }
+
+    public void clearGrid() {
+        grid.defaultInitializeCells();
+    }
 }
