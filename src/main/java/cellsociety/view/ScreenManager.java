@@ -33,8 +33,15 @@ public class ScreenManager {
   public ScreenManager(Stage stage, GridView gridToUse) {
     stageLive = stage;
     gridView = gridToUse;
-    buttons = new ButtonCreator();
     languager = new LanguageView();
+  }
+
+  public void checkAllNotNull(Object... params) {
+    for (Object param : params) {
+      if (param == null) {
+        throw new NullPointerException("A parameter is null.");
+      }
+    }
   }
 
   public void setGridView(GridView newGridView) {
@@ -42,9 +49,11 @@ public class ScreenManager {
   }
 
   public void gameScreen(Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
-      Runnable reset, Runnable setGameSpeed,
-      Runnable createNewGameAction) { //TODO: implement createNewGame button
+      Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction) { // TODO: implement createNewGame button
+    checkAllNotNull(onSave, onLoad, pause, play, reset, setGameSpeed, createNewGameAction);
+
     onPlay = true;
+    buttons = new ButtonCreator();
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
@@ -55,7 +64,7 @@ public class ScreenManager {
     titleBox.setAlignment(Pos.TOP_CENTER);
     mainScreen.setTop(titleBox);
 
-    String[] names = {"Play", "Reset", "Clear", "Save", "Load", "Edit", "NewGame"};
+    String[] names = { "Play", "Reset", "Clear", "Save", "Load", "Edit", "NewGame" };
     for (int i = 0; i < names.length; i++) {
       buttons.addEmptyButton(names[i]);
     }
@@ -139,7 +148,7 @@ public class ScreenManager {
     return sliderValue;
   }
 
-  public File startScreen(Stage stage) {
+  public Optional<File> startScreen(Stage stage) {
     FileChooser fileChooser = new FileChooser();
     File initialDir = new File(
         Paths.get(".").toAbsolutePath().normalize().resolve("cellsociety_team01/data").toString());
@@ -153,7 +162,9 @@ public class ScreenManager {
       File userHome = new File(System.getProperty("user.home"));
       fileChooser.setInitialDirectory(userHome);
     }
-    return fileChooser.showOpenDialog(stage);
+    File chosen = fileChooser.showOpenDialog(stage);
+    Optional<File> returnObject = Optional.ofNullable(chosen);
+    return returnObject;
   }
 
   public String getLanguage() {

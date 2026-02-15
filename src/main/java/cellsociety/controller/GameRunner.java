@@ -8,6 +8,8 @@ import cellsociety.view.GridView;
 import cellsociety.view.ScreenManager;
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
+
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -38,12 +40,14 @@ public class GameRunner {
   private void setup(Stage primaryStage) {
     gameFactory = new GameFactory();
     screenManager = new ScreenManager(primaryStage, gridView); // in contructor also calls the language screen
-    File initialStart = screenManager.startScreen(primaryStage);
-    if (initialStart == null)
-      return;
+    Optional<File> optionalFile = screenManager.startScreen(primaryStage);
+    optionalFile.ifPresent(file -> handleRealLoad(file));
+  }
+
+  private void handleRealLoad(File file) {
     ParseResult parseResult = null;
     try {
-      parseResult = XMLParser.parse(initialStart);
+      parseResult = XMLParser.parse(file);
     } catch (ParserConfigurationException | SAXException | IOException e) {
       throw new RuntimeException(e);
     }
@@ -51,10 +55,6 @@ public class GameRunner {
     game = gameFactory.createGame(parseResult);
     gridView = gameFactory.createView(parseResult);
     controller = new Controller(game, screenManager, gridView, createNewGameAction);
-    start();
-  }
-
-  private void start() {
     controller.gameScreenShow(this::handleSave, this::handleLoad, createNewGameAction);
     controller.loop();
   }
@@ -82,21 +82,7 @@ public class GameRunner {
 
   private void handleLoad() {
     controller.pause();
-    File file = screenManager.startScreen(myStage);
-    if (file == null) {
-      return;
-    }
-    try {
-      ParseResult parseResult = XMLParser.parse(file);
-      currentParseResult = parseResult;
-      game = gameFactory.createGame(parseResult);
-      gridView = gameFactory.createView(parseResult);
-      screenManager.setGridView(gridView);
-      controller = new Controller(game, screenManager, gridView, createNewGameAction);
-      controller.play();
-    } catch (ParserConfigurationException | SAXException | IOException e) {
-      throw new RuntimeException(e);
-    }
+    Optional<File> optionalFile = screenManager.startScreen(myStage);
+    optionalFile.ifPresent(value -> handleRealLoad(value));
   }
-
 }
