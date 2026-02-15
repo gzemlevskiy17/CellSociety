@@ -172,6 +172,21 @@ class SegregationTest {
     assertEquals(1, grid.getCell(1, 1).getState());
   }
 
+  @Test
+  void testAllEmptyGridRemainsEmpty() {
+    Grid grid = new Grid(3, 3);
+    // All cells default to state 0 (empty)
+
+    Segregation game = new Segregation(grid, 0.5);
+    game.step();
+
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        assertEquals(0, grid.getCell(i, j).getState());
+      }
+    }
+  }
+
   private int countState(Grid grid, int state) {
     int count = 0;
     for (int i = 0; i < grid.getRows(); i++) {
