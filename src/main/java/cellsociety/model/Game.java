@@ -21,6 +21,7 @@ public abstract class Game {
         return grid.getCell(row, col);
     }
 
+    //TODO: does this work for all types of games?
     public void clearGrid() {
         grid.defaultInitializeCells();
     }
