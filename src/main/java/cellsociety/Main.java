@@ -1,6 +1,6 @@
 package cellsociety;
 
-import cellsociety.controller.GameEngine;
+import cellsociety.controller.GameManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -8,7 +8,7 @@ public class Main extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    new GameEngine(primaryStage);
+    new GameManager(primaryStage);
   }
 
   public static void main(String[] args) {

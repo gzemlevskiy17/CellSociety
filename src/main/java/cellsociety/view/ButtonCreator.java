@@ -35,5 +35,5 @@ public class ButtonCreator {
 
     public Iterator<Button> returnAll() {
         return (Iterator<Button>) buttonHolder.iterator();
-    }
+    } //TODO: return immutable list?
 }

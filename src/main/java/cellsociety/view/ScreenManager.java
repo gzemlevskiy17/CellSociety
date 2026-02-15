@@ -42,7 +42,8 @@ public class ScreenManager {
   }
 
   public void gameScreen(Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
-      Runnable reset, Runnable setGameSpeed) {
+      Runnable reset, Runnable setGameSpeed,
+      Runnable createNewGameAction) { //TODO: implement createNewGame button
     onPlay = true;
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
@@ -54,7 +55,7 @@ public class ScreenManager {
     titleBox.setAlignment(Pos.TOP_CENTER);
     mainScreen.setTop(titleBox);
 
-    String[] names = { "Play", "Reset", "Clear", "Save", "Load", "Edit" };
+    String[] names = {"Play", "Reset", "Clear", "Save", "Load", "Edit", "NewGame"};
     for (int i = 0; i < names.length; i++) {
       buttons.addEmptyButton(names[i]);
     }
@@ -67,16 +68,19 @@ public class ScreenManager {
     speedSlider.setSnapToTicks(true);
 
     buttons.addActionToButton("Reset", e -> {
-      if (reset != null)
+      if (reset != null) {
         reset.run();
+      }
     });
     buttons.addActionToButton("Save", e -> {
-      if (onSave != null)
+      if (onSave != null) {
         onSave.run();
+      }
     });
     buttons.addActionToButton("Load", e -> {
-      if (onLoad != null)
+      if (onLoad != null) {
         onLoad.run();
+      }
     });
     buttons.addActionToButton("Play", e -> {
       if (play != null && pause != null) {
@@ -98,6 +102,10 @@ public class ScreenManager {
       buttons.getButton("Play").setText("Play");
       sliderValue = newValue.doubleValue();
       setGameSpeed.run();
+    });
+
+    buttons.addActionToButton("NewGame", e -> {
+      createNewGameAction.run();
     });
 
     HBox hbox = new HBox(30);
@@ -125,8 +133,9 @@ public class ScreenManager {
   }
 
   public double getSliderValue() {
-    if (sliderValue <= 0)
+    if (sliderValue <= 0) {
       return 1;
+    }
     return sliderValue;
   }
 

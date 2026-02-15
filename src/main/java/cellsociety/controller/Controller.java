@@ -24,7 +24,7 @@ public class Controller {
   private double gameSpeed;
   private int generations;
 
-  public Controller(Game game, ScreenManager screenManager, GridView gridView) {
+  public Controller(Game game, ScreenManager screenManager, GridView gridView, Runnable createNewGameAction) {
     this.game = game;
     this.screenManager = screenManager;
     this.gridView = gridView;
@@ -88,8 +88,8 @@ public class Controller {
     return generations;
   }
 
-  public void gameScreenShow(Runnable onSave, Runnable onLoad) {
+  public void gameScreenShow(Runnable onSave, Runnable onLoad, Runnable createNewGameAction) {
     screenManager.gameScreen(onSave, onLoad, this::pause, this::play, this::reset,
-        this::findGameSpeed);
+        this::findGameSpeed, createNewGameAction);
   }
 }

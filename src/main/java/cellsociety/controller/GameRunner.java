@@ -8,16 +8,17 @@ import cellsociety.view.GridView;
 import cellsociety.view.ScreenManager;
 import java.io.File;
 import java.io.IOException;
-import javafx.scene.input.KeyCode;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 
-public class GameEngine {
-  public static final String DATA_PATH = "cellsociety_team01/data/";
+public class GameRunner {
 
-  private Stage primaryStage;
+  private Stage myStage;
   private ScreenManager screenManager;
   private GameFactory gameFactory;
   private Game game;
@@ -25,10 +26,13 @@ public class GameEngine {
   private GridView gridView;
   private ParseResult currentParseResult;
 
-  public GameEngine(Stage primaryStage) {
-    this.primaryStage = primaryStage;
-    primaryStage.show();
-    setup(primaryStage);
+  private Runnable createNewGameAction;
+
+  public GameRunner(Stage myStage, Runnable createNewGameAction) {
+    this.myStage = myStage;
+    this.createNewGameAction = createNewGameAction;
+    myStage.show();
+    setup(myStage);
   }
 
   private void setup(Stage primaryStage) {
@@ -46,8 +50,12 @@ public class GameEngine {
     currentParseResult = parseResult;
     game = gameFactory.createGame(parseResult);
     gridView = gameFactory.createView(parseResult);
-    controller = new Controller(game, screenManager, gridView);
-    controller.gameScreenShow(this::handleSave, this::handleLoad);
+    controller = new Controller(game, screenManager, gridView, createNewGameAction);
+    start();
+  }
+
+  private void start() {
+    controller.gameScreenShow(this::handleSave, this::handleLoad, createNewGameAction);
     controller.loop();
   }
 
@@ -66,7 +74,7 @@ public class GameEngine {
         currentParseResult.getProbGrow(),
         currentParseResult.getColorMap());
     try {
-      XMLParser.save(snapshot, primaryStage);
+      XMLParser.save(snapshot, myStage);
     } catch (ParserConfigurationException | TransformerException e) {
       throw new RuntimeException(e);
     }
@@ -74,7 +82,7 @@ public class GameEngine {
 
   private void handleLoad() {
     controller.pause();
-    File file = screenManager.startScreen(primaryStage);
+    File file = screenManager.startScreen(myStage);
     if (file == null) {
       return;
     }
@@ -84,13 +92,11 @@ public class GameEngine {
       game = gameFactory.createGame(parseResult);
       gridView = gameFactory.createView(parseResult);
       screenManager.setGridView(gridView);
-      controller = new Controller(game, screenManager, gridView);
+      controller = new Controller(game, screenManager, gridView, createNewGameAction);
       controller.play();
     } catch (ParserConfigurationException | SAXException | IOException e) {
       throw new RuntimeException(e);
     }
   }
 
-  private void handleKeyInput(KeyCode code) {
-  }
 }
