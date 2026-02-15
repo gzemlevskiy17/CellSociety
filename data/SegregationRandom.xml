@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>Segregation</type>
+    <title>Segregation Random</title>
+    <author>Michael</author>
+    <description>A 10x10 grid with 30% group A, 30% group B, 40% empty, randomly placed.</description>
+    <grid>
+        <rows>10</rows>
+        <columns>10</columns>
+        <stateDistribution type="proportion">
+            <state id="1" proportion="0.3"/>
+            <state id="2" proportion="0.3"/>
+        </stateDistribution>
+    </grid>
+    <parameters>
+        <speed>5</speed>
+        <threshold>0.3</threshold>
+        <states>
+            <state id="0" name="EMPTY" color="#FFFFFF"/>
+            <state id="1" name="GROUP_A" color="#2ECC71"/>
+            <state id="2" name="GROUP_B" color="#3498DB"/>
+        </states>
+    </parameters>
+</simulation>

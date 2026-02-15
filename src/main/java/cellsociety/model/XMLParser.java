@@ -5,7 +5,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -50,6 +53,9 @@ public class XMLParser {
 
     // 4. Detailed Data
     int[][] cells = (gridEl != null) ? parseCells(gridEl, rows, cols) : null;
+    if (cells == null && gridEl != null) {
+      cells = parseStateDistribution(gridEl, rows, cols);
+    }
     double[] params = (paramEl != null) ? parseParameters(paramEl) : new double[] { 0.0, 0.0 };
     Map<Integer, String> colorMap = parseColors(root); // Search root for all <state> tags
 
@@ -181,6 +187,49 @@ public class XMLParser {
     int[][] cells = new int[rows][cols];
     for (int r = 0; r < Math.min(rowNodes.getLength(), rows); r++) {
       parseRowContent(rowNodes.item(r).getTextContent().trim(), cells[r], cols);
+    }
+    return cells;
+  }
+
+  private static int[][] parseStateDistribution(Element gridEl, int rows, int cols) {
+    Element distEl = getFirstElement(gridEl, "stateDistribution");
+    if (distEl == null) {
+      return null;
+    }
+
+    int totalCells = rows * cols;
+    String type = distEl.getAttribute("type");
+    NodeList stateNodes = distEl.getElementsByTagName("state");
+
+    // Build a flat list of cell states, then shuffle to randomize
+    List<Integer> flatCells = new ArrayList<>(Collections.nCopies(totalCells, 0));
+
+    int assigned = 0;
+    for (int i = 0; i < stateNodes.getLength(); i++) {
+      Element stateEl = (Element) stateNodes.item(i);
+      int stateId = Integer.parseInt(stateEl.getAttribute("id"));
+
+      int count;
+      if ("proportion".equals(type)) {
+        double proportion = Double.parseDouble(stateEl.getAttribute("proportion"));
+        count = (int) Math.round(proportion * totalCells);
+      } else {
+        count = Integer.parseInt(stateEl.getAttribute("count"));
+      }
+
+      count = Math.min(count, totalCells - assigned);
+      for (int j = 0; j < count; j++) {
+        flatCells.set(assigned + j, stateId);
+      }
+      assigned += count;
+    }
+
+    Collections.shuffle(flatCells);
+
+    // Convert flat list back to 2D array
+    int[][] cells = new int[rows][cols];
+    for (int i = 0; i < totalCells; i++) {
+      cells[i / cols][i % cols] = flatCells.get(i);
     }
     return cells;
   }

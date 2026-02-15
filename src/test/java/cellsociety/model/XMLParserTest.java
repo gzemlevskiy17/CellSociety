@@ -1,6 +1,7 @@
 package cellsociety.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import cellsociety.ParseResult;
@@ -44,5 +45,51 @@ class XMLParserTest {
         java.util.Map<Integer, String> colors = result.getColorMap();
         assertEquals("#FFFFFF", colors.get(0));
         assertEquals("#2ECC71", colors.get(1));
+    }
+
+    @Test
+    void parseStateDistributionByCount() throws Exception {
+        File file = new File("data/GameOfLifeRandom.xml");
+        ParseResult result = XMLParser.parse(file);
+
+        assertEquals("GameOfLife", result.getGameType());
+        assertEquals(10, result.getRows());
+        assertEquals(10, result.getCols());
+
+        int[][] cells = result.getCells();
+        assertNotNull(cells);
+
+        int aliveCount = 0;
+        for (int[] row : cells) {
+            for (int cell : row) {
+                if (cell == 1) aliveCount++;
+            }
+        }
+        assertEquals(30, aliveCount);
+    }
+
+    @Test
+    void parseStateDistributionByProportion() throws Exception {
+        File file = new File("data/SegregationRandom.xml");
+        ParseResult result = XMLParser.parse(file);
+
+        assertEquals("Segregation", result.getGameType());
+        assertEquals(10, result.getRows());
+        assertEquals(10, result.getCols());
+
+        int[][] cells = result.getCells();
+        assertNotNull(cells);
+
+        int[] stateCounts = new int[3];
+        for (int[] row : cells) {
+            for (int cell : row) {
+                stateCounts[cell]++;
+            }
+        }
+        // 30% of 100 = 30 cells for each group
+        assertEquals(30, stateCounts[1]);
+        assertEquals(30, stateCounts[2]);
+        // Remaining 40% = 40 empty
+        assertEquals(40, stateCounts[0]);
     }
 }

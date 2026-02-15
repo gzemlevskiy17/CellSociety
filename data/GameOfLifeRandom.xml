@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>GameOfLife</type>
+    <title>Game Of Life Random</title>
+    <author>Michael</author>
+    <description>A 10x10 grid with 30 alive cells, randomly placed.</description>
+    <grid>
+        <rows>10</rows>
+        <columns>10</columns>
+        <stateDistribution type="count">
+            <state id="1" count="30"/>
+        </stateDistribution>
+    </grid>
+    <parameters>
+        <speed>5</speed>
+        <states>
+            <state id="0" name="DEAD" color="#FFFFFF"/>
+            <state id="1" name="ALIVE" color="#2ECC71"/>
+        </states>
+    </parameters>
+</simulation>

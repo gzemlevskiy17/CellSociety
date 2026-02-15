@@ -9,9 +9,18 @@ public abstract class Game {
 
     public void step() {
         updateGame();
+        commitChanges();
     }
 
     protected abstract void updateGame();
+
+    protected void commitChanges() {
+        for (int i = 0; i < grid.getRows(); i++) {
+            for (int j = 0; j < grid.getCols(); j++) {
+                grid.getCell(i, j).updateState();
+            }
+        }
+    }
 
     public Grid getGrid() {
         return grid;
