@@ -9,7 +9,7 @@ public class LanguageView {
 
     private static final String[] langChoices = { "English" };
     private static final String DEFAULT_LANGUAGE = "English";
-    private String choosenLang = "";
+    private String chosenLanguage = "";
 
     public LanguageView() {
         languageScreen();
@@ -21,14 +21,14 @@ public class LanguageView {
         dialog.setHeaderText("Language Setting");
         dialog.setContentText("Choose your language:");
         Optional<String> result = dialog.showAndWait();
-        result.ifPresentOrElse(choice -> setLang(choice), () -> setLang(DEFAULT_LANGUAGE));
+        result.ifPresentOrElse(choice -> setLanguage(choice), () -> setLanguage(DEFAULT_LANGUAGE));
     }
 
-    private void setLang(String language) {
-        choosenLang = language;
+    private void setLanguage(String language) {
+        chosenLanguage = language;
     }
 
-    public String getLang() {
-        return choosenLang;
+    public String getLanguage() {
+        return chosenLanguage;
     }
 }

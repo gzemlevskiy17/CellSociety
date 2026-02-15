@@ -2,7 +2,6 @@ package cellsociety.view;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Optional;
 
@@ -10,7 +9,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
@@ -26,13 +24,13 @@ public class ScreenManager {
   private Stage stageLive;
   private GridView gridView;
   private ButtonCreator buttons;
-  private LanguageView languager;
+  private LanguageView languageView;
   private double sliderValue = 0.0;
   private boolean onPlay;
 
   public ScreenManager(Stage stage) {
     stageLive = stage;
-    languager = new LanguageView();
+    languageView = new LanguageView();
   }
 
   public void checkAllNotNull(Object... params) {
@@ -48,25 +46,26 @@ public class ScreenManager {
   }
 
   public void gameScreen(Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
-      Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction) { // TODO: implement createNewGame button
-    checkAllNotNull(onSave, onLoad, pause, play, reset, setGameSpeed, createNewGameAction);
+      Runnable reset, Runnable setGameSpeed,
+      Runnable createNewGameAction, Runnable clear) {
+    checkAllNotNull(onSave, onLoad, pause, play, reset, setGameSpeed, createNewGameAction, clear);
 
     onPlay = true;
-    buttons = new ButtonCreator();
+    buttons = new ButtonCreator(languageView.getLanguage());
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
     Label topLabel = new Label(gridView.gameName);
-    topLabel.setFont(new Font("Comic Sans", 50));
+    topLabel.setFont(new Font("Comic Sans", 50)); //TODO: put in style
     topLabel.setAlignment(Pos.CENTER);
     VBox titleBox = new VBox(topLabel);
     titleBox.setAlignment(Pos.TOP_CENTER);
     mainScreen.setTop(titleBox);
 
-    String[] names = { "Play", "Reset", "Clear", "Save", "Load", "Edit", "NewGame" };
+    String[] names = {"Play", "Reset", "Clear", "Save", "Load", "Edit", "NewGame"};
 
     VBox simulationControl = createControlArea(names, onSave, onLoad, pause, play,
-        reset, setGameSpeed, createNewGameAction);
+        reset, setGameSpeed, createNewGameAction, clear);
     mainScreen.setBottom(simulationControl);
 
     Scene scene = new Scene(mainScreen, 1000, 800);
@@ -75,8 +74,9 @@ public class ScreenManager {
     stageLive.setScene(scene);
   }
 
-  private VBox createControlArea(String[] names, Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
-      Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction) {
+  private VBox createControlArea(String[] names, Runnable onSave, Runnable onLoad, Runnable pause,
+      Runnable play,
+      Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction, Runnable clear) {
 
     Slider speedSlider = new Slider(0, 60, 1);
     speedSlider.setPrefWidth(400);
@@ -90,7 +90,7 @@ public class ScreenManager {
     });
 
     HBox hbox = createButtonBoxArea(names, onSave, onLoad, pause, play,
-        reset, setGameSpeed, createNewGameAction);
+        reset, createNewGameAction, clear);
 
     VBox simulationControl = new VBox(15);
     simulationControl.getChildren().addAll(speedSlider, hbox);
@@ -98,27 +98,19 @@ public class ScreenManager {
     return simulationControl;
   }
 
-  private HBox createButtonBoxArea(String[] names, Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
-      Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction) {
-    for (int i = 0; i < names.length; i++) {
-      buttons.addEmptyButton(names[i]);
+  private HBox createButtonBoxArea(String[] names, Runnable onSave, Runnable onLoad, Runnable pause,
+      Runnable play,
+      Runnable reset, Runnable createNewGameAction, Runnable clear) {
+    for (String name : names) {
+      buttons.addEmptyButton(name);
     }
 
-    buttons.addActionToButton("Reset", e -> {
-      reset.run();
-    });
-    buttons.addActionToButton("Save", e -> {
-      onSave.run();
-    });
-    buttons.addActionToButton("Load", e -> {
-      onLoad.run();
-    });
-    buttons.addActionToButton("Play", e -> {
-      playButtonFunction(play, pause);
-    });
-    buttons.addActionToButton("NewGame", e -> {
-      createNewGameAction.run();
-    });
+    buttons.addActionToButton("Clear", e -> clear.run());
+    buttons.addActionToButton("Reset", e -> reset.run());
+    buttons.addActionToButton("Save", e -> onSave.run());
+    buttons.addActionToButton("Load", e -> onLoad.run());
+    buttons.addActionToButton("Play", e -> playButtonFunction(play, pause));
+    buttons.addActionToButton("NewGame", e -> createNewGameAction.run());
 
     HBox hbox = new HBox(30);
     hbox.setAlignment(Pos.BOTTOM_CENTER);
@@ -135,11 +127,11 @@ public class ScreenManager {
   private void playButtonFunction(Runnable play, Runnable pause) {
     if (onPlay) {
       onPlay = false;
-      buttons.getButton("Play").setText("Pause");
+      buttons.setButtonText("Play", "Pause");
       play.run();
     } else {
       onPlay = true;
-      buttons.getButton("Play").setText("Play");
+      buttons.setButtonText("Play", "Play");
       pause.run();
     }
   }
@@ -147,10 +139,10 @@ public class ScreenManager {
   private void speedSliderFunction(Runnable pause, Runnable setGameSpeed, double newValue) {
     pause.run();
     onPlay = true;
-    buttons.getButton("Play").setText("Play");
+    buttons.setButtonText("Play", "Play");
     sliderValue = newValue;
     setGameSpeed.run();
-  }
+  } //TODO: refactor so that this is called from the controller on button press.
 
   public double getSliderValue() {
     if (sliderValue <= 0) {
@@ -166,7 +158,7 @@ public class ScreenManager {
     ExtensionFilter onlyXML = new ExtensionFilter("*.xml", "*.xml");
 
     fileChooser.getExtensionFilters().add(onlyXML);
-    fileChooser.setTitle("Open My File");
+//    fileChooser.setTitle("Open My File"); //TODO: need title?
     if (initialDir.exists() && initialDir.isDirectory()) {
       fileChooser.setInitialDirectory(initialDir);
     } else {
@@ -174,11 +166,10 @@ public class ScreenManager {
       fileChooser.setInitialDirectory(userHome);
     }
     File chosen = fileChooser.showOpenDialog(stage);
-    Optional<File> returnObject = Optional.ofNullable(chosen);
-    return returnObject;
+    return Optional.ofNullable(chosen);
   }
 
   public String getLanguage() {
-    return languager.getLang();
-  }
+    return languageView.getLanguage();
+  } //TODO: needed?
 }

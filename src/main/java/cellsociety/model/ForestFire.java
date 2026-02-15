@@ -7,6 +7,7 @@ public class ForestFire extends Game {
   private double ignitionProbability;
   private double fillProbability;
 
+  //TODO: need to validate probabilities are between 0 and 1
   public ForestFire(Grid grid, double ignitionProbability, double fillProbability) {
     super(grid);
     this.ignitionProbability = ignitionProbability;
@@ -25,11 +26,9 @@ public class ForestFire extends Game {
         }
 
         if (cell.getState() == 1) {
-//          System.err.println("Checking neighbors for cell at (" + i + ", " + j + ")");
           for (Cell neighbor : neighbors) {
             if (neighbor.getState() == 2) {
               cell.setNextState(2);
-//              System.out.println("Cell at (" + i + ", " + j + ") caught fire.");
               break;
             }
           }

@@ -1,7 +1,5 @@
 package cellsociety.controller;
 
-import java.util.concurrent.Callable;
-
 import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.view.GridView;
@@ -20,7 +18,6 @@ public class Controller {
   private static final int FRAMES_PER_SECOND = 60;
   private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 
-  private boolean running;
   private double gameSpeed;
   private int generations;
 
@@ -53,26 +50,30 @@ public class Controller {
 
   public void pause() {
     gameLoop.pause();
-    running = false;
   }
 
   public void play() {
     gameLoop.play();
-    running = true;
+  }
+
+  public void clear() {
+    pause();
+    gameSpeed = 1.0;
+    game.clearGrid();
+    updateGrid();
   }
 
   public void reset() {
-    // game.defaultInitializeGrid(); //TODO: method call awaits implementation
-    gameLoop.stop();
+   //TODO: implement resetting grid to initial loaded state
     generations = 0;
-    running = false;
-    gameSpeed = 1.0;
+    updateGrid();
   }
 
   public double getGameSpeed() {
     return gameSpeed;
   }
 
+  //TODO: replace gameSpeed variable with getRate/setRate?
   public void setGameSpeed(double gameSpeed) {
     this.gameSpeed = gameSpeed;
     if (gameLoop != null) {
@@ -90,6 +91,6 @@ public class Controller {
 
   public void gameScreenShow(Runnable onSave, Runnable onLoad, Runnable createNewGameAction) {
     screenManager.gameScreen(onSave, onLoad, this::pause, this::play, this::reset,
-        this::findGameSpeed, createNewGameAction);
+        this::findGameSpeed, createNewGameAction, this::clear);
   }
 }
