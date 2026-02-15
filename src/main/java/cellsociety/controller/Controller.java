@@ -56,17 +56,24 @@ public class Controller {
     gameLoop.play();
   }
 
-  public void reset() {
-//    game.defaultInitializeGrid(); //TODO: method call awaits implementation
-    gameLoop.stop();
-    generations = 0;
+  public void clear() {
+    pause();
     gameSpeed = 1.0;
+    game.clearGrid();
+    updateGrid();
+  }
+
+  public void reset() {
+   //TODO: implement resetting grid to initial loaded state
+    generations = 0;
+    updateGrid();
   }
 
   public double getGameSpeed() {
     return gameSpeed;
   }
 
+  //TODO: replace gameSpeed variable with getRate/setRate?
   public void setGameSpeed(double gameSpeed) {
     this.gameSpeed = gameSpeed;
     if (gameLoop != null) {
@@ -84,6 +91,6 @@ public class Controller {
 
   public void gameScreenShow(Runnable onSave, Runnable onLoad, Runnable createNewGameAction) {
     screenManager.gameScreen(onSave, onLoad, this::pause, this::play, this::reset,
-        this::findGameSpeed, createNewGameAction);
+        this::findGameSpeed, createNewGameAction, this::clear);
   }
 }

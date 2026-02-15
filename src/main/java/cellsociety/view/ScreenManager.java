@@ -47,8 +47,8 @@ public class ScreenManager {
 
   public void gameScreen(Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
       Runnable reset, Runnable setGameSpeed,
-      Runnable createNewGameAction) { // TODO: implement createNewGame button
-    checkAllNotNull(onSave, onLoad, pause, play, reset, setGameSpeed, createNewGameAction);
+      Runnable createNewGameAction, Runnable clear) {
+    checkAllNotNull(onSave, onLoad, pause, play, reset, setGameSpeed, createNewGameAction, clear);
 
     onPlay = true;
     buttons = new ButtonCreator(languageView.getLanguage());
@@ -65,7 +65,7 @@ public class ScreenManager {
     String[] names = {"Play", "Reset", "Clear", "Save", "Load", "Edit", "NewGame"};
 
     VBox simulationControl = createControlArea(names, onSave, onLoad, pause, play,
-        reset, setGameSpeed, createNewGameAction);
+        reset, setGameSpeed, createNewGameAction, clear);
     mainScreen.setBottom(simulationControl);
 
     Scene scene = new Scene(mainScreen, 1000, 800);
@@ -76,7 +76,7 @@ public class ScreenManager {
 
   private VBox createControlArea(String[] names, Runnable onSave, Runnable onLoad, Runnable pause,
       Runnable play,
-      Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction) {
+      Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction, Runnable clear) {
 
     Slider speedSlider = new Slider(0, 60, 1);
     speedSlider.setPrefWidth(400);
@@ -90,7 +90,7 @@ public class ScreenManager {
     });
 
     HBox hbox = createButtonBoxArea(names, onSave, onLoad, pause, play,
-        reset, createNewGameAction);
+        reset, createNewGameAction, clear);
 
     VBox simulationControl = new VBox(15);
     simulationControl.getChildren().addAll(speedSlider, hbox);
@@ -100,26 +100,17 @@ public class ScreenManager {
 
   private HBox createButtonBoxArea(String[] names, Runnable onSave, Runnable onLoad, Runnable pause,
       Runnable play,
-      Runnable reset, Runnable createNewGameAction) {
+      Runnable reset, Runnable createNewGameAction, Runnable clear) {
     for (String name : names) {
       buttons.addEmptyButton(name);
     }
 
-    buttons.addActionToButton("Reset", e -> {
-      reset.run();
-    });
-    buttons.addActionToButton("Save", e -> {
-      onSave.run();
-    });
-    buttons.addActionToButton("Load", e -> {
-      onLoad.run();
-    });
-    buttons.addActionToButton("Play", e -> {
-      playButtonFunction(play, pause);
-    });
-    buttons.addActionToButton("NewGame", e -> {
-      createNewGameAction.run();
-    });
+    buttons.addActionToButton("Clear", e -> clear.run());
+    buttons.addActionToButton("Reset", e -> reset.run());
+    buttons.addActionToButton("Save", e -> onSave.run());
+    buttons.addActionToButton("Load", e -> onLoad.run());
+    buttons.addActionToButton("Play", e -> playButtonFunction(play, pause));
+    buttons.addActionToButton("NewGame", e -> createNewGameAction.run());
 
     HBox hbox = new HBox(30);
     hbox.setAlignment(Pos.BOTTOM_CENTER);
