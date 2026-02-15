@@ -67,7 +67,7 @@ public class XMLParser {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Save Simulation As");
     File dataDir = new File(
-        Paths.get(".").toAbsolutePath().normalize().resolve("data").toString());
+        Paths.get(".").toAbsolutePath().normalize().resolve("cellsociety_team01/data").toString());
     if (dataDir.exists()) {
       fileChooser.setInitialDirectory(dataDir);
     }
