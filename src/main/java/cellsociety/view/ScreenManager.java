@@ -36,15 +36,23 @@ public class ScreenManager {
     languager = new LanguageView();
   }
 
+  public void checkAllNotNull(Object... params) {
+    for (Object param : params) {
+      if (param == null) {
+        throw new NullPointerException("A parameter is null.");
+      }
+    }
+  }
+
   public void setGridView(GridView newGridView) {
     gridView = newGridView;
   }
 
   public void gameScreen(Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
-      Runnable reset, Runnable setGameSpeed,
-      Runnable createNewGameAction) { // TODO: implement createNewGame button
-    onPlay = true;
+      Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction) { // TODO: implement createNewGame button
+    checkAllNotNull(onSave, onLoad, pause, play, reset, setGameSpeed, createNewGameAction);
 
+    onPlay = true;
     buttons = new ButtonCreator();
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
