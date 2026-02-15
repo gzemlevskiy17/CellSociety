@@ -30,9 +30,8 @@ public class ScreenManager {
   private double sliderValue = 0.0;
   private boolean onPlay;
 
-  public ScreenManager(Stage stage, GridView gridToUse) {
+  public ScreenManager(Stage stage) {
     stageLive = stage;
-    gridView = gridToUse;
     languager = new LanguageView();
   }
 
@@ -65,9 +64,19 @@ public class ScreenManager {
     mainScreen.setTop(titleBox);
 
     String[] names = { "Play", "Reset", "Clear", "Save", "Load", "Edit", "NewGame" };
-    for (int i = 0; i < names.length; i++) {
-      buttons.addEmptyButton(names[i]);
-    }
+
+    VBox simulationControl = createControlArea(names, onSave, onLoad, pause, play,
+        reset, setGameSpeed, createNewGameAction);
+    mainScreen.setBottom(simulationControl);
+
+    Scene scene = new Scene(mainScreen, 1000, 800);
+    String titleOfWindow = "Cell Society: Running " + gridView.gameName;
+    stageLive.setTitle(titleOfWindow);
+    stageLive.setScene(scene);
+  }
+
+  private VBox createControlArea(String[] names, Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
+      Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction) {
 
     Slider speedSlider = new Slider(0, 60, 1);
     speedSlider.setPrefWidth(400);
@@ -76,43 +85,37 @@ public class ScreenManager {
     speedSlider.setMajorTickUnit(6);
     speedSlider.setSnapToTicks(true);
 
+    speedSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
+      speedSliderFunction(pause, setGameSpeed, newValue.doubleValue());
+    });
+
+    HBox hbox = createButtonBoxArea(names, onSave, onLoad, pause, play,
+        reset, setGameSpeed, createNewGameAction);
+
+    VBox simulationControl = new VBox(15);
+    simulationControl.getChildren().addAll(speedSlider, hbox);
+    simulationControl.setAlignment(Pos.CENTER);
+    return simulationControl;
+  }
+
+  private HBox createButtonBoxArea(String[] names, Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
+      Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction) {
+    for (int i = 0; i < names.length; i++) {
+      buttons.addEmptyButton(names[i]);
+    }
+
     buttons.addActionToButton("Reset", e -> {
-      if (reset != null) {
-        reset.run();
-      }
+      reset.run();
     });
     buttons.addActionToButton("Save", e -> {
-      if (onSave != null) {
-        onSave.run();
-      }
+      onSave.run();
     });
     buttons.addActionToButton("Load", e -> {
-      if (onLoad != null) {
-        onLoad.run();
-      }
+      onLoad.run();
     });
     buttons.addActionToButton("Play", e -> {
-      if (play != null && pause != null) {
-        if (onPlay) {
-          onPlay = false;
-          buttons.getButton("Play").setText("Pause");
-          play.run();
-        } else {
-          onPlay = true;
-          buttons.getButton("Play").setText("Play");
-          pause.run();
-        }
-      }
+      playButtonFunction(play, pause);
     });
-
-    speedSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
-      pause.run();
-      onPlay = true;
-      buttons.getButton("Play").setText("Play");
-      sliderValue = newValue.doubleValue();
-      setGameSpeed.run();
-    });
-
     buttons.addActionToButton("NewGame", e -> {
       createNewGameAction.run();
     });
@@ -126,19 +129,27 @@ public class ScreenManager {
       hbox.getChildren().add(currentButtons.next());
     }
 
-    VBox simulationControl = new VBox(15);
-    simulationControl.getChildren().addAll(speedSlider, hbox);
-    simulationControl.setAlignment(Pos.CENTER);
-    mainScreen.setBottom(simulationControl);
-
-    Scene scene = new Scene(mainScreen, 1000, 800);
-    String titleOfWindow = "Cell Society: Running " + gridView.gameName;
-    stageLive.setTitle(titleOfWindow);
-    stageLive.setScene(scene);
+    return hbox;
   }
 
-  public void addButtons(String[] names) {
+  private void playButtonFunction(Runnable play, Runnable pause) {
+    if (onPlay) {
+      onPlay = false;
+      buttons.getButton("Play").setText("Pause");
+      play.run();
+    } else {
+      onPlay = true;
+      buttons.getButton("Play").setText("Play");
+      pause.run();
+    }
+  }
 
+  private void speedSliderFunction(Runnable pause, Runnable setGameSpeed, double newValue) {
+    pause.run();
+    onPlay = true;
+    buttons.getButton("Play").setText("Play");
+    sliderValue = newValue;
+    setGameSpeed.run();
   }
 
   public double getSliderValue() {

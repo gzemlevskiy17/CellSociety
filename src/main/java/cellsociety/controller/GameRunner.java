@@ -33,13 +33,14 @@ public class GameRunner {
   public GameRunner(Stage myStage, Runnable createNewGameAction) {
     this.myStage = myStage;
     this.createNewGameAction = createNewGameAction;
-    myStage.show();
+    gameFactory = new GameFactory();
+    screenManager = new ScreenManager(myStage);
     setup(myStage);
+    myStage.show();
   }
 
   private void setup(Stage primaryStage) {
-    gameFactory = new GameFactory();
-    screenManager = new ScreenManager(primaryStage, gridView); // in contructor also calls the language screen
+    // in contructor also calls the language screen
     Optional<File> optionalFile = screenManager.startScreen(primaryStage);
     optionalFile.ifPresent(file -> handleRealLoad(file));
   }
@@ -81,8 +82,6 @@ public class GameRunner {
   }
 
   private void handleLoad() {
-    controller.pause();
-    Optional<File> optionalFile = screenManager.startScreen(myStage);
-    optionalFile.ifPresent(value -> handleRealLoad(value));
+    setup(myStage);
   }
 }
