@@ -5,6 +5,8 @@ import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Optional;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -27,13 +29,16 @@ public class ScreenManager {
   private LanguageView languageView;
   private double sliderValue = 0.0;
   private boolean onPlay;
+  private Label dynamicGen;
+  private Slider speedSlider;
+  private int gen;
 
   public ScreenManager(Stage stage) {
     stageLive = stage;
     languageView = new LanguageView();
   }
 
-  public void checkAllNotNull(Object... params) {
+  public void checkAllNotNull(Object... params) throws Exception {
     for (Object param : params) {
       if (param == null) {
         throw new NullPointerException("A parameter is null.");
@@ -47,22 +52,26 @@ public class ScreenManager {
 
   public void gameScreen(Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
       Runnable reset, Runnable setGameSpeed,
-      Runnable createNewGameAction, Runnable clear) {
-    checkAllNotNull(onSave, onLoad, pause, play, reset, setGameSpeed, createNewGameAction, clear);
-
+      Runnable createNewGameAction, Runnable clear, int genNum) {
+    try {
+      checkAllNotNull(onSave, onLoad, pause, play, reset, setGameSpeed, createNewGameAction, clear);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    gen = genNum;
     onPlay = true;
     buttons = new ButtonCreator(languageView.getLanguage());
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
     Label topLabel = new Label(gridView.gameName);
-    topLabel.setFont(new Font("Comic Sans", 50)); //TODO: put in style
+    topLabel.setFont(new Font("Comic Sans", 50)); // TODO: put in style
     topLabel.setAlignment(Pos.CENTER);
     VBox titleBox = new VBox(topLabel);
     titleBox.setAlignment(Pos.TOP_CENTER);
     mainScreen.setTop(titleBox);
 
-    String[] names = {"Play", "Reset", "Clear", "Save", "Load", "Edit", "NewGame"};
+    String[] names = { "Play", "Reset", "Clear", "Save", "Load", "Edit", "NewGame" };
 
     VBox simulationControl = createControlArea(names, onSave, onLoad, pause, play,
         reset, setGameSpeed, createNewGameAction, clear);
@@ -75,27 +84,41 @@ public class ScreenManager {
   }
 
   private VBox createControlArea(String[] names, Runnable onSave, Runnable onLoad, Runnable pause,
-      Runnable play,
-      Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction, Runnable clear) {
+      Runnable play, Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction, Runnable clear) {
 
-    Slider speedSlider = new Slider(0, 60, 1);
+    HBox timeArea = createTimeAreaBox(pause, setGameSpeed);
+
+    HBox buttonArea = createButtonBoxArea(names, onSave, onLoad, pause, play,
+        reset, createNewGameAction, clear);
+
+    VBox simulationControl = new VBox(15);
+    simulationControl.getChildren().addAll(timeArea, buttonArea);
+    simulationControl.setAlignment(Pos.CENTER);
+    return simulationControl;
+  }
+
+  private HBox createTimeAreaBox(Runnable pause, Runnable setGameSpeed) {
+    HBox hbox = new HBox(20);
+
+    speedSlider = new Slider(0, 10, 4);
     speedSlider.setPrefWidth(400);
     speedSlider.setMaxWidth(400);
     speedSlider.setShowTickMarks(true);
-    speedSlider.setMajorTickUnit(6);
+    speedSlider.setMajorTickUnit(1);
     speedSlider.setSnapToTicks(true);
+    sliderValue = speedSlider.getValue();
+    setGameSpeed.run();
 
     speedSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
       speedSliderFunction(pause, setGameSpeed, newValue.doubleValue());
     });
 
-    HBox hbox = createButtonBoxArea(names, onSave, onLoad, pause, play,
-        reset, createNewGameAction, clear);
+    dynamicGen = new Label();
+    dynamicGen.setText("Gen: " + String.valueOf(gen));
 
-    VBox simulationControl = new VBox(15);
-    simulationControl.getChildren().addAll(speedSlider, hbox);
-    simulationControl.setAlignment(Pos.CENTER);
-    return simulationControl;
+    hbox.setAlignment(Pos.TOP_CENTER);
+    hbox.getChildren().addAll(speedSlider, dynamicGen);
+    return hbox;
   }
 
   private HBox createButtonBoxArea(String[] names, Runnable onSave, Runnable onLoad, Runnable pause,
@@ -142,13 +165,22 @@ public class ScreenManager {
     buttons.setButtonText("Play", "Play");
     sliderValue = newValue;
     setGameSpeed.run();
-  } //TODO: refactor so that this is called from the controller on button press.
+  } // TODO: refactor so that this is called from the controller on button press.
 
   public double getSliderValue() {
     if (sliderValue <= 0) {
       return 1;
     }
     return sliderValue;
+  }
+
+  public void setGen(int genNum) {
+    gen = genNum;
+    dynamicGen.setText("#: " + String.valueOf(gen));
+  }
+
+  public void setSpeed(double speed) {
+    speedSlider.setValue(speed);
   }
 
   public Optional<File> startScreen(Stage stage) {
@@ -158,7 +190,7 @@ public class ScreenManager {
     ExtensionFilter onlyXML = new ExtensionFilter("*.xml", "*.xml");
 
     fileChooser.getExtensionFilters().add(onlyXML);
-//    fileChooser.setTitle("Open My File"); //TODO: need title?
+    // fileChooser.setTitle("Open My File"); //TODO: need title?
     if (initialDir.exists() && initialDir.isDirectory()) {
       fileChooser.setInitialDirectory(initialDir);
     } else {
@@ -171,5 +203,5 @@ public class ScreenManager {
 
   public String getLanguage() {
     return languageView.getLanguage();
-  } //TODO: needed?
+  } // TODO: needed?
 }

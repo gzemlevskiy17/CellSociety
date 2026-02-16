@@ -15,11 +15,11 @@ public class Controller {
   private GridView gridView;
   private Timeline gameLoop;
 
-  private static final int FRAMES_PER_SECOND = 60;
+  private static final double FRAMES_PER_SECOND = 0.5;
   private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 
   private double gameSpeed;
-  private int generations;
+  private int generations = 0;
 
   public Controller(Game game, ScreenManager screenManager, GridView gridView, Runnable createNewGameAction) {
     this.game = game;
@@ -27,7 +27,7 @@ public class Controller {
     this.gridView = gridView;
     screenManager.setGridView(gridView);
     gameSpeed = 1;
-    gameLoop = new Timeline(new KeyFrame(Duration.seconds(2), e -> loop()));
+    gameLoop = new Timeline(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> loop()));
     gameLoop.setCycleCount(Timeline.INDEFINITE);
   }
 
@@ -35,6 +35,7 @@ public class Controller {
     game.step();
     updateGrid();
     generations++;
+    screenManager.setGen(generations);
   }
 
   private void updateGrid() {
@@ -64,7 +65,7 @@ public class Controller {
   }
 
   public void reset() {
-   //TODO: implement resetting grid to initial loaded state
+    // TODO: implement resetting grid to initial loaded state
     generations = 0;
     updateGrid();
   }
@@ -73,12 +74,13 @@ public class Controller {
     return gameSpeed;
   }
 
-  //TODO: replace gameSpeed variable with getRate/setRate?
+  // TODO: replace gameSpeed variable with getRate/setRate?
   public void setGameSpeed(double gameSpeed) {
     this.gameSpeed = gameSpeed;
     if (gameLoop != null) {
       gameLoop.setRate(this.gameSpeed);
     }
+    screenManager.setSpeed(gameSpeed);
   }
 
   public void findGameSpeed() {
@@ -91,6 +93,6 @@ public class Controller {
 
   public void gameScreenShow(Runnable onSave, Runnable onLoad, Runnable createNewGameAction) {
     screenManager.gameScreen(onSave, onLoad, this::pause, this::play, this::reset,
-        this::findGameSpeed, createNewGameAction, this::clear);
+        this::findGameSpeed, createNewGameAction, this::clear, generations);
   }
 }
