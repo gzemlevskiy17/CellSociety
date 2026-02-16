@@ -27,9 +27,44 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * Simple XML parser that reads basic simulation configuration.
+ * Reads and writes simulation configuration XML files.
+ *
+ * <p>Supports two ways of specifying initial cell states:</p>
+ * <ul>
+ *   <li><b>Explicit:</b> a {@code <cells>} block with one {@code <row>} per grid row,
+ *       containing space-separated state integers.</li>
+ *   <li><b>Algorithmic:</b> a {@code <stateDistribution>} block that specifies state
+ *       counts or proportions; cells are then randomly assigned to match.</li>
+ * </ul>
+ *
+ * <p><b>Assumptions:</b> The XML file is well-formed and follows the expected schema.
+ * Grid dimensions must be present (as {@code <rows>/<columns>} or {@code <width>/<height>}).
+ * If neither {@code <cells>} nor {@code <stateDistribution>} is provided, {@code cells}
+ * will be null in the resulting {@link ParseResult}.</p>
+ *
+ * <p><b>Dependencies:</b> {@link ParseResult}, {@code javax.xml.parsers},
+ * {@code javax.xml.transform}, JavaFX {@link Stage} (for save dialog).</p>
+ *
+ * <p><b>Example usage:</b></p>
+ * <pre>{@code
+ * File file = new File("data/GameOfLifeSimple.xml");
+ * ParseResult result = XMLParser.parse(file);
+ * // result now contains grid dimensions, cell states, parameters, colors, etc.
+ * }</pre>
+ *
+ * @author Michael Li
  */
 public class XMLParser {
+
+  /**
+   * Parses a simulation XML file into a {@link ParseResult}.
+   *
+   * @param file the XML configuration file to parse
+   * @return a {@link ParseResult} containing all extracted simulation data
+   * @throws ParserConfigurationException if the XML parser cannot be configured
+   * @throws SAXException if the XML is malformed
+   * @throws IOException if the file cannot be read
+   */
   public static ParseResult parse(File file)
       throws ParserConfigurationException, SAXException, IOException {
     Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder()
