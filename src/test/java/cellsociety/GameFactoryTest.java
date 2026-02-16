@@ -54,7 +54,7 @@ class GameFactoryTest {
 
     @Test
     void createGameWithUnknownTypeThrows() {
-        ParseResult result = new ParseResult(5, 5, "UnknownGame", "UnknownGame", "Author", "Description", null, 0.0, 0.0, new HashMap<>());
+        ParseResult result = new ParseResult(5, 5, "UnknownGame", "UnknownGame", "Author", "Description", null, 0.0, 0.0, 1.0, 0.0, new HashMap<>());
         ModelFactory factory = new ModelFactory();
 
         assertThrows(IllegalArgumentException.class, () -> factory.createGame(result));

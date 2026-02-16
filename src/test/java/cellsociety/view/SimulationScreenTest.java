@@ -1,10 +1,11 @@
 package cellsociety.view;
 
-import cellsociety.GameFactory;
 import cellsociety.ParseResult;
 import cellsociety.controller.Controller;
 import cellsociety.model.Game;
+import cellsociety.model.ModelFactory;
 import cellsociety.model.XMLParser;
+import cellsociety.view.ViewFactory;
 import java.io.File;
 import java.io.IOException;
 import javafx.stage.Stage;
@@ -18,22 +19,24 @@ public class SimulationScreenTest extends DukeApplicationTest {
   public static final String DATA_PATH = "data/";
 
   private ScreenManager screenManager;
-  private GameFactory gameFactory;
+  private ModelFactory modelFactory;
+  private ViewFactory viewFactory;
   private Game game;
   private Controller controller;
   private GridView gridView;
 
   @Override
   public void start(Stage primaryStage) {
-    gameFactory = new GameFactory();
+    modelFactory = new ModelFactory();
+    viewFactory = new ViewFactory();
     ParseResult parseResult = null;
     try {
       parseResult = XMLParser.parse(new File(DATA_PATH + "GameOfLifeSimple.xml"));
     } catch (ParserConfigurationException | SAXException | IOException e) {
       throw new RuntimeException(e);
     }
-    game = gameFactory.createGame(parseResult);
-    gridView = gameFactory.createView(parseResult);
+    game = modelFactory.createGame(parseResult);
+    gridView = viewFactory.createView(parseResult);
     // screenManager = new ScreenManager(primaryStage, gridView);
     // controller = new Controller(game, screenManager, gridView);
     // controller.play();

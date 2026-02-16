@@ -1,11 +1,12 @@
 package cellsociety.controller;
 
-import cellsociety.GameFactory;
 import cellsociety.ParseResult;
 import cellsociety.model.Game;
+import cellsociety.model.ModelFactory;
 import cellsociety.model.XMLParser;
 import cellsociety.view.GridView;
 import cellsociety.view.ScreenManager;
+import cellsociety.view.ViewFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
@@ -22,7 +23,8 @@ public class GameRunner {
 
   private Stage myStage;
   private ScreenManager screenManager;
-  private GameFactory gameFactory;
+  private ModelFactory modelFactory;
+  private ViewFactory viewFactory;
   private Game game;
   private Controller controller;
   private GridView gridView;
@@ -33,7 +35,8 @@ public class GameRunner {
   public GameRunner(Stage myStage, Runnable createNewGameAction) {
     this.myStage = myStage;
     this.createNewGameAction = createNewGameAction;
-    gameFactory = new GameFactory();
+    modelFactory = new ModelFactory();
+    viewFactory = new ViewFactory();
     screenManager = new ScreenManager(myStage);
     setup(myStage);
     myStage.show();
@@ -53,8 +56,8 @@ public class GameRunner {
       throw new RuntimeException(e);
     }
     currentParseResult = parseResult;
-    game = gameFactory.createGame(parseResult);
-    gridView = gameFactory.createView(parseResult);
+    game = modelFactory.createGame(parseResult);
+    gridView = viewFactory.createView(parseResult);
     controller = new Controller(game, screenManager, gridView, createNewGameAction);
     controller.gameScreenShow(this::handleSave, this::handleLoad, createNewGameAction);
     controller.loop();

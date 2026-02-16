@@ -1,10 +1,5 @@
 package cellsociety.controller;
 
-import cellsociety.GameFactory;
-import cellsociety.ParseResult;
-import cellsociety.model.Game;
-import cellsociety.view.GridView;
-import cellsociety.view.ScreenManager;
 import javafx.stage.Stage;
 
 public class GameManager {
