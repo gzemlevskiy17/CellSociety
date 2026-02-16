@@ -47,18 +47,31 @@ public class XMLParser {
     Element paramEl = getFirstElement(root, "parameters");
 
     // 3. Grid Dimensions (fallback to root if not in <grid>)
-    int[] dimensions = parseDimensions(gridEl != null ? gridEl : root);
+    Element dimensionSource = root;
+    if (gridEl != null) {
+      dimensionSource = gridEl;
+    }
+    int[] dimensions = parseDimensions(dimensionSource);
     int rows = dimensions[0];
     int cols = dimensions[1];
 
     // 4. Detailed Data
-    int[][] cells = (gridEl != null) ? parseCells(gridEl, rows, cols) : null;
-    if (cells == null && gridEl != null) {
-      cells = parseStateDistribution(gridEl, rows, cols);
+    int[][] cells = null;
+    if (gridEl != null) {
+      cells = parseCells(gridEl, rows, cols);
+      if (cells == null) {
+        cells = parseStateDistribution(gridEl, rows, cols);
+      }
     }
-    double[] params = (paramEl != null) ? parseParameters(paramEl) : new double[] { 0.0, 0.0 };
-    double speed = (paramEl != null) ? parseDouble(getTextValue(paramEl, "speed"), 1.0) : 1.0;
-    double threshold = (paramEl != null) ? parseDouble(getTextValue(paramEl, "threshold"), 0.0) : 0.0;
+
+    double[] params = new double[] { 0.0, 0.0 };
+    double speed = 1.0;
+    double threshold = 0.0;
+    if (paramEl != null) {
+      params = parseParameters(paramEl);
+      speed = parseDouble(getTextValue(paramEl, "speed"), 1.0);
+      threshold = parseDouble(getTextValue(paramEl, "threshold"), 0.0);
+    }
     Map<Integer, String> colorMap = parseColors(root); // Search root for all <state> tags
 
     return new ParseResult(rows, cols, gameType, title, author, description, cells, params[0], params[1], speed, threshold, colorMap);
