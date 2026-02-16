@@ -38,7 +38,8 @@ This project implements a cellular automata simulator.
 ### Notes/Assumptions
 
  * Assumptions or Simplifications:
-
+    * New windows (simultaneous simulations) are placed in the center of the screen and are fully
+      independent of other simulations. The program exits when the last remaining window is closed.
  * Known Bugs:
 
  * Features implemented:

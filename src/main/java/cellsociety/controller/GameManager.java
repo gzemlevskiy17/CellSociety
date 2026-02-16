@@ -1,10 +1,7 @@
 package cellsociety.controller;
 
-import cellsociety.GameFactory;
-import cellsociety.ParseResult;
-import cellsociety.model.Game;
-import cellsociety.view.GridView;
-import cellsociety.view.ScreenManager;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class GameManager {
@@ -16,14 +13,17 @@ public class GameManager {
   }
 
   private void createNewGame() {
-    launchNewGame(createNewStage());
+    Stage newStage = createNewStage();
+    Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+    newStage.setX((screenBounds.getWidth() - newStage.getWidth()) / 2);
+    newStage.setY((screenBounds.getHeight() - newStage.getHeight()) / 2);
+    launchNewGame(newStage);
   }
 
   private Stage createNewStage() {
     return new Stage();
   }
 
-  //TODO: implement new window location/window tiling (needs to be documented)
   private void launchNewGame(Stage newStage) {
     GameRunner gameRunner = new GameRunner(newStage, this::createNewGame);
   }

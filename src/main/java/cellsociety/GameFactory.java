@@ -4,11 +4,10 @@ import cellsociety.model.ForestFire;
 import cellsociety.model.Game;
 import cellsociety.model.GameOfLife;
 import cellsociety.model.Grid;
-
 import cellsociety.view.GridView;
 import cellsociety.view.RectangularGridView;
-import javafx.scene.paint.Color;
 import java.util.HashMap;
+import javafx.scene.paint.Color;
 
 public class GameFactory {
     public Game createGame(ParseResult result) {
@@ -28,6 +27,7 @@ public class GameFactory {
             }
         }
 
+        //TODO: reflection?
         Game game = switch (gameType) {
             case "GameOfLife" -> new GameOfLife(grid);
             case "ForestFire" -> new ForestFire(grid, result.getProbCatch(), result.getProbGrow());
