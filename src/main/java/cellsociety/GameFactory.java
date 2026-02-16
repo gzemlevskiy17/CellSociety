@@ -31,7 +31,8 @@ public class GameFactory {
         Game game = switch (gameType) {
             case "GameOfLife" -> new GameOfLife(grid);
             case "ForestFire" -> new ForestFire(grid, result.getProbCatch(), result.getProbGrow());
-            default -> throw new IllegalArgumentException("Unknown game type: " + gameType);
+            default -> throw new IllegalArgumentException(
+                "Unknown game type: " + gameType); //TODO: need to handle and show to user
         };
 
         return game;
