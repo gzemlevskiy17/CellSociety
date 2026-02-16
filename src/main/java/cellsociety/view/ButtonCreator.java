@@ -1,5 +1,7 @@
 package cellsociety.view;
 
+import cellsociety.controller.PropertiesLoader;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,17 +17,18 @@ public class ButtonCreator {
     private HashMap<String, Integer> buttonIndex;
     private ResourceBundle myResources;
 
-    public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.view.Buttons.";
-    public static final String DEFAULT_RESOURCE_FOLDER = "/" + DEFAULT_RESOURCE_PACKAGE.replace(".", "/");
-
     public ButtonCreator(String language) {
         size = 0;
         buttonHolder = new ArrayList<>();
         buttonIndex = new HashMap<>();
-        myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language); //TODO: complete default text setting implementation
+        try {
+            myResources = PropertiesLoader.loadProperties("Buttons/" + language);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    //TODO: fix confusing method name. why is the button empty?
+    // TODO: fix confusing method name. why is the button empty?
     public void addEmptyButton(String name) {
         Button newButton = new Button(myResources.getString(name));
         buttonHolder.add(size, newButton);
