@@ -29,23 +29,37 @@ import org.xml.sax.SAXException;
 /**
  * Reads and writes simulation configuration XML files.
  *
- * <p>Supports two ways of specifying initial cell states:</p>
+ * <p>
+ * Supports two ways of specifying initial cell states:
+ * </p>
  * <ul>
- *   <li><b>Explicit:</b> a {@code <cells>} block with one {@code <row>} per grid row,
- *       containing space-separated state integers.</li>
- *   <li><b>Algorithmic:</b> a {@code <stateDistribution>} block that specifies state
- *       counts or proportions; cells are then randomly assigned to match.</li>
+ * <li><b>Explicit:</b> a {@code <cells>} block with one {@code <row>} per grid
+ * row,
+ * containing space-separated state integers.</li>
+ * <li><b>Algorithmic:</b> a {@code <stateDistribution>} block that specifies
+ * state
+ * counts or proportions; cells are then randomly assigned to match.</li>
  * </ul>
  *
- * <p><b>Assumptions:</b> The XML file is well-formed and follows the expected schema.
- * Grid dimensions must be present (as {@code <rows>/<columns>} or {@code <width>/<height>}).
- * If neither {@code <cells>} nor {@code <stateDistribution>} is provided, {@code cells}
- * will be null in the resulting {@link ParseResult}.</p>
+ * <p>
+ * <b>Assumptions:</b> The XML file is well-formed and follows the expected
+ * schema.
+ * Grid dimensions must be present (as {@code <rows>/<columns>} or
+ * {@code <width>/<height>}).
+ * If neither {@code <cells>} nor {@code <stateDistribution>} is provided,
+ * {@code cells}
+ * will be null in the resulting {@link ParseResult}.
+ * </p>
  *
- * <p><b>Dependencies:</b> {@link ParseResult}, {@code javax.xml.parsers},
- * {@code javax.xml.transform}, JavaFX {@link Stage} (for save dialog).</p>
+ * <p>
+ * <b>Dependencies:</b> {@link ParseResult}, {@code javax.xml.parsers},
+ * {@code javax.xml.transform}, JavaFX {@link Stage} (for save dialog).
+ * </p>
  *
- * <p><b>Example usage:</b></p>
+ * <p>
+ * <b>Example usage:</b>
+ * </p>
+ * 
  * <pre>{@code
  * File file = new File("data/GameOfLifeSimple.xml");
  * ParseResult result = XMLParser.parse(file);
@@ -62,8 +76,8 @@ public class XMLParser {
    * @param file the XML configuration file to parse
    * @return a {@link ParseResult} containing all extracted simulation data
    * @throws ParserConfigurationException if the XML parser cannot be configured
-   * @throws SAXException if the XML is malformed
-   * @throws IOException if the file cannot be read
+   * @throws SAXException                 if the XML is malformed
+   * @throws IOException                  if the file cannot be read
    */
   public static ParseResult parse(File file)
       throws ParserConfigurationException, SAXException, IOException {
@@ -109,7 +123,8 @@ public class XMLParser {
     }
     Map<Integer, String> colorMap = parseColors(root); // Search root for all <state> tags
 
-    return new ParseResult(rows, cols, gameType, title, author, description, cells, params[0], params[1], speed, threshold, colorMap);
+    return new ParseResult(rows, cols, gameType, title, author, description, cells, params[0], params[1], speed,
+        threshold, colorMap);
   }
 
   /**
@@ -202,7 +217,10 @@ public class XMLParser {
 
   private static Element getFirstElement(Element parent, String tagName) {
     NodeList nodeList = parent.getElementsByTagName(tagName);
-    return (nodeList.getLength() > 0) ? (Element) nodeList.item(0) : null;
+    if (nodeList.getLength() > 0) {
+      return (Element) nodeList.item(0);
+    }
+    return null;
   }
 
   private static int[] parseDimensions(Element container) {
@@ -334,6 +352,9 @@ public class XMLParser {
 
   private static String getTextValue(Element e, String tagName) {
     NodeList nodeList = e.getElementsByTagName(tagName);
-    return (nodeList.getLength() > 0) ? nodeList.item(0).getTextContent().trim() : "";
+    if (nodeList.getLength() > 0) {
+      return nodeList.item(0).getTextContent().trim();
+    }
+    return "";
   }
 }

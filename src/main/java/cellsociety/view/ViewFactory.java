@@ -5,15 +5,25 @@ import java.util.HashMap;
 import javafx.scene.paint.Color;
 
 /**
- * Factory that creates {@link GridView} instances from parsed XML configuration data.
+ * Factory that creates {@link GridView} instances from parsed XML configuration
+ * data.
  *
- * <p>Converts hex color strings from the {@link ParseResult} into JavaFX {@link Color}
- * objects and builds a {@link RectangularGridView}. Falls back to default colors
- * (white, black, red) if no color map is provided in the XML.</p>
+ * <p>
+ * Converts hex color strings from the {@link ParseResult} into JavaFX
+ * {@link Color}
+ * objects and builds a {@link RectangularGridView}. Falls back to default
+ * colors
+ * (white, black, red) if no color map is provided in the XML.
+ * </p>
  *
- * <p><b>Dependencies:</b> {@link ParseResult}, {@link RectangularGridView}</p>
+ * <p>
+ * <b>Dependencies:</b> {@link ParseResult}, {@link RectangularGridView}
+ * </p>
  *
- * <p><b>Example usage:</b></p>
+ * <p>
+ * <b>Example usage:</b>
+ * </p>
+ * 
  * <pre>{@code
  * ParseResult result = XMLParser.parse(new File("data/GameOfLifeSimple.xml"));
  * ViewFactory factory = new ViewFactory();
@@ -48,7 +58,6 @@ public class ViewFactory {
       colorMap.put(1, Color.BLACK);
       colorMap.put(2, Color.RED);
     }
-
     return new RectangularGridView(gameType, colorMap, cols, rows);
   }
 }
