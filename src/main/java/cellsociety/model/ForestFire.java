@@ -2,11 +2,36 @@ package cellsociety.model;
 
 import java.util.List;
 
+/**
+ * Forest Fire spreading simulation.
+ *
+ * <p>Uses three states: 0 (empty), 1 (tree), 2 (burning). Transition rules:</p>
+ * <ul>
+ *   <li>A burning cell becomes empty.</li>
+ *   <li>A tree catches fire if any neighbor is burning, or spontaneously with
+ *       probability {@code ignitionProbability}.</li>
+ *   <li>An empty cell grows a tree with probability {@code fillProbability}.</li>
+ * </ul>
+ *
+ * <p><b>Assumptions:</b> Probabilities should be in the range [0.0, 1.0].</p>
+ *
+ * <p><b>Dependencies:</b> {@link Game}, {@link Grid}, {@link Cell}</p>
+ *
+ * @author Michael Li
+ * @see Game
+ */
 public class ForestFire extends Game {
 
   private double ignitionProbability;
   private double fillProbability;
 
+  /**
+   * Constructs a Forest Fire simulation with the given probabilities.
+   *
+   * @param grid the grid of cells; states should be 0 (empty), 1 (tree), or 2 (burning)
+   * @param ignitionProbability chance a tree spontaneously catches fire each step
+   * @param fillProbability chance an empty cell grows a new tree each step
+   */
   public ForestFire(Grid grid, double ignitionProbability, double fillProbability) {
     super(grid);
     this.ignitionProbability = ignitionProbability;
