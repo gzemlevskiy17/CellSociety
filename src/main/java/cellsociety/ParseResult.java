@@ -7,13 +7,15 @@ public class ParseResult {
     private final int[][] cells; // may be null if not provided
     private final double probCatch;
     private final double probGrow;
+    private final double speed;
+    private final double threshold;
     private final java.util.Map<Integer, String> colorMap;
     private final String author;
     private final String title;
     private final String description;
 
     public ParseResult(int rows, int cols, String gameType, String title, String author, String description,
-            int[][] cells, double probCatch, double probGrow,
+            int[][] cells, double probCatch, double probGrow, double speed, double threshold,
             java.util.Map<Integer, String> colorMap) {
         this.rows = rows;
         this.cols = cols;
@@ -24,6 +26,8 @@ public class ParseResult {
         this.cells = cells;
         this.probCatch = probCatch;
         this.probGrow = probGrow;
+        this.speed = speed;
+        this.threshold = threshold;
         this.colorMap = colorMap;
     }
 
@@ -65,5 +69,13 @@ public class ParseResult {
 
     public double getProbGrow() {
         return probGrow;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public double getThreshold() {
+        return threshold;
     }
 }

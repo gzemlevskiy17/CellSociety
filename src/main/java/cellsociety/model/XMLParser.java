@@ -57,9 +57,11 @@ public class XMLParser {
       cells = parseStateDistribution(gridEl, rows, cols);
     }
     double[] params = (paramEl != null) ? parseParameters(paramEl) : new double[] { 0.0, 0.0 };
+    double speed = (paramEl != null) ? parseDouble(getTextValue(paramEl, "speed"), 1.0) : 1.0;
+    double threshold = (paramEl != null) ? parseDouble(getTextValue(paramEl, "threshold"), 0.0) : 0.0;
     Map<Integer, String> colorMap = parseColors(root); // Search root for all <state> tags
 
-    return new ParseResult(rows, cols, gameType, title, author, description, cells, params[0], params[1], colorMap);
+    return new ParseResult(rows, cols, gameType, title, author, description, cells, params[0], params[1], speed, threshold, colorMap);
   }
 
   /**

@@ -73,6 +73,8 @@ public class GameRunner {
         currentCells,
         currentParseResult.getProbCatch(),
         currentParseResult.getProbGrow(),
+        currentParseResult.getSpeed(),
+        currentParseResult.getThreshold(),
         currentParseResult.getColorMap());
     try {
       XMLParser.save(snapshot, myStage);
