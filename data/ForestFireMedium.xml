@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+  <author>Drossel &amp; Schwabl</author>
+  <description>Medium rectangular 6x10 grid to exercise spreading and regrowth.</description>
+  <grid>
+    <cells>
+      <row>0 1 1 1 0 0 1 1 0 0</row>
+      <row>1 1 1 1 1 1 1 0 0 0</row>
+      <row>1 2 1 1 1 0 1 1 1 0</row>
+      <row>0 1 1 1 1 1 1 1 0 0</row>
+      <row>0 0 1 1 0 1 1 0 0 0</row>
+      <row>0 0 0 0 0 0 1 0 0 0</row>
+    </cells>
+    <columns>10</columns>
+    <rows>6</rows>
+  </grid>
+  <parameters>
+    <fillProbability>0.2</fillProbability>
+    <ignitionProbability>0.5</ignitionProbability>
+    <speed>4</speed>
+    <states>
+      <state color="#FFFFFF" id="0" name="EMPTY"/>
+      <state color="#27AE60" id="1" name="TREE"/>
+      <state color="#C0392B" id="2" name="BURNING"/>
+    </states>
+  </parameters>
+  <title>Forest Fire - Medium Rectangular</title>
+  <type>ForestFire</type>
+</simulation>
+

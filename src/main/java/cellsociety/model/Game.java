@@ -82,4 +82,9 @@ public abstract class Game {
     public Cell getCell(int row, int col) {
         return grid.getCell(row, col);
     }
+
+    //TODO: does this work for all types of games?
+    public void clearGrid() {
+        grid.defaultInitializeCells();
+    }
 }

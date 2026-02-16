@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+  <author>Drossel &amp; Schwabl</author>
+  <description>Small 5x5 grid (trees, one burning cell).</description>
+  <grid>
+    <cells>
+      <row>0 1 0 0 0</row>
+      <row>1 1 1 0 0</row>
+      <row>0 1 2 1 0</row>
+      <row>0 0 1 0 0</row>
+      <row>0 0 0 0 0</row>
+    </cells>
+    <columns>5</columns>
+    <rows>5</rows>
+  </grid>
+  <parameters>
+    <fillProbability>1</fillProbability>
+    <ignitionProbability>0.9</ignitionProbability>
+    <speed>5</speed>
+    <states>
+      <state color="#FFFFFF" id="0" name="EMPTY"/>
+      <state color="#2ECC71" id="1" name="TREE"/>
+      <state color="#E74C3C" id="2" name="BURNING"/>
+    </states>
+  </parameters>
+  <title>Forest Fire - Small</title>
+  <type>ForestFire</type>
+</simulation>
+

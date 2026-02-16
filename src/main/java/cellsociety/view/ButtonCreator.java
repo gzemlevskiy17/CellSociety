@@ -1,9 +1,12 @@
 package cellsociety.view;
 
+import cellsociety.controller.PropertiesLoader;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -12,28 +15,40 @@ public class ButtonCreator {
     private int size;
     private ArrayList<Button> buttonHolder;
     private HashMap<String, Integer> buttonIndex;
+    private ResourceBundle myResources;
 
-    public ButtonCreator() {
+    public ButtonCreator(String language) {
         size = 0;
-        buttonHolder = new ArrayList<Button>();
-        buttonIndex = new HashMap<String, Integer>();
+        buttonHolder = new ArrayList<>();
+        buttonIndex = new HashMap<>();
+        try {
+            myResources = PropertiesLoader.loadProperties("Buttons/" + language);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    // TODO: fix confusing method name. why is the button empty?
     public void addEmptyButton(String name) {
-        buttonHolder.add(size, new Button(name));
-        buttonIndex.put(name, Integer.valueOf(size));
+        Button newButton = new Button(myResources.getString(name));
+        buttonHolder.add(size, newButton);
+        buttonIndex.put(name, size);
         size++;
     }
 
     public void addActionToButton(String name, EventHandler<ActionEvent> e) {
-        buttonHolder.get(buttonIndex.get(name).intValue()).setOnAction(e);
+        getButton(name).setOnAction(e);
     }
 
     public Button getButton(String name) {
-        return buttonHolder.get(buttonIndex.get(name).intValue());
+        return buttonHolder.get(buttonIndex.get(name));
+    }
+
+    public void setButtonText(String name, String text) {
+        getButton(name).setText(myResources.getString(text));
     }
 
     public Iterator<Button> returnAll() {
-        return (Iterator<Button>) buttonHolder.iterator();
-    } //TODO: return immutable list?
+        return buttonHolder.iterator();
+    }
 }
