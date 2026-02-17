@@ -55,7 +55,8 @@ public class ModelFactory {
     return switch (gameType) {
       case "GameOfLife" -> new GameOfLife(grid);
       case "ForestFire" -> new ForestFire(grid, result.getProbCatch(), result.getProbGrow());
-      case "Segregation" -> new Segregation(grid, result.getProbCatch());
+      case "Segregation" -> new Segregation(grid, result.getThreshold());
+      case "Percolation" -> new Percolation(grid);
       default -> throw new IllegalArgumentException("Unknown game type: " + gameType);
     };
   }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <title>Missing Type Test</title>
+    <author>Michael</author>
+    <description>This file is missing the type element to test CELL-27 error handling.</description>
+    <grid>
+        <rows>3</rows>
+        <columns>3</columns>
+        <cells>
+            <row>0 1 0</row>
+            <row>1 1 1</row>
+            <row>0 1 0</row>
+        </cells>
+    </grid>
+    <parameters>
+        <speed>5</speed>
+        <states>
+            <state id="0" name="DEAD" color="#FFFFFF"/>
+            <state id="1" name="ALIVE" color="#2ECC71"/>
+        </states>
+    </parameters>
+</simulation>

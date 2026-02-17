@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>GameOfLife</type>
+    <title>Negative Dimension Test</title>
+    <author>Michael</author>
+    <description>This file has a negative grid dimension to test CELL-28 error handling.</description>
+    <grid>
+        <rows>-3</rows>
+        <columns>3</columns>
+    </grid>
+    <parameters>
+        <speed>5</speed>
+        <states>
+            <state id="0" name="DEAD" color="#FFFFFF"/>
+            <state id="1" name="ALIVE" color="#2ECC71"/>
+        </states>
+    </parameters>
+</simulation>

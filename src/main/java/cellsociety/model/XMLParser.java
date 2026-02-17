@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -80,9 +82,20 @@ public class XMLParser {
    * @throws IOException                  if the file cannot be read
    */
   public static ParseResult parse(File file)
-      throws ParserConfigurationException, SAXException, IOException {
-    Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-        .parse(file);
+      throws ParserConfigurationException, IOException {
+    if (!file.exists()) {
+      throw new IllegalArgumentException("File not found: " + file.getName());
+    }
+    if (file.length() == 0) {
+      throw new IllegalArgumentException("File is empty: " + file.getName());
+    }
+
+    Document xmlDocument;
+    try {
+      xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+    } catch (SAXException e) {
+      throw new IllegalArgumentException("File is not valid XML: " + file.getName(), e);
+    }
     Element root = xmlDocument.getDocumentElement();
 
     // 1. Root Level Metadata
@@ -90,6 +103,12 @@ public class XMLParser {
     String title = getTextValue(root, "title");
     String author = getTextValue(root, "author");
     String description = getTextValue(root, "description");
+
+    validateRequiredField(gameType, "type");
+    validateRequiredField(title, "title");
+    validateRequiredField(author, "author");
+    validateRequiredField(description, "description");
+    validateSimulationType(gameType);
 
     // 2. Section Elements
     Element gridEl = getFirstElement(root, "grid");
@@ -103,6 +122,9 @@ public class XMLParser {
     int[] dimensions = parseDimensions(dimensionSource);
     int rows = dimensions[0];
     int cols = dimensions[1];
+    if (rows <= 0 || cols <= 0) {
+      throw new IllegalArgumentException("Grid dimensions must be positive, got: " + rows + "x" + cols);
+    }
 
     // 4. Detailed Data
     int[][] cells = null;
@@ -122,6 +144,10 @@ public class XMLParser {
       threshold = parseDouble(getTextValue(paramEl, "threshold"), 0.0);
     }
     Map<Integer, String> colorMap = parseColors(root); // Search root for all <state> tags
+
+    if (cells != null && !colorMap.isEmpty()) {
+      validateCellStates(cells, colorMap.keySet());
+    }
 
     return new ParseResult(rows, cols, gameType, title, author, description, cells, params[0], params[1], speed,
         threshold, colorMap);
@@ -252,8 +278,12 @@ public class XMLParser {
       return null;
     }
 
+    if (rowNodes.getLength() > rows) {
+      throw new IllegalArgumentException(
+          "Too many rows in cell data: found " + rowNodes.getLength() + " but grid has " + rows + " rows");
+    }
     int[][] cells = new int[rows][cols];
-    for (int r = 0; r < Math.min(rowNodes.getLength(), rows); r++) {
+    for (int r = 0; r < rowNodes.getLength(); r++) {
       parseRowContent(rowNodes.item(r).getTextContent().trim(), cells[r], cols);
     }
     return cells;
@@ -307,7 +337,11 @@ public class XMLParser {
       return;
     }
     String[] parts = rowText.split("\\s+");
-    for (int c = 0; c < Math.min(parts.length, cols); c++) {
+    if (parts.length > cols) {
+      throw new IllegalArgumentException(
+          "Too many columns in row data: found " + parts.length + " but grid has " + cols + " columns");
+    }
+    for (int c = 0; c < parts.length; c++) {
       try {
         rowArray[c] = Integer.parseInt(parts[c]);
       } catch (NumberFormatException ex) {
@@ -347,6 +381,33 @@ public class XMLParser {
       return Double.parseDouble(value.trim());
     } catch (NumberFormatException e) {
       return defaultValue;
+    }
+  }
+
+  private static final List<String> VALID_TYPES = Arrays.asList(
+      "GameOfLife", "ForestFire", "Segregation", "Percolation", "WaTor");
+
+  private static void validateRequiredField(String value, String fieldName) {
+    if (value == null || value.isEmpty()) {
+      throw new IllegalArgumentException("Missing required field: " + fieldName);
+    }
+  }
+
+  private static void validateSimulationType(String gameType) {
+    if (!VALID_TYPES.contains(gameType)) {
+      throw new IllegalArgumentException("Invalid simulation type: " + gameType);
+    }
+  }
+
+  private static void validateCellStates(int[][] cells, Set<Integer> validStates) {
+    for (int i = 0; i < cells.length; i++) {
+      for (int j = 0; j < cells[i].length; j++) {
+        if (!validStates.contains(cells[i][j])) {
+          throw new IllegalArgumentException(
+              "Invalid cell state " + cells[i][j] + " at (" + i + ", " + j
+                  + "). Valid states: " + validStates);
+        }
+      }
     }
   }
 
