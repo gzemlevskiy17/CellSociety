@@ -5,8 +5,6 @@ import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Optional;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
