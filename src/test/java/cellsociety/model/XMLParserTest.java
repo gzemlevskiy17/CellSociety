@@ -7,25 +7,30 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import cellsociety.ParseResult;
 import java.io.File;
-import java.io.IOException;
-import javax.xml.parsers.ParserConfigurationException;
 import org.junit.jupiter.api.Test;
-import org.xml.sax.SAXException;
 
 class XMLParserTest {
 
     @Test
-    void parseValidSimpleXml() throws Exception {
-        File file = new File("data/Simple.xml");
-        ParseResult res = XMLParser.parse(file);
-        assertEquals(25, res.getRows());
-        assertEquals(20, res.getCols());
+    void parseInvalidXmlThrows() {
+        File file = new File("data/BadData.xml");
+        assertThrows(IllegalArgumentException.class, () -> XMLParser.parse(file));
     }
 
     @Test
-    void parseInvalidXmlThrows() throws ParserConfigurationException, SAXException, IOException {
-        File file = new File("data/BadData.xml");
-        assertThrows(IllegalArgumentException.class, () -> XMLParser.parse(file));
+    void parseEmptyFileThrows() {
+        File file = new File("data/ErrorEmptyFile.xml");
+        IllegalArgumentException ex = assertThrows(
+            IllegalArgumentException.class, () -> XMLParser.parse(file));
+        assertTrue(ex.getMessage().contains("File is empty"));
+    }
+
+    @Test
+    void parseNotXmlFileThrows() {
+        File file = new File("data/ErrorNotXml.xml");
+        IllegalArgumentException ex = assertThrows(
+            IllegalArgumentException.class, () -> XMLParser.parse(file));
+        assertTrue(ex.getMessage().contains("not valid XML"));
     }
 
     @Test

@@ -82,9 +82,20 @@ public class XMLParser {
    * @throws IOException                  if the file cannot be read
    */
   public static ParseResult parse(File file)
-      throws ParserConfigurationException, SAXException, IOException {
-    Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-        .parse(file);
+      throws ParserConfigurationException, IOException {
+    if (!file.exists()) {
+      throw new IllegalArgumentException("File not found: " + file.getName());
+    }
+    if (file.length() == 0) {
+      throw new IllegalArgumentException("File is empty: " + file.getName());
+    }
+
+    Document xmlDocument;
+    try {
+      xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+    } catch (SAXException e) {
+      throw new IllegalArgumentException("File is not valid XML: " + file.getName(), e);
+    }
     Element root = xmlDocument.getDocumentElement();
 
     // 1. Root Level Metadata
