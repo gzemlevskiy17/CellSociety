@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -95,6 +96,7 @@ public class XMLParser {
     validateRequiredField(title, "title");
     validateRequiredField(author, "author");
     validateRequiredField(description, "description");
+    validateSimulationType(gameType);
 
     // 2. Section Elements
     Element gridEl = getFirstElement(root, "grid");
@@ -108,6 +110,9 @@ public class XMLParser {
     int[] dimensions = parseDimensions(dimensionSource);
     int rows = dimensions[0];
     int cols = dimensions[1];
+    if (rows <= 0 || cols <= 0) {
+      throw new IllegalArgumentException("Grid dimensions must be positive, got: " + rows + "x" + cols);
+    }
 
     // 4. Detailed Data
     int[][] cells = null;
@@ -355,9 +360,18 @@ public class XMLParser {
     }
   }
 
+  private static final List<String> VALID_TYPES = Arrays.asList(
+      "GameOfLife", "ForestFire", "Segregation", "Percolation", "WaTor");
+
   private static void validateRequiredField(String value, String fieldName) {
     if (value == null || value.isEmpty()) {
       throw new IllegalArgumentException("Missing required field: " + fieldName);
+    }
+  }
+
+  private static void validateSimulationType(String gameType) {
+    if (!VALID_TYPES.contains(gameType)) {
+      throw new IllegalArgumentException("Invalid simulation type: " + gameType);
     }
   }
 

@@ -100,4 +100,12 @@ class XMLParserTest {
             IllegalArgumentException.class, () -> XMLParser.parse(file));
         assertEquals("Missing required field: type", ex.getMessage());
     }
+
+    @Test
+    void parseInvalidSimulationTypeThrows() {
+        File file = new File("data/ErrorInvalidType.xml");
+        IllegalArgumentException ex = assertThrows(
+            IllegalArgumentException.class, () -> XMLParser.parse(file));
+        assertEquals("Invalid simulation type: FakeGame", ex.getMessage());
+    }
 }
