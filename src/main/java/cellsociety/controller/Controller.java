@@ -67,7 +67,7 @@ public class Controller {
   }
 
   public void reset() {
-    // TODO: implement resetting grid to initial loaded state
+    gameLoop.stop();
     generations = 0;
     updateGrid();
   }
@@ -86,14 +86,15 @@ public class Controller {
 
   public void findGameSpeed() {
     setGameSpeed(screenManager.getSliderValue());
+    gameLoop.play();
   }
 
   public int getGenerations() {
     return generations;
   }
 
-  public void gameScreenShow(Runnable onSave, Runnable onLoad, Runnable createNewGameAction) {
-    screenManager.gameScreen(onSave, onLoad, this::pause, this::play, this::reset,
+  public void gameScreenShow(Runnable onSave, Runnable onLoad, Runnable createNewGameAction, Runnable loadForResults) {
+    screenManager.gameScreen(onSave, onLoad, this::pause, this::play, loadForResults,
         this::findGameSpeed, createNewGameAction, this::clear, generations, gameSpeed);
   }
 }

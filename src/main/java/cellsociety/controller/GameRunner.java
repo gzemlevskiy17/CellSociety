@@ -8,6 +8,7 @@ import cellsociety.view.GridView;
 import cellsociety.view.ScreenManager;
 import cellsociety.view.ViewFactory;
 import java.io.File;
+import java.util.Map;
 import java.util.Optional;
 
 import javafx.stage.Stage;
@@ -49,21 +50,27 @@ public class GameRunner {
     try {
       parseResult = XMLParser.parse(file);
       currentParseResult = parseResult;
-      game = modelFactory.createGame(parseResult);
-      gridView = viewFactory.createView(parseResult);
     } catch (Exception e) {
       screenManager.showError("Configuration Error", e.getMessage());
       return;
     }
-    controller = new Controller(game, screenManager, gridView, parseResult.getSpeed(), createNewGameAction);
-    controller.gameScreenShow(this::handleSave, this::handleLoad, createNewGameAction);
-    controller.loop();
+    loadForResults();
+  }
+
+  private void loadForResults() {
+    game = modelFactory.createGame(currentParseResult);
+    gridView = viewFactory.createView(currentParseResult);
+    controller = new Controller(game, screenManager, gridView, currentParseResult.getSpeed(), createNewGameAction);
+    controller.gameScreenShow(this::handleSave, this::handleLoad, createNewGameAction, this::loadForResults);
+    controller.reset();
   }
 
   private void handleSave() {
     controller.pause();
     int[][] currentCells = game.getGrid().getCellStates();
     double currentSpeed = controller.getGameSpeed();
+    Map<String, Double> toBeChanged = currentParseResult.getParams();
+    toBeChanged.replace("speed", Double.valueOf(currentSpeed));
     ParseResult snapshot = new ParseResult(
         currentParseResult.getRows(),
         currentParseResult.getCols(),
@@ -72,7 +79,7 @@ public class GameRunner {
         currentParseResult.getAuthor(),
         currentParseResult.getDescription(),
         currentCells,
-        currentParseResult.getParams(),
+        toBeChanged,
         currentParseResult.getColorMap());
     try {
       XMLParser.save(snapshot, myStage);

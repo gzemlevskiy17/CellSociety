@@ -138,9 +138,6 @@ public class XMLParser {
       params = new HashMap<String, Double>();
       params.put("speed", 1.0);
     }
-    for (String s : params.keySet()) {
-      System.out.println(s);
-    }
     Element colorEl = getFirstElement(paramEl, "states");
     Map<Integer, String> colorMap = parseColors(colorEl); // Search root for all <state> tags
 
