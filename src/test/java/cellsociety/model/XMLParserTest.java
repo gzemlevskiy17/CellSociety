@@ -125,4 +125,12 @@ class XMLParserTest {
             IllegalArgumentException.class, () -> XMLParser.parse(file));
         assertTrue(ex.getMessage().contains("Invalid cell state 5"));
     }
+
+    @Test
+    void parseOutOfBoundsCellsThrows() {
+        File file = new File("data/ErrorOutOfBounds.xml");
+        IllegalArgumentException ex = assertThrows(
+            IllegalArgumentException.class, () -> XMLParser.parse(file));
+        assertTrue(ex.getMessage().contains("Too many rows"));
+    }
 }

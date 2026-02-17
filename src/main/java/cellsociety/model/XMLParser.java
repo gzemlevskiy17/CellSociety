@@ -267,8 +267,12 @@ public class XMLParser {
       return null;
     }
 
+    if (rowNodes.getLength() > rows) {
+      throw new IllegalArgumentException(
+          "Too many rows in cell data: found " + rowNodes.getLength() + " but grid has " + rows + " rows");
+    }
     int[][] cells = new int[rows][cols];
-    for (int r = 0; r < Math.min(rowNodes.getLength(), rows); r++) {
+    for (int r = 0; r < rowNodes.getLength(); r++) {
       parseRowContent(rowNodes.item(r).getTextContent().trim(), cells[r], cols);
     }
     return cells;
@@ -322,7 +326,11 @@ public class XMLParser {
       return;
     }
     String[] parts = rowText.split("\\s+");
-    for (int c = 0; c < Math.min(parts.length, cols); c++) {
+    if (parts.length > cols) {
+      throw new IllegalArgumentException(
+          "Too many columns in row data: found " + parts.length + " but grid has " + cols + " columns");
+    }
+    for (int c = 0; c < parts.length; c++) {
       try {
         rowArray[c] = Integer.parseInt(parts[c]);
       } catch (NumberFormatException ex) {
@@ -386,7 +394,7 @@ public class XMLParser {
         if (!validStates.contains(cells[i][j])) {
           throw new IllegalArgumentException(
               "Invalid cell state " + cells[i][j] + " at (" + i + ", " + j
-              + "). Valid states: " + validStates);
+                  + "). Valid states: " + validStates);
         }
       }
     }
