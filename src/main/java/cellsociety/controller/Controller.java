@@ -21,12 +21,13 @@ public class Controller {
   private double gameSpeed;
   private int generations = 0;
 
-  public Controller(Game game, ScreenManager screenManager, GridView gridView, Runnable createNewGameAction) {
+  public Controller(Game game, ScreenManager screenManager, GridView gridView, double gameSpeed,
+      Runnable createNewGameAction) {
     this.game = game;
     this.screenManager = screenManager;
     this.gridView = gridView;
     screenManager.setGridView(gridView);
-    gameSpeed = 1;
+    this.gameSpeed = gameSpeed;
     gameLoop = new Timeline(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> loop()));
     gameLoop.setCycleCount(Timeline.INDEFINITE);
   }
@@ -80,7 +81,6 @@ public class Controller {
     if (gameLoop != null) {
       gameLoop.setRate(this.gameSpeed);
     }
-    screenManager.setSpeed(gameSpeed);
   }
 
   public void findGameSpeed() {
@@ -93,6 +93,6 @@ public class Controller {
 
   public void gameScreenShow(Runnable onSave, Runnable onLoad, Runnable createNewGameAction) {
     screenManager.gameScreen(onSave, onLoad, this::pause, this::play, this::reset,
-        this::findGameSpeed, createNewGameAction, this::clear, generations);
+        this::findGameSpeed, createNewGameAction, this::clear, generations, gameSpeed);
   }
 }

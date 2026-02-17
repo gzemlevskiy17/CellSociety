@@ -3,20 +3,32 @@ package cellsociety.model;
 import cellsociety.ParseResult;
 
 /**
- * Factory that creates {@link Game} instances from parsed XML configuration data.
+ * Factory that creates {@link Game} instances from parsed XML configuration
+ * data.
  *
- * <p>Builds a {@link Grid}, populates it with initial cell states from the
+ * <p>
+ * Builds a {@link Grid}, populates it with initial cell states from the
  * {@link ParseResult}, and instantiates the correct {@link Game} subclass based
- * on the simulation type string.</p>
+ * on the simulation type string.
+ * </p>
  *
- * <p><b>Assumptions:</b> The {@code gameType} in the {@link ParseResult} must match
- * one of the supported types ("GameOfLife", "ForestFire", "Segregation"). An unknown
- * type throws {@link IllegalArgumentException}.</p>
+ * <p>
+ * <b>Assumptions:</b> The {@code gameType} in the {@link ParseResult} must
+ * match
+ * one of the supported types ("GameOfLife", "ForestFire", "Segregation"). An
+ * unknown
+ * type throws {@link IllegalArgumentException}.
+ * </p>
  *
- * <p><b>Dependencies:</b> {@link ParseResult}, {@link Grid}, {@link GameOfLife},
- * {@link ForestFire}, {@link Segregation}</p>
+ * <p>
+ * <b>Dependencies:</b> {@link ParseResult}, {@link Grid}, {@link GameOfLife},
+ * {@link ForestFire}, {@link Segregation}
+ * </p>
  *
- * <p><b>Example usage:</b></p>
+ * <p>
+ * <b>Example usage:</b>
+ * </p>
+ * 
  * <pre>{@code
  * ParseResult result = XMLParser.parse(new File("data/GameOfLifeSimple.xml"));
  * ModelFactory factory = new ModelFactory();
@@ -29,7 +41,8 @@ import cellsociety.ParseResult;
 public class ModelFactory {
 
   /**
-   * Creates a {@link Game} instance matching the simulation type in the given result.
+   * Creates a {@link Game} instance matching the simulation type in the given
+   * result.
    * Builds and populates the grid from the cell data if present.
    *
    * @param result the parsed XML configuration
@@ -55,7 +68,8 @@ public class ModelFactory {
     return switch (gameType) {
       case "GameOfLife" -> new GameOfLife(grid);
       case "ForestFire" -> new ForestFire(grid, result.getProbCatch(), result.getProbGrow());
-      case "Segregation" -> new Segregation(grid, result.getProbCatch());
+      case "Segregation" -> new Segregation(grid, result.getThreshold());
+      case "WatorWorld" -> new WaTor(grid);
       default -> throw new IllegalArgumentException("Unknown game type: " + gameType);
     };
   }

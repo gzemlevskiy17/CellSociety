@@ -25,7 +25,6 @@ public class ScreenManager {
   private GridView gridView;
   private ButtonCreator buttons;
   private LanguageView languageView;
-  private double sliderValue = 0.0;
   private boolean onPlay;
   private Label dynamicGen;
   private Slider speedSlider;
@@ -50,7 +49,7 @@ public class ScreenManager {
 
   public void gameScreen(Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
       Runnable reset, Runnable setGameSpeed,
-      Runnable createNewGameAction, Runnable clear, int genNum) {
+      Runnable createNewGameAction, Runnable clear, int genNum, double startSpeed) {
     try {
       checkAllNotNull(onSave, onLoad, pause, play, reset, setGameSpeed, createNewGameAction, clear);
     } catch (Exception e) {
@@ -72,7 +71,7 @@ public class ScreenManager {
     String[] names = { "Play", "Reset", "Clear", "Save", "Load", "Edit", "NewGame" };
 
     VBox simulationControl = createControlArea(names, onSave, onLoad, pause, play,
-        reset, setGameSpeed, createNewGameAction, clear);
+        reset, setGameSpeed, createNewGameAction, clear, startSpeed);
     mainScreen.setBottom(simulationControl);
 
     Scene scene = new Scene(mainScreen, 1000, 800);
@@ -82,9 +81,10 @@ public class ScreenManager {
   }
 
   private VBox createControlArea(String[] names, Runnable onSave, Runnable onLoad, Runnable pause,
-      Runnable play, Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction, Runnable clear) {
+      Runnable play, Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction, Runnable clear,
+      double startSpeed) {
 
-    HBox timeArea = createTimeAreaBox(pause, setGameSpeed);
+    HBox timeArea = createTimeAreaBox(pause, setGameSpeed, startSpeed);
 
     HBox buttonArea = createButtonBoxArea(names, onSave, onLoad, pause, play,
         reset, createNewGameAction, clear);
@@ -95,17 +95,15 @@ public class ScreenManager {
     return simulationControl;
   }
 
-  private HBox createTimeAreaBox(Runnable pause, Runnable setGameSpeed) {
+  private HBox createTimeAreaBox(Runnable pause, Runnable setGameSpeed, double startSpeed) {
     HBox hbox = new HBox(20);
 
-    speedSlider = new Slider(0, 10, 4);
+    speedSlider = new Slider(0, 10, startSpeed);
     speedSlider.setPrefWidth(400);
     speedSlider.setMaxWidth(400);
     speedSlider.setShowTickMarks(true);
     speedSlider.setMajorTickUnit(1);
     speedSlider.setSnapToTicks(true);
-    sliderValue = speedSlider.getValue();
-    setGameSpeed.run();
 
     speedSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
       speedSliderFunction(pause, setGameSpeed, newValue.doubleValue());
@@ -161,24 +159,19 @@ public class ScreenManager {
     pause.run();
     onPlay = true;
     buttons.setButtonText("Play", "Play");
-    sliderValue = newValue;
     setGameSpeed.run();
   } // TODO: refactor so that this is called from the controller on button press.
 
   public double getSliderValue() {
-    if (sliderValue <= 0) {
+    if (speedSlider.getValue() <= 0) {
       return 1;
     }
-    return sliderValue;
+    return speedSlider.getValue();
   }
 
   public void setGen(int genNum) {
     gen = genNum;
     dynamicGen.setText("#: " + String.valueOf(gen));
-  }
-
-  public void setSpeed(double speed) {
-    speedSlider.setValue(speed);
   }
 
   public Optional<File> startScreen(Stage stage) {

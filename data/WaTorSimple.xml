@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>WatorWorld</type>
+    <title>WaTor World Simple</title>
+    <author>Alexander Keewatin Dewdney</author>
+    <description>A simple 5x5 test grid.</description>
+    <grid>
+        <rows>5</rows>
+        <columns>5</columns>
+        <cells>
+            <row>1 1 0 0 0</row>
+            <row>1 1 1 0 0</row>
+            <row>1 1 2 0 0</row>
+            <row>0 0 0 0 0</row>
+            <row>0 0 0 0 0</row>
+        </cells>
+    </grid>
+    <parameters>
+        <speed>5</speed>
+        <pyRepro>5</pyRepro>
+        <pdrEner>5</pdrEner>
+        <pdrRepro>5</pdrRepro>
+        <states>
+            <state id="0" name="EMPTY" color="#FFFFFF"/>
+            <state id="1" name="GROUP_A" color="#2ECC71"/>
+            <state id="2" name="GROUP_B" color="#3498DB"/>
+        </states>
+    </parameters>
+</simulation>

@@ -11,9 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -58,7 +55,7 @@ public class GameRunner {
     currentParseResult = parseResult;
     game = modelFactory.createGame(parseResult);
     gridView = viewFactory.createView(parseResult);
-    controller = new Controller(game, screenManager, gridView, createNewGameAction);
+    controller = new Controller(game, screenManager, gridView, parseResult.getSpeed(), createNewGameAction);
     controller.gameScreenShow(this::handleSave, this::handleLoad, createNewGameAction);
     controller.loop();
   }
@@ -66,6 +63,7 @@ public class GameRunner {
   private void handleSave() {
     controller.pause();
     int[][] currentCells = game.getGrid().getCellStates();
+    double currentSpeed = controller.getGameSpeed();
     ParseResult snapshot = new ParseResult(
         currentParseResult.getRows(),
         currentParseResult.getCols(),
@@ -76,7 +74,7 @@ public class GameRunner {
         currentCells,
         currentParseResult.getProbCatch(),
         currentParseResult.getProbGrow(),
-        currentParseResult.getSpeed(),
+        currentSpeed,
         currentParseResult.getThreshold(),
         currentParseResult.getColorMap());
     try {

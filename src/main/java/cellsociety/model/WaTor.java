@@ -27,9 +27,15 @@ package cellsociety.model;
 
 public class WaTor extends Game {
 
-    public WaTor(Grid grid) {
+    private double pyRepro;
+    private double pdrEner;
+    private double pdrRepro;
+
+    public WaTor(Grid grid, double pyRepro, double pdrEner, double pdrRepro) {
         super(grid);
-        // TODO Auto-generated constructor stub
+        this.pyRepro = pyRepro;
+        this. pdrEner = pdrEner;
+        this. pdrRepro = pdrRepro;
     }
 
     @Override
