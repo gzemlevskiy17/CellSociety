@@ -136,7 +136,10 @@ public class XMLParser {
       params = parseParameters(paramEl);
     } else {
       params = new HashMap<String, Double>();
-      params.put("String", 1.0);
+      params.put("speed", 1.0);
+    }
+    for (String s : params.keySet()) {
+      System.out.println(s);
     }
     Element colorEl = getFirstElement(paramEl, "states");
     Map<Integer, String> colorMap = parseColors(colorEl); // Search root for all <state> tags
@@ -349,8 +352,10 @@ public class XMLParser {
     Map<String, Double> holding = new HashMap<String, Double>();
     NodeList nodes = paramEl.getChildNodes();
     for (int i = 0; i < nodes.getLength(); i++) {
-      Double value = parseDouble(getTextValue(paramEl, nodes.item(i).getNodeName()), 0.0);
-      holding.put(nodes.item(i).getNodeName(), value);
+      if (!nodes.item(i).getNodeName().equals("states") && !nodes.item(i).getNodeName().equals("#text")) {
+        Double value = parseDouble(getTextValue(paramEl, nodes.item(i).getNodeName()), 0.0);
+        holding.put(nodes.item(i).getNodeName(), value);
+      }
     }
     if (!holding.containsKey("speed") || holding.get("speed") < 0.0) {
       holding.put("speed", 1.0);

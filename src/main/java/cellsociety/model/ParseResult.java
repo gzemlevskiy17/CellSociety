@@ -72,7 +72,7 @@ public class ParseResult {
      */
     public ParseResult(int rows, int cols, String gameType, String title, String author, String description,
             int[][] cells, Map<String, Double> params,
-            java.util.Map<Integer, String> colorMap) {
+            Map<Integer, String> colorMap) {
         this.rows = rows;
         this.cols = cols;
         this.gameType = gameType;
@@ -85,7 +85,7 @@ public class ParseResult {
     }
 
     /** @return mapping of state IDs to hex color strings (e.g., 0 -> "#FFFFFF") */
-    public java.util.Map<Integer, String> getColorMap() {
+    public Map<Integer, String> getColorMap() {
         return colorMap;
     }
 
@@ -131,7 +131,10 @@ public class ParseResult {
 
     /** @return parameter from Map of parameters */
     public double getAParam(String param) {
-        return params.get(param);
+        if (params.containsKey(param)) {
+            return params.get(param);
+        }
+        return 0.0;
     }
 
     /** @return fire ignition probability for ForestFire simulations */

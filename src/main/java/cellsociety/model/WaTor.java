@@ -1,5 +1,7 @@
 package cellsociety.model;
 
+import java.util.Map;
+
 /**
  * Wa-Tor World simulation.
  *
@@ -31,7 +33,7 @@ public class WaTor extends Game {
     private double pdrEner;
     private double pdrRepro;
 
-    public WaTor(Grid grid, double pyRepro, double pdrEner, double pdrRepro) {
+    public WaTor(Grid grid, Map<String, Double> params) {
         super(grid);
         this.pyRepro = pyRepro;
         this.pdrEner = pdrEner;
