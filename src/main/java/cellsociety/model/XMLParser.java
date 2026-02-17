@@ -91,6 +91,11 @@ public class XMLParser {
     String author = getTextValue(root, "author");
     String description = getTextValue(root, "description");
 
+    validateRequiredField(gameType, "type");
+    validateRequiredField(title, "title");
+    validateRequiredField(author, "author");
+    validateRequiredField(description, "description");
+
     // 2. Section Elements
     Element gridEl = getFirstElement(root, "grid");
     Element paramEl = getFirstElement(root, "parameters");
@@ -347,6 +352,12 @@ public class XMLParser {
       return Double.parseDouble(value.trim());
     } catch (NumberFormatException e) {
       return defaultValue;
+    }
+  }
+
+  private static void validateRequiredField(String value, String fieldName) {
+    if (value == null || value.isEmpty()) {
+      throw new IllegalArgumentException("Missing required field: " + fieldName);
     }
   }
 
