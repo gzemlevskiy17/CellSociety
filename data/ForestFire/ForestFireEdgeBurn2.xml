@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+  <author>Test Configuration</author>
+  <description>Fire starts at all four corners, burns perimeter, then travels to center. Everything
+    burns in 4 steps.
+  </description>
+  <grid>
+    <cells>
+      <row>2 1 1 1 1 1 1 1 2</row>
+      <row>1 0 0 0 0 0 0 0 1</row>
+      <row>1 0 0 1 1 1 0 0 1</row>
+      <row>1 0 0 1 1 1 0 0 1</row>
+      <row>1 0 0 1 1 1 0 0 1</row>
+      <row>1 0 0 0 1 0 0 0 1</row>
+      <row>2 1 1 1 1 1 1 1 2</row>
+    </cells>
+    <columns>9</columns>
+    <rows>7</rows>
+  </grid>
+  <parameters>
+    <fillProbability>0.0</fillProbability>
+    <ignitionProbability>0.0</ignitionProbability>
+    <speed>4</speed>
+    <states>
+      <state color="#FFFFFF" id="0" name="EMPTY"/>
+      <state color="#27AE60" id="1" name="TREE"/>
+      <state color="#C0392B" id="2" name="BURNING"/>
+    </states>
+  </parameters>
+  <title>Forest Fire - Corner Edge Burns</title>
+  <type>ForestFire</type>
+</simulation>
+

@@ -1,6 +1,8 @@
 package cellsociety.model;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 /**
@@ -22,10 +24,13 @@ import java.util.List;
  * List<Cell> neighbors = grid.getNeighbors(0, 0); // returns up to 3 in-bounds neighbors
  * }</pre>
  *
+ * @author Georgiy Zemlevskiy
  * @author Michael Li
  */
 public class Grid {
   private Cell[][] cells;
+  private Deque<Cell[][]> history;
+
   private int[][] directions = {
       { -1, -1 }, { -1, 0 }, { -1, 1 },
       { 0, -1 }, { 0, 1 },
@@ -41,6 +46,26 @@ public class Grid {
   public Grid(int numRows, int numCols) {
     cells = new Cell[numRows][numCols];
     defaultInitializeCells();
+    history = new ArrayDeque<>();
+    history.add(copyGrid(cells));
+  }
+
+  //TODO: test this and possibly other methods
+  public void saveState() {
+    if (history.size() >= 20) { //TODO: extract magic number into config file
+      history.removeLast();
+    }
+    history.addFirst(copyGrid(cells));
+  }
+
+  private Cell[][] copyGrid(Cell[][] cells) {
+    Cell[][] copy = new Cell[cells.length][cells[0].length];
+    for (int i = 0; i < cells.length; i++) {
+      for (int j = 0; j < cells[i].length; j++) {
+        copy[i][j] = getCell(i, j).copy();
+      }
+    }
+    return copy;
   }
 
   /**
@@ -100,7 +125,7 @@ public class Grid {
    *
    * @return the column count
    */
-  public int getCols() {
+  public int getColumns() {
     return cells[0].length;
   }
 
@@ -111,9 +136,9 @@ public class Grid {
    * @return a new 2D array where each entry is the state of the corresponding cell
    */
   public int[][] getCellStates() {
-    int[][] states = new int[getRows()][getCols()];
+    int[][] states = new int[getRows()][getColumns()];
     for (int i = 0; i < getRows(); i++) {
-      for (int j = 0; j < getCols(); j++) {
+      for (int j = 0; j < getColumns(); j++) {
         states[i][j] = cells[i][j].getState();
       }
     }

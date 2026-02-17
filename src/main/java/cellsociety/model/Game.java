@@ -40,6 +40,7 @@ public abstract class Game {
      * then commits the changes simultaneously.
      */
     public void step() {
+        grid.saveState();
         updateGame();
         commitChanges();
     }
@@ -57,7 +58,7 @@ public abstract class Game {
      */
     protected void commitChanges() {
         for (int i = 0; i < grid.getRows(); i++) {
-            for (int j = 0; j < grid.getCols(); j++) {
+            for (int j = 0; j < grid.getColumns(); j++) {
                 grid.getCell(i, j).updateState();
             }
         }

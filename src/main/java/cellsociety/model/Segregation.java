@@ -41,7 +41,7 @@ public class Segregation extends Game {
     List<int[]> emptyCells = new ArrayList<>();
 
     for (int i = 0; i < grid.getRows(); i++) {
-      for (int j = 0; j < grid.getCols(); j++) {
+      for (int j = 0; j < grid.getColumns(); j++) {
         Cell cell = grid.getCell(i, j);
         if (cell.getState() == 0) {
           emptyCells.add(new int[]{i, j});

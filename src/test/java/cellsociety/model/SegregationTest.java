@@ -1,7 +1,6 @@
 package cellsociety.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -190,7 +189,7 @@ class SegregationTest {
   private int countState(Grid grid, int state) {
     int count = 0;
     for (int i = 0; i < grid.getRows(); i++) {
-      for (int j = 0; j < grid.getCols(); j++) {
+      for (int j = 0; j < grid.getColumns(); j++) {
         if (grid.getCell(i, j).getState() == state) {
           count++;
         }

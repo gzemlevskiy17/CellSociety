@@ -86,4 +86,9 @@ public class Cell {
     return state;
   }
 
+  public Cell copy() {
+    Cell copy = new Cell(this.state);
+    copy.setNextState(this.nextState);
+    return copy;
+  }
 }
