@@ -92,4 +92,12 @@ class XMLParserTest {
         // Remaining 40% = 40 empty
         assertEquals(40, stateCounts[0]);
     }
+
+    @Test
+    void parseMissingTypeThrows() {
+        File file = new File("data/ErrorMissingType.xml");
+        IllegalArgumentException ex = assertThrows(
+            IllegalArgumentException.class, () -> XMLParser.parse(file));
+        assertEquals("Missing required field: type", ex.getMessage());
+    }
 }
