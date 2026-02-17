@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <simulation>
-    <type>WatorWorld</type>
+    <type>WaTor</type>
     <title>WaTor World Simple</title>
     <author>Alexander Keewatin Dewdney</author>
     <description>A simple 5x5 test grid.</description>
@@ -19,7 +19,8 @@
         <speed>5</speed>
         <pyRepro>5</pyRepro>
         <pdrEner>5</pdrEner>
-        <pdrRepro>5</pdrRepro>
+        <pdrEatsFor>5</pdrEatsFor>
+        <pdrRepro>7</pdrRepro>
         <states>
             <state id="0" name="EMPTY" color="#FFFFFF"/>
             <state id="1" name="GROUP_A" color="#2ECC71"/>

@@ -30,6 +30,7 @@ public class Controller {
     this.gameSpeed = gameSpeed;
     gameLoop = new Timeline(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> loop()));
     gameLoop.setCycleCount(Timeline.INDEFINITE);
+    gameLoop.pause();
   }
 
   public void loop() {
