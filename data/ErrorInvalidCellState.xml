@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>GameOfLife</type>
+    <title>Invalid Cell State Test</title>
+    <author>Michael</author>
+    <description>This file has an invalid cell state (5) to test CELL-29 error handling.</description>
+    <grid>
+        <rows>3</rows>
+        <columns>3</columns>
+        <cells>
+            <row>0 1 0</row>
+            <row>1 5 1</row>
+            <row>0 1 0</row>
+        </cells>
+    </grid>
+    <parameters>
+        <speed>5</speed>
+        <states>
+            <state id="0" name="DEAD" color="#FFFFFF"/>
+            <state id="1" name="ALIVE" color="#2ECC71"/>
+        </states>
+    </parameters>
+</simulation>

@@ -3,6 +3,7 @@ package cellsociety.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import cellsociety.ParseResult;
 import java.io.File;
@@ -107,5 +108,21 @@ class XMLParserTest {
         IllegalArgumentException ex = assertThrows(
             IllegalArgumentException.class, () -> XMLParser.parse(file));
         assertEquals("Invalid simulation type: FakeGame", ex.getMessage());
+    }
+
+    @Test
+    void parseNegativeDimensionThrows() {
+        File file = new File("data/ErrorNegativeDimension.xml");
+        IllegalArgumentException ex = assertThrows(
+            IllegalArgumentException.class, () -> XMLParser.parse(file));
+        assertEquals("Grid dimensions must be positive, got: -3x3", ex.getMessage());
+    }
+
+    @Test
+    void parseInvalidCellStateThrows() {
+        File file = new File("data/ErrorInvalidCellState.xml");
+        IllegalArgumentException ex = assertThrows(
+            IllegalArgumentException.class, () -> XMLParser.parse(file));
+        assertTrue(ex.getMessage().contains("Invalid cell state 5"));
     }
 }

@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -132,6 +133,10 @@ public class XMLParser {
       threshold = parseDouble(getTextValue(paramEl, "threshold"), 0.0);
     }
     Map<Integer, String> colorMap = parseColors(root); // Search root for all <state> tags
+
+    if (cells != null && !colorMap.isEmpty()) {
+      validateCellStates(cells, colorMap.keySet());
+    }
 
     return new ParseResult(rows, cols, gameType, title, author, description, cells, params[0], params[1], speed,
         threshold, colorMap);
@@ -372,6 +377,18 @@ public class XMLParser {
   private static void validateSimulationType(String gameType) {
     if (!VALID_TYPES.contains(gameType)) {
       throw new IllegalArgumentException("Invalid simulation type: " + gameType);
+    }
+  }
+
+  private static void validateCellStates(int[][] cells, Set<Integer> validStates) {
+    for (int i = 0; i < cells.length; i++) {
+      for (int j = 0; j < cells[i].length; j++) {
+        if (!validStates.contains(cells[i][j])) {
+          throw new IllegalArgumentException(
+              "Invalid cell state " + cells[i][j] + " at (" + i + ", " + j
+              + "). Valid states: " + validStates);
+        }
+      }
     }
   }
 
