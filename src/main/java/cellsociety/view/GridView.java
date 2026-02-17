@@ -24,7 +24,7 @@ public abstract class GridView {
 
     // going to assume the Game will include the colors
     public GridView(String gameName, HashMap<Integer, Color> colors, int x, int y) {
-        this.gameName = gameName.replaceAll("(\\p{Ll})(\\p{Lu})", "$1 $2");
+        this.gameName = gameName.replaceAll("([a-z])([A-Z])", "$1 $2");
         mainPane = new GridPane();
         mainPane.setAlignment(Pos.CENTER);
         mainPane.setHgap(2);
