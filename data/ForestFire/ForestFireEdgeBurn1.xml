@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+  <author>Test Configuration</author>
+  <description>Fire starts at top and bottom edges, burns inward but center isolated trees survive.
+    Expected outcome in 4 steps: edge trees burn, center 4 trees remain.
+  </description>
+  <grid>
+    <cells>
+      <row>2 1 1 0 0 0 1 1 2</row>
+      <row>0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 1 1 1 0 0 0</row>
+      <row>0 0 0 1 1 1 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0</row>
+      <row>2 1 1 0 0 0 1 1 2</row>
+    </cells>
+    <columns>9</columns>
+    <rows>6</rows>
+  </grid>
+  <parameters>
+    <fillProbability>0.0</fillProbability>
+    <ignitionProbability>0.0</ignitionProbability>
+    <speed>4</speed>
+    <states>
+      <state color="#FFFFFF" id="0" name="EMPTY"/>
+      <state color="#27AE60" id="1" name="TREE"/>
+      <state color="#C0392B" id="2" name="BURNING"/>
+    </states>
+  </parameters>
+  <title>Forest Fire - Edge Burn with Center Survivors</title>
+  <type>ForestFire</type>
+</simulation>
+

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+  <author>Test Configuration</author>
+  <description>Fire spreads but is stopped by an empty firebreak. Trees on the right survive.
+    Expected outcome in 3 steps: fire burns out, right trees survive.
+  </description>
+  <grid>
+    <cells>
+      <row>0 0 0 0 0 0 0 0</row>
+      <row>0 2 1 0 0 1 1 0</row>
+      <row>0 1 1 0 0 1 1 0</row>
+      <row>0 1 1 0 0 1 1 0</row>
+      <row>0 0 0 0 0 0 0 0</row>
+    </cells>
+    <columns>8</columns>
+    <rows>5</rows>
+  </grid>
+  <parameters>
+    <fillProbability>0.0</fillProbability>
+    <ignitionProbability>0.0</ignitionProbability>
+    <speed>4</speed>
+    <states>
+      <state color="#FFFFFF" id="0" name="EMPTY"/>
+      <state color="#27AE60" id="1" name="TREE"/>
+      <state color="#C0392B" id="2" name="BURNING"/>
+    </states>
+  </parameters>
+  <title>Forest Fire - Firebreak Protection</title>
+  <type>ForestFire</type>
+</simulation>
+
