@@ -41,14 +41,14 @@ public class Grid {
     return cells.length;
   }
 
-  public int getCols() {
+  public int getColumns() {
     return cells[0].length;
   }
 
   public int[][] getCellStates() {
-    int[][] states = new int[getRows()][getCols()];
+    int[][] states = new int[getRows()][getColumns()];
     for (int i = 0; i < getRows(); i++) {
-      for (int j = 0; j < getCols(); j++) {
+      for (int j = 0; j < getColumns(); j++) {
         states[i][j] = cells[i][j].getState();
       }
     }

@@ -1,6 +1,6 @@
 package cellsociety.model;
 
-import java.util.*;
+import java.util.List;
 
 public class GameOfLife extends Game {
     public GameOfLife(Grid grid) {
@@ -10,7 +10,7 @@ public class GameOfLife extends Game {
     @Override
     protected void updateGame() {
         for (int i = 0; i < grid.getRows(); i++) {
-            for (int j = 0; j < grid.getCols(); j++) {
+            for (int j = 0; j < grid.getColumns(); j++) {
                 Cell cell = grid.getCell(i, j);
                 int numAliveNeighbors = getAliveNeighbors(grid.getNeighbors(i, j));
 
