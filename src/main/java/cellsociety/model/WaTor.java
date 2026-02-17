@@ -34,8 +34,8 @@ public class WaTor extends Game {
     public WaTor(Grid grid, double pyRepro, double pdrEner, double pdrRepro) {
         super(grid);
         this.pyRepro = pyRepro;
-        this. pdrEner = pdrEner;
-        this. pdrRepro = pdrRepro;
+        this.pdrEner = pdrEner;
+        this.pdrRepro = pdrRepro;
     }
 
     @Override
