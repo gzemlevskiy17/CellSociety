@@ -1,10 +1,14 @@
 package cellsociety.model;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 public class Grid {
   private Cell[][] cells;
+  private Deque<Cell[][]> history;
+
   private int[][] directions = {
       { -1, -1 }, { -1, 0 }, { -1, 1 },
       { 0, -1 }, { 0, 1 },
@@ -14,6 +18,26 @@ public class Grid {
   public Grid(int numRows, int numCols) {
     cells = new Cell[numRows][numCols];
     defaultInitializeCells();
+    history = new ArrayDeque<>();
+    history.add(copyGrid(cells));
+  }
+
+  //TODO: test this and possibly other methods
+  public void saveState() {
+    if (history.size() >= 20) { //TODO: extract magic number into config file
+      history.removeLast();
+    }
+    history.addFirst(copyGrid(cells));
+  }
+
+  private Cell[][] copyGrid(Cell[][] cells) {
+    Cell[][] copy = new Cell[cells.length][cells[0].length];
+    for (int i = 0; i < cells.length; i++) {
+      for (int j = 0; j < cells[i].length; j++) {
+        copy[i][j] = getCell(i, j).copy();
+      }
+    }
+    return copy;
   }
 
   public Cell getCell(int row, int col) {

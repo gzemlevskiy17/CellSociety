@@ -8,6 +8,7 @@ public abstract class Game {
     }
 
     public void step() {
+        grid.saveState();
         updateGame();
         commitChanges();
     }
