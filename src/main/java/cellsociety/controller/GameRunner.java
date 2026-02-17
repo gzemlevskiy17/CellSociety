@@ -1,6 +1,6 @@
 package cellsociety.controller;
 
-import cellsociety.ParseResult;
+import cellsociety.model.ParseResult;
 import cellsociety.model.Game;
 import cellsociety.model.ModelFactory;
 import cellsociety.model.XMLParser;
@@ -8,7 +8,6 @@ import cellsociety.view.GridView;
 import cellsociety.view.ScreenManager;
 import cellsociety.view.ViewFactory;
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 
 import javafx.stage.Stage;
@@ -73,10 +72,7 @@ public class GameRunner {
         currentParseResult.getAuthor(),
         currentParseResult.getDescription(),
         currentCells,
-        currentParseResult.getProbCatch(),
-        currentParseResult.getProbGrow(),
-        currentSpeed,
-        currentParseResult.getThreshold(),
+        currentParseResult.getParams(),
         currentParseResult.getColorMap());
     try {
       XMLParser.save(snapshot, myStage);

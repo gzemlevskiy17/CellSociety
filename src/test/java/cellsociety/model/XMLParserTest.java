@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import cellsociety.ParseResult;
 import java.io.File;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +20,7 @@ class XMLParserTest {
     void parseEmptyFileThrows() {
         File file = new File("data/ErrorEmptyFile.xml");
         IllegalArgumentException ex = assertThrows(
-            IllegalArgumentException.class, () -> XMLParser.parse(file));
+                IllegalArgumentException.class, () -> XMLParser.parse(file));
         assertTrue(ex.getMessage().contains("File is empty"));
     }
 
@@ -29,7 +28,7 @@ class XMLParserTest {
     void parseNotXmlFileThrows() {
         File file = new File("data/ErrorNotXml.xml");
         IllegalArgumentException ex = assertThrows(
-            IllegalArgumentException.class, () -> XMLParser.parse(file));
+                IllegalArgumentException.class, () -> XMLParser.parse(file));
         assertTrue(ex.getMessage().contains("not valid XML"));
     }
 
@@ -68,7 +67,8 @@ class XMLParserTest {
         int aliveCount = 0;
         for (int[] row : cells) {
             for (int cell : row) {
-                if (cell == 1) aliveCount++;
+                if (cell == 1)
+                    aliveCount++;
             }
         }
         assertEquals(30, aliveCount);
@@ -103,7 +103,7 @@ class XMLParserTest {
     void parseMissingTypeThrows() {
         File file = new File("data/ErrorMissingType.xml");
         IllegalArgumentException ex = assertThrows(
-            IllegalArgumentException.class, () -> XMLParser.parse(file));
+                IllegalArgumentException.class, () -> XMLParser.parse(file));
         assertEquals("Missing required field: type", ex.getMessage());
     }
 
@@ -111,7 +111,7 @@ class XMLParserTest {
     void parseInvalidSimulationTypeThrows() {
         File file = new File("data/ErrorInvalidType.xml");
         IllegalArgumentException ex = assertThrows(
-            IllegalArgumentException.class, () -> XMLParser.parse(file));
+                IllegalArgumentException.class, () -> XMLParser.parse(file));
         assertEquals("Invalid simulation type: FakeGame", ex.getMessage());
     }
 
@@ -119,7 +119,7 @@ class XMLParserTest {
     void parseNegativeDimensionThrows() {
         File file = new File("data/ErrorNegativeDimension.xml");
         IllegalArgumentException ex = assertThrows(
-            IllegalArgumentException.class, () -> XMLParser.parse(file));
+                IllegalArgumentException.class, () -> XMLParser.parse(file));
         assertEquals("Grid dimensions must be positive, got: -3x3", ex.getMessage());
     }
 
@@ -127,7 +127,7 @@ class XMLParserTest {
     void parseInvalidCellStateThrows() {
         File file = new File("data/ErrorInvalidCellState.xml");
         IllegalArgumentException ex = assertThrows(
-            IllegalArgumentException.class, () -> XMLParser.parse(file));
+                IllegalArgumentException.class, () -> XMLParser.parse(file));
         assertTrue(ex.getMessage().contains("Invalid cell state 5"));
     }
 
@@ -135,7 +135,7 @@ class XMLParserTest {
     void parseOutOfBoundsCellsThrows() {
         File file = new File("data/ErrorOutOfBounds.xml");
         IllegalArgumentException ex = assertThrows(
-            IllegalArgumentException.class, () -> XMLParser.parse(file));
+                IllegalArgumentException.class, () -> XMLParser.parse(file));
         assertTrue(ex.getMessage().contains("Too many rows"));
     }
 }

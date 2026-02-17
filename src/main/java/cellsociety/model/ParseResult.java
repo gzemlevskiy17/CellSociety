@@ -1,20 +1,37 @@
-package cellsociety;
+package cellsociety.model;
+
+import java.util.Map;
 
 /**
- * Immutable data container holding all values parsed from a simulation XML configuration file.
+ * Immutable data container holding all values parsed from a simulation XML
+ * configuration file.
  *
- * <p>Acts as the bridge between {@link cellsociety.model.XMLParser} and the rest of the
- * application. The parser produces a {@code ParseResult}, which is then consumed by
- * factories ({@link cellsociety.model.ModelFactory}, {@link cellsociety.view.ViewFactory})
- * and the controller to build the simulation.</p>
+ * <p>
+ * Acts as the bridge between {@link cellsociety.model.XMLParser} and the rest
+ * of the
+ * application. The parser produces a {@code ParseResult}, which is then
+ * consumed by
+ * factories ({@link cellsociety.model.ModelFactory},
+ * {@link cellsociety.view.ViewFactory})
+ * and the controller to build the simulation.
+ * </p>
  *
- * <p><b>Assumptions:</b> {@code cells} may be null when the XML uses
- * {@code <stateDistribution>} or omits cell data entirely. Numeric parameters default
- * to 0.0 if absent from the XML, except {@code speed} which defaults to 1.0.</p>
+ * <p>
+ * <b>Assumptions:</b> {@code cells} may be null when the XML uses
+ * {@code <stateDistribution>} or omits cell data entirely. Numeric parameters
+ * default
+ * to 0.0 if absent from the XML, except {@code speed} which defaults to 1.0.
+ * </p>
  *
- * <p><b>Dependencies:</b> None — this is a plain data class with no external dependencies.</p>
+ * <p>
+ * <b>Dependencies:</b> None — this is a plain data class with no external
+ * dependencies.
+ * </p>
  *
- * <p><b>Example usage:</b></p>
+ * <p>
+ * <b>Example usage:</b>
+ * </p>
+ * 
  * <pre>{@code
  * ParseResult result = XMLParser.parse(new File("data/GameOfLifeSimple.xml"));
  * int rows = result.getRows();
@@ -29,11 +46,8 @@ public class ParseResult {
     private final int cols;
     private final String gameType;
     private final int[][] cells;
-    private final double probCatch;
-    private final double probGrow;
-    private final double speed;
-    private final double threshold;
-    private final java.util.Map<Integer, String> colorMap;
+    private final Map<String, Double> params;
+    private final Map<Integer, String> colorMap;
     private final String author;
     private final String title;
     private final String description;
@@ -43,11 +57,13 @@ public class ParseResult {
      *
      * @param rows        number of grid rows
      * @param cols        number of grid columns
-     * @param gameType    simulation type (e.g., "GameOfLife", "ForestFire", "Segregation")
+     * @param gameType    simulation type (e.g., "GameOfLife", "ForestFire",
+     *                    "Segregation")
      * @param title       simulation title from the XML
      * @param author      simulation author from the XML
      * @param description simulation description from the XML
-     * @param cells       2D array of initial cell states, or null if algorithmically generated
+     * @param cells       2D array of initial cell states, or null if
+     *                    algorithmically generated
      * @param probCatch   fire ignition probability (ForestFire)
      * @param probGrow    tree growth probability (ForestFire)
      * @param speed       simulation speed multiplier
@@ -55,7 +71,7 @@ public class ParseResult {
      * @param colorMap    mapping of state IDs to hex color strings
      */
     public ParseResult(int rows, int cols, String gameType, String title, String author, String description,
-            int[][] cells, double probCatch, double probGrow, double speed, double threshold,
+            int[][] cells, Map<String, Double> params,
             java.util.Map<Integer, String> colorMap) {
         this.rows = rows;
         this.cols = cols;
@@ -64,10 +80,7 @@ public class ParseResult {
         this.author = author;
         this.description = description;
         this.cells = cells;
-        this.probCatch = probCatch;
-        this.probGrow = probGrow;
-        this.speed = speed;
-        this.threshold = threshold;
+        this.params = params;
         this.colorMap = colorMap;
     }
 
@@ -111,23 +124,33 @@ public class ParseResult {
         return cells;
     }
 
+    /** @return Map of parameters */
+    public Map<String, Double> getParams() {
+        return params;
+    }
+
+    /** @return parameter from Map of parameters */
+    public double getAParam(String param) {
+        return params.get(param);
+    }
+
     /** @return fire ignition probability for ForestFire simulations */
     public double getProbCatch() {
-        return probCatch;
+        return getAParam("ignitionProbability");
     }
 
     /** @return tree growth probability for ForestFire simulations */
     public double getProbGrow() {
-        return probGrow;
+        return getAParam("fillProbability");
     }
 
     /** @return simulation speed multiplier */
     public double getSpeed() {
-        return speed;
+        return getAParam("speed");
     }
 
     /** @return satisfaction threshold for Segregation simulations */
     public double getThreshold() {
-        return threshold;
+        return getAParam("threshold");
     }
 }

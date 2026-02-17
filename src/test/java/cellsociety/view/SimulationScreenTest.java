@@ -1,17 +1,15 @@
 package cellsociety.view;
 
-import cellsociety.ParseResult;
 import cellsociety.controller.Controller;
 import cellsociety.model.Game;
 import cellsociety.model.ModelFactory;
+import cellsociety.model.ParseResult;
 import cellsociety.model.XMLParser;
-import cellsociety.view.ViewFactory;
 import java.io.File;
 import java.io.IOException;
 import javafx.stage.Stage;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.jupiter.api.Test;
-import org.xml.sax.SAXException;
 import util.DukeApplicationTest;
 
 public class SimulationScreenTest extends DukeApplicationTest {
@@ -32,7 +30,7 @@ public class SimulationScreenTest extends DukeApplicationTest {
     ParseResult parseResult = null;
     try {
       parseResult = XMLParser.parse(new File(DATA_PATH + "GameOfLifeSimple.xml"));
-    } catch (ParserConfigurationException | SAXException | IOException e) {
+    } catch (ParserConfigurationException | IOException e) {
       throw new RuntimeException(e);
     }
     game = modelFactory.createGame(parseResult);

@@ -1,7 +1,5 @@
 package cellsociety.model;
 
-import cellsociety.ParseResult;
-
 /**
  * Factory that creates {@link Game} instances from parsed XML configuration
  * data.
@@ -67,8 +65,9 @@ public class ModelFactory {
 
     return switch (gameType) {
       case "GameOfLife" -> new GameOfLife(grid);
-      case "ForestFire" -> new ForestFire(grid, result.getProbCatch(), result.getProbGrow());
-      case "Segregation" -> new Segregation(grid, result.getThreshold());
+      case "ForestFire" ->
+        new ForestFire(grid, result.getAParam("ignitionProbability"), result.getAParam("fillProbability"));
+      case "Segregation" -> new Segregation(grid, result.getAParam("threshold"));
       // case "WatorWorld" -> new WaTor(grid);
       case "Percolation" -> new Percolation(grid);
       default -> throw new IllegalArgumentException("Unknown game type: " + gameType);

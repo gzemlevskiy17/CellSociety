@@ -1,9 +1,7 @@
 package cellsociety.model;
 
-import cellsociety.ParseResult;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -133,13 +131,12 @@ public class XMLParser {
       }
     }
 
-    double[] params = new double[] { 0.0, 0.0 };
-    double speed = 1.0;
-    double threshold = 0.0;
+    Map<String, Double> params = null;
     if (paramEl != null) {
       params = parseParameters(paramEl);
-      speed = parseDouble(getTextValue(paramEl, "speed"), 1.0);
-      threshold = parseDouble(getTextValue(paramEl, "threshold"), 0.0);
+    } else {
+      params = new HashMap<String, Double>();
+      params.put("String", 1.0);
     }
     Element colorEl = getFirstElement(paramEl, "states");
     Map<Integer, String> colorMap = parseColors(colorEl); // Search root for all <state> tags
@@ -148,8 +145,7 @@ public class XMLParser {
       validateCellStates(cells, colorMap.keySet());
     }
 
-    return new ParseResult(dims[0], dims[1], gameType, title, author, description, cells, params[0], params[1], speed,
-        threshold, colorMap);
+    return new ParseResult(dims[0], dims[1], gameType, title, author, description, cells, params, colorMap);
   }
 
   /**
@@ -349,10 +345,17 @@ public class XMLParser {
     }
   }
 
-  private static double[] parseParameters(Element paramEl) {
-    double probCatch = parseDouble(getTextValue(paramEl, "probCatch"), 0.0);
-    double probGrow = parseDouble(getTextValue(paramEl, "probGrow"), 0.0);
-    return new double[] { probCatch, probGrow };
+  private static Map<String, Double> parseParameters(Element paramEl) {
+    Map<String, Double> holding = new HashMap<String, Double>();
+    NodeList nodes = paramEl.getChildNodes();
+    for (int i = 0; i < nodes.getLength(); i++) {
+      Double value = parseDouble(getTextValue(paramEl, nodes.item(i).getNodeName()), 0.0);
+      holding.put(nodes.item(i).getNodeName(), value);
+    }
+    if (!holding.containsKey("speed") || holding.get("speed") < 0.0) {
+      holding.put("speed", 1.0);
+    }
+    return holding;
   }
 
   private static Map<Integer, String> parseColors(Element container) {

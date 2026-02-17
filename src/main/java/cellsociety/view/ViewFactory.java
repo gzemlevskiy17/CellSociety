@@ -1,7 +1,8 @@
 package cellsociety.view;
 
-import cellsociety.ParseResult;
 import java.util.HashMap;
+
+import cellsociety.model.ParseResult;
 import javafx.scene.paint.Color;
 
 /**
