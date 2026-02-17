@@ -46,15 +46,16 @@ public class GameRunner {
   }
 
   private void handleRealLoad(File file) {
-    ParseResult parseResult = null;
+    ParseResult parseResult;
     try {
       parseResult = XMLParser.parse(file);
-    } catch (ParserConfigurationException | SAXException | IOException e) {
-      throw new RuntimeException(e);
+      currentParseResult = parseResult;
+      game = modelFactory.createGame(parseResult);
+      gridView = viewFactory.createView(parseResult);
+    } catch (Exception e) {
+      screenManager.showError("Configuration Error", e.getMessage());
+      return;
     }
-    currentParseResult = parseResult;
-    game = modelFactory.createGame(parseResult);
-    gridView = viewFactory.createView(parseResult);
     controller = new Controller(game, screenManager, gridView, parseResult.getSpeed(), createNewGameAction);
     controller.gameScreenShow(this::handleSave, this::handleLoad, createNewGameAction);
     controller.loop();

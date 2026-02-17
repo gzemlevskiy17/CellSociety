@@ -69,7 +69,8 @@ public class ModelFactory {
       case "GameOfLife" -> new GameOfLife(grid);
       case "ForestFire" -> new ForestFire(grid, result.getProbCatch(), result.getProbGrow());
       case "Segregation" -> new Segregation(grid, result.getThreshold());
-      case "WatorWorld" -> new WaTor(grid);
+      // case "WatorWorld" -> new WaTor(grid);
+      case "Percolation" -> new Percolation(grid);
       default -> throw new IllegalArgumentException("Unknown game type: " + gameType);
     };
   }

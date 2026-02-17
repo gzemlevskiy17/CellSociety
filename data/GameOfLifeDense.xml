@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>GameOfLife</type>
+    <title>Game Of Life Dense</title>
+    <author>Michael</author>
+    <description>A 50x50 grid with 60% alive cells, randomly placed.</description>
+    <grid>
+        <rows>50</rows>
+        <columns>50</columns>
+        <stateDistribution type="proportion">
+            <state id="1" proportion="0.6"/>
+        </stateDistribution>
+    </grid>
+    <parameters>
+        <speed>5</speed>
+        <states>
+            <state id="0" name="DEAD" color="#FFFFFF"/>
+            <state id="1" name="ALIVE" color="#2ECC71"/>
+        </states>
+    </parameters>
+</simulation>
