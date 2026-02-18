@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>FallingSand</type>
+    <title>Sand Pile Basic</title>
+    <author>Michael</author>
+    <description>Random sand and metal particles. Sand should fall and pile up on metal.</description>
+    <grid>
+        <rows>20</rows>
+        <columns>20</columns>
+        <stateDistribution type="proportion">
+            <state id="0" proportion="0.50"/>
+            <state id="1" proportion="0.10"/>
+            <state id="2" proportion="0.40"/>
+        </stateDistribution>
+    </grid>
+    <parameters>
+        <speed>5</speed>
+        <states>
+            <state id="0" name="EMPTY" color="#000000"/>
+            <state id="1" name="METAL" color="#808080"/>
+            <state id="2" name="SAND" color="#F4D03F"/>
+            <state id="3" name="WATER" color="#3498DB"/>
+        </states>
+    </parameters>
+</simulation>

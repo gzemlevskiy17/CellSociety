@@ -7,7 +7,7 @@ import java.util.Map;
  * configuration file.
  *
  * <p>
- * Acts as the bridge between {@link cellsociety.model.XMLParser} and the rest
+ * Acts as the bridge between {@link cellsociety.model.XMLReader} and the rest
  * of the
  * application. The parser produces a {@code ParseResult}, which is then
  * consumed by
@@ -33,7 +33,7 @@ import java.util.Map;
  * </p>
  * 
  * <pre>{@code
- * ParseResult result = XMLParser.parse(new File("data/GameOfLifeSimple.xml"));
+ * ParseResult result = XMLReader.parse(new File("data/GameOfLife/GameOfLifeSimple.xml"));
  * int rows = result.getRows();
  * String type = result.getGameType();
  * int[][] cells = result.getCells(); // may be null
@@ -51,6 +51,7 @@ public class ParseResult {
     private final String author;
     private final String title;
     private final String description;
+    private final String rulestring;
 
     /**
      * Constructs a ParseResult with all simulation configuration values.
@@ -72,7 +73,7 @@ public class ParseResult {
      */
     public ParseResult(int rows, int cols, String gameType, String title, String author, String description,
             int[][] cells, Map<String, Double> params,
-            Map<Integer, String> colorMap) {
+            Map<Integer, String> colorMap, String rulestring) {
         this.rows = rows;
         this.cols = cols;
         this.gameType = gameType;
@@ -82,6 +83,7 @@ public class ParseResult {
         this.cells = cells;
         this.params = params;
         this.colorMap = colorMap;
+        this.rulestring = rulestring;
     }
 
     /** @return mapping of state IDs to hex color strings (e.g., 0 -> "#FFFFFF") */
@@ -155,5 +157,16 @@ public class ParseResult {
     /** @return satisfaction threshold for Segregation simulations */
     public double getThreshold() {
         return getAParam("threshold");
+    }
+
+    /**
+     * @return rulestring for Game of Life variations (e.g., "B3/S23"), or empty
+     *         string if not set
+     */
+    public String getRulestring() {
+        if (rulestring == null) {
+            return "";
+        }
+        return rulestring;
     }
 }

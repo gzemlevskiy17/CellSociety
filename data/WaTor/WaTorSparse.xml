@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>WaTor</type>
+    <title>Sparse Wa-Tor</title>
+    <author>Michael</author>
+    <description>Mostly empty ocean with few fish and sharks. Tests low-density behavior.</description>
+    <grid>
+        <rows>20</rows>
+        <columns>20</columns>
+        <stateDistribution type="proportion">
+            <state id="0" proportion="0.85"/>
+            <state id="1" proportion="0.10"/>
+            <state id="2" proportion="0.05"/>
+        </stateDistribution>
+    </grid>
+    <parameters>
+        <speed>5</speed>
+        <pyRepro>2</pyRepro>
+        <pdrEner>6</pdrEner>
+        <pdrRepro>6</pdrRepro>
+        <pdrEatsFor>3</pdrEatsFor>
+        <states>
+            <state id="0" name="EMPTY" color="#1A5276"/>
+            <state id="1" name="FISH" color="#2ECC71"/>
+            <state id="2" name="SHARK" color="#E74C3C"/>
+        </states>
+    </parameters>
+</simulation>

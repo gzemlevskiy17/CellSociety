@@ -3,6 +3,7 @@ package cellsociety.model;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import cellsociety.model.games.Percolation;
 import org.junit.jupiter.api.Test;
 
 class PercolationTest {

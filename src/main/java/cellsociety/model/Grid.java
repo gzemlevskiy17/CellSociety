@@ -9,8 +9,8 @@ import java.util.List;
  * A 2D grid of {@link Cell} objects that serves as the spatial structure for all simulations.
  *
  * <p>Provides access to individual cells, their 8-directional (Moore) neighbors, and
- * bulk operations like extracting all cell states as a 2D array. All cells are initialized
- * to state 0 by default.</p>
+ * bulk operations like extracting all cell states as a 2D array. All cells are initialized to state
+ * 0 by default.</p>
  *
  * <p><b>Assumptions:</b> Row and column counts must be positive. Out-of-bounds access to
  * {@link #getCell(int, int)} will throw an {@code ArrayIndexOutOfBoundsException}.</p>
@@ -28,13 +28,15 @@ import java.util.List;
  * @author Michael Li
  */
 public class Grid {
+
   private Cell[][] cells;
   private Deque<Cell[][]> history;
+  private Cell[][] initialState;
 
   private int[][] directions = {
-      { -1, -1 }, { -1, 0 }, { -1, 1 },
-      { 0, -1 }, { 0, 1 },
-      { 1, -1 }, { 1, 0 }, { 1, 1 }
+      {-1, -1}, {-1, 0}, {-1, 1},
+      {0, -1}, {0, 1},
+      {1, -1}, {1, 0}, {1, 1}
   };
 
   /**
@@ -47,7 +49,22 @@ public class Grid {
     cells = new Cell[numRows][numCols];
     defaultInitializeCells();
     history = new ArrayDeque<>();
+    initialState = copyGrid(cells);
     history.add(copyGrid(cells));
+  }
+
+
+  //TODO: test
+  public void revertState() {
+    if (history.size() > 1) { // Keep at least the initial state
+      history.removeFirst(); // Remove current state
+      Cell[][] previousState = history.peekFirst(); // Get previous state
+      for (int i = 0; i < cells.length; i++) {
+        for (int j = 0; j < cells[i].length; j++) {
+          cells[i][j].setState(previousState[i][j].getState());
+        }
+      }
+    }
   }
 
   //TODO: test this and possibly other methods
@@ -80,8 +97,8 @@ public class Grid {
   }
 
   /**
-   * Returns all in-bounds Moore neighbors (up to 8) of the cell at the given position.
-   * Corner cells return 3 neighbors, edge cells return 5, and interior cells return 8.
+   * Returns all in-bounds Moore neighbors (up to 8) of the cell at the given position. Corner cells
+   * return 3 neighbors, edge cells return 5, and interior cells return 8.
    *
    * @param row the row index of the target cell
    * @param col the column index of the target cell
@@ -130,8 +147,8 @@ public class Grid {
   }
 
   /**
-   * Returns a snapshot of all current cell states as a 2D int array.
-   * Useful for saving the simulation state to XML.
+   * Returns a snapshot of all current cell states as a 2D int array. Useful for saving the
+   * simulation state to XML.
    *
    * @return a new 2D array where each entry is the state of the corresponding cell
    */
@@ -154,5 +171,14 @@ public class Grid {
         cells[i][j] = new Cell(0);
       }
     }
+  }
+
+  /*
+   * Resets the grid to its initial state. Clears the history and sets all cells back to their
+   * original states as captured at construction.
+   */
+  public void resetToInitialState() {
+    cells = initialState;
+    history = new ArrayDeque<>();
   }
 }

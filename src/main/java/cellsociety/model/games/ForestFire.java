@@ -1,4 +1,8 @@
-package cellsociety.model;
+package cellsociety.model.games;
+
+import cellsociety.model.Cell;
+import cellsociety.model.Game;
+import cellsociety.model.Grid;
 
 import java.util.List;
 
@@ -17,7 +21,7 @@ import java.util.List;
  *
  * <p><b>Dependencies:</b> {@link Game}, {@link Grid}, {@link Cell}</p>
  *
- * @author Michael Li
+ * @author Georgiy Zemlevskiy
  * @see Game
  */
 public class ForestFire extends Game {

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>WaTor</type>
+    <title>Edge Border Ring</title>
+    <author>Michael</author>
+    <description>Fish and sharks along the entire border. Tests all edge and corner boundary behavior.</description>
+    <grid>
+        <rows>10</rows>
+        <columns>10</columns>
+        <cells>
+            <row>1 2 1 1 2 1 2 1 1 2</row>
+            <row>2 0 0 0 0 0 0 0 0 1</row>
+            <row>1 0 0 0 0 0 0 0 0 2</row>
+            <row>1 0 0 0 0 0 0 0 0 1</row>
+            <row>2 0 0 0 0 0 0 0 0 1</row>
+            <row>1 0 0 0 0 0 0 0 0 2</row>
+            <row>2 0 0 0 0 0 0 0 0 1</row>
+            <row>1 0 0 0 0 0 0 0 0 2</row>
+            <row>1 0 0 0 0 0 0 0 0 1</row>
+            <row>2 1 2 1 1 2 1 2 1 1</row>
+        </cells>
+    </grid>
+    <parameters>
+        <speed>5</speed>
+        <pyRepro>3</pyRepro>
+        <pdrEner>5</pdrEner>
+        <pdrRepro>6</pdrRepro>
+        <pdrEatsFor>3</pdrEatsFor>
+        <states>
+            <state id="0" name="EMPTY" color="#1A5276"/>
+            <state id="1" name="FISH" color="#2ECC71"/>
+            <state id="2" name="SHARK" color="#E74C3C"/>
+        </states>
+    </parameters>
+</simulation>

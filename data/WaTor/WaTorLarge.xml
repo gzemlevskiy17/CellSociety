@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>WaTor</type>
+    <title>Large Wa-Tor</title>
+    <author>Michael</author>
+    <description>Large 40x40 grid with balanced populations for long-running dynamics.</description>
+    <grid>
+        <rows>40</rows>
+        <columns>40</columns>
+        <stateDistribution type="proportion">
+            <state id="0" proportion="0.50"/>
+            <state id="1" proportion="0.35"/>
+            <state id="2" proportion="0.15"/>
+        </stateDistribution>
+    </grid>
+    <parameters>
+        <speed>8</speed>
+        <pyRepro>3</pyRepro>
+        <pdrEner>5</pdrEner>
+        <pdrRepro>8</pdrRepro>
+        <pdrEatsFor>3</pdrEatsFor>
+        <states>
+            <state id="0" name="EMPTY" color="#1A5276"/>
+            <state id="1" name="FISH" color="#2ECC71"/>
+            <state id="2" name="SHARK" color="#E74C3C"/>
+        </states>
+    </parameters>
+</simulation>
