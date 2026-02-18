@@ -2,6 +2,7 @@ package cellsociety.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import cellsociety.model.games.ForestFire;
 import org.junit.jupiter.api.Test;
 
 class ForestFireTest {

@@ -26,7 +26,7 @@ import javafx.scene.paint.Color;
  * </p>
  * 
  * <pre>{@code
- * ParseResult result = XMLReader.parse(new File("data/GameOfLifeSimple.xml"));
+ * ParseResult result = XMLReader.parse(new File("data/GameOfLife/GameOfLifeSimple.xml"));
  * ViewFactory factory = new ViewFactory();
  * GridView view = factory.createView(result);
  * }</pre>

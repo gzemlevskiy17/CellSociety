@@ -33,7 +33,7 @@ import java.util.Map;
  * </p>
  * 
  * <pre>{@code
- * ParseResult result = XMLReader.parse(new File("data/GameOfLifeSimple.xml"));
+ * ParseResult result = XMLReader.parse(new File("data/GameOfLife/GameOfLifeSimple.xml"));
  * int rows = result.getRows();
  * String type = result.getGameType();
  * int[][] cells = result.getCells(); // may be null

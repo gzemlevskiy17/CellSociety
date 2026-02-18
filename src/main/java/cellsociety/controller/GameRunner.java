@@ -15,7 +15,6 @@ import java.util.Optional;
 import javafx.stage.Stage;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import org.xml.sax.SAXException;
 
 public class GameRunner {
 
