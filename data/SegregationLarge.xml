@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>Segregation</type>
+    <title>Segregation Large</title>
+    <author>Thomas Schelling</author>
+    <description>10x10 dense grid with 40% threshold. Demonstrates emergent clustering from random start.</description>
+    <grid>
+        <rows>10</rows>
+        <columns>10</columns>
+        <cells>
+            <row>1 2 1 0 2 1 2 0 1 2</row>
+            <row>2 0 1 2 1 0 1 2 0 1</row>
+            <row>0 1 2 1 0 2 0 1 2 0</row>
+            <row>1 2 0 2 1 1 2 0 1 2</row>
+            <row>2 0 1 0 2 0 1 2 0 1</row>
+            <row>1 1 2 1 0 2 0 1 2 2</row>
+            <row>0 2 0 2 1 1 2 0 1 0</row>
+            <row>2 1 1 0 2 0 1 2 2 1</row>
+            <row>1 0 2 1 0 2 0 1 0 2</row>
+            <row>0 2 1 2 1 0 2 1 2 1</row>
+        </cells>
+    </grid>
+    <parameters>
+        <probCatch>0.4</probCatch>
+        <states>
+            <state id="0" color="#FFFFFF"/>
+            <state id="1" color="#3498DB"/>
+            <state id="2" color="#E74C3C"/>
+        </states>
+    </parameters>
+</simulation>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>Segregation</type>
+    <title>Segregation Edge Mixed</title>
+    <author>Thomas Schelling</author>
+    <description>6x6 grid with agents filling edges. High threshold forces agents to cluster.</description>
+    <grid>
+        <rows>6</rows>
+        <columns>6</columns>
+        <cells>
+            <row>1 1 2 2 1 2</row>
+            <row>2 0 0 0 0 1</row>
+            <row>1 0 0 0 0 2</row>
+            <row>2 0 0 0 0 1</row>
+            <row>1 0 0 0 0 2</row>
+            <row>2 1 2 1 2 1</row>
+        </cells>
+    </grid>
+    <parameters>
+        <probCatch>0.5</probCatch>
+        <states>
+            <state id="0" color="#FFFFFF"/>
+            <state id="1" color="#3498DB"/>
+            <state id="2" color="#E74C3C"/>
+        </states>
+    </parameters>
+</simulation>
