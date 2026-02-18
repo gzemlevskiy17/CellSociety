@@ -1,5 +1,12 @@
 package cellsociety.model;
 
+import cellsociety.model.games.FallingSand;
+import cellsociety.model.games.ForestFire;
+import cellsociety.model.games.GameOfLife;
+import cellsociety.model.games.Percolation;
+import cellsociety.model.games.Segregation;
+import cellsociety.model.games.WaTor;
+
 /**
  * Factory that creates {@link Game} instances from parsed XML configuration
  * data.
@@ -28,7 +35,7 @@ package cellsociety.model;
  * </p>
  * 
  * <pre>{@code
- * ParseResult result = XMLReader.parse(new File("data/GameOfLifeSimple.xml"));
+ * ParseResult result = XMLReader.parse(new File("data/GameOfLife/GameOfLifeSimple.xml"));
  * ModelFactory factory = new ModelFactory();
  * Game game = factory.createGame(result);
  * game.step();

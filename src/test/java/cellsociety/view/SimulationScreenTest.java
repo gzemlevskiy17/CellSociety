@@ -14,7 +14,7 @@ import util.DukeApplicationTest;
 
 public class SimulationScreenTest extends DukeApplicationTest {
 
-  public static final String DATA_PATH = "data/";
+  public static final String DATA_PATH = "data/GameOfLife/";
 
   private ScreenManager screenManager;
   private ModelFactory modelFactory;

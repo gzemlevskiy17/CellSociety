@@ -1,4 +1,8 @@
-package cellsociety.model;
+package cellsociety.model.games;
+
+import cellsociety.model.Cell;
+import cellsociety.model.Game;
+import cellsociety.model.Grid;
 
 import java.util.HashSet;
 import java.util.List;

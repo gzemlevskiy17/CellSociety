@@ -1,8 +1,8 @@
 package cellsociety;
 
-import cellsociety.model.ForestFire;
+import cellsociety.model.games.ForestFire;
 import cellsociety.model.Game;
-import cellsociety.model.GameOfLife;
+import cellsociety.model.games.GameOfLife;
 import cellsociety.model.ModelFactory;
 import cellsociety.model.ParseResult;
 import cellsociety.view.ViewFactory;

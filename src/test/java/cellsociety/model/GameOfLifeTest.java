@@ -1,7 +1,6 @@
 package cellsociety.model;
 
-import cellsociety.model.Grid;
-import cellsociety.model.Cell;
+import cellsociety.model.games.GameOfLife;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
