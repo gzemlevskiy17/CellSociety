@@ -1,8 +1,8 @@
 package cellsociety.controller;
 
-import cellsociety.model.ParseResult;
 import cellsociety.model.Game;
 import cellsociety.model.ModelFactory;
+import cellsociety.model.ParseResult;
 import cellsociety.model.XMLParser;
 import cellsociety.view.GridView;
 import cellsociety.view.ScreenManager;
@@ -10,11 +10,9 @@ import cellsociety.view.ViewFactory;
 import java.io.File;
 import java.util.Map;
 import java.util.Optional;
-
 import javafx.stage.Stage;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import org.xml.sax.SAXException;
 
 public class GameRunner {
 
@@ -70,7 +68,7 @@ public class GameRunner {
     int[][] currentCells = game.getGrid().getCellStates();
     double currentSpeed = controller.getGameSpeed();
     Map<String, Double> toBeChanged = currentParseResult.getParams();
-    toBeChanged.replace("speed", Double.valueOf(currentSpeed));
+    toBeChanged.replace("speed", currentSpeed);
     ParseResult snapshot = new ParseResult(
         currentParseResult.getRows(),
         currentParseResult.getCols(),
