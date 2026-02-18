@@ -159,7 +159,10 @@ public class ParseResult {
         return getAParam("threshold");
     }
 
-    /** @return rulestring for Game of Life variations (e.g., "B3/S23"), or empty string if not set */
+    /**
+     * @return rulestring for Game of Life variations (e.g., "B3/S23"), or empty
+     *         string if not set
+     */
     public String getRulestring() {
         if (rulestring == null) {
             return "";
