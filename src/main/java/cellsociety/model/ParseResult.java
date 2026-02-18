@@ -51,6 +51,7 @@ public class ParseResult {
     private final String author;
     private final String title;
     private final String description;
+    private final String rulestring;
 
     /**
      * Constructs a ParseResult with all simulation configuration values.
@@ -72,7 +73,7 @@ public class ParseResult {
      */
     public ParseResult(int rows, int cols, String gameType, String title, String author, String description,
             int[][] cells, Map<String, Double> params,
-            Map<Integer, String> colorMap) {
+            Map<Integer, String> colorMap, String rulestring) {
         this.rows = rows;
         this.cols = cols;
         this.gameType = gameType;
@@ -82,6 +83,7 @@ public class ParseResult {
         this.cells = cells;
         this.params = params;
         this.colorMap = colorMap;
+        this.rulestring = rulestring;
     }
 
     /** @return mapping of state IDs to hex color strings (e.g., 0 -> "#FFFFFF") */
@@ -155,5 +157,13 @@ public class ParseResult {
     /** @return satisfaction threshold for Segregation simulations */
     public double getThreshold() {
         return getAParam("threshold");
+    }
+
+    /** @return rulestring for Game of Life variations (e.g., "B3/S23"), or empty string if not set */
+    public String getRulestring() {
+        if (rulestring == null) {
+            return "";
+        }
+        return rulestring;
     }
 }

@@ -81,7 +81,8 @@ public class GameRunner {
         currentParseResult.getDescription(),
         currentCells,
         toBeChanged,
-        currentParseResult.getColorMap());
+        currentParseResult.getColorMap(),
+        currentParseResult.getRulestring());
     try {
       XMLWriter.save(snapshot, myStage);
     } catch (ParserConfigurationException | TransformerException e) {
