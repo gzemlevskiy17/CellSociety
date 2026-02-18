@@ -21,8 +21,7 @@ import javafx.util.Duration;
  * methods are not performed by this class.</p>
  *
  * <p>Dependencies: cellsociety.model.Game, cellsociety.view.GridView,
- * cellsociety.view.ScreenManager,
- * and JavaFX Timeline APIs.</p>
+ * cellsociety.view.ScreenManager, and JavaFX Timeline APIs.</p>
  *
  * <p>Example usage:</p>
  * <pre>{@code
@@ -52,10 +51,10 @@ public class Controller {
   /**
    * Constructs a Controller that coordinates the model, view, and UI controls.
    *
-   * @param game the game model to control
-   * @param screenManager the screen manager used to display UI elements
-   * @param gridView the view responsible for rendering the grid
-   * @param gameSpeed the initial playback rate for the game loop
+   * @param game                the game model to control
+   * @param screenManager       the screen manager used to display UI elements
+   * @param gridView            the view responsible for rendering the grid
+   * @param gameSpeed           the initial playback rate for the game loop
    * @param createNewGameAction action invoked to create a new game
    */
   public Controller(Game game, ScreenManager screenManager, GridView gridView, double gameSpeed,
@@ -73,8 +72,8 @@ public class Controller {
   //TODO: reevaluate scopes of methods
 
   /**
-   * Advances the simulation by a single step, updates the view, increments the
-   * generation counter, and updates the screen manager with the new generation count.
+   * Advances the simulation by a single step, updates the view, increments the generation counter,
+   * and updates the screen manager with the new generation count.
    */
   public void loop() {
     game.step();
@@ -84,8 +83,8 @@ public class Controller {
   }
 
   /**
-   * Synchronizes the GridView with the current states from the Game model.
-   * Iterates all rows and columns and updates each cell's displayed state.
+   * Synchronizes the GridView with the current states from the Game model. Iterates all rows and
+   * columns and updates each cell's displayed state.
    */
   public void updateGrid() {
     int rows = gridView.getNumRows();
@@ -113,9 +112,9 @@ public class Controller {
   }
 
   /**
-   * Clears the current simulation: pauses playback, resets speed to 1.0,
-   * resets generations to 0, clears the game grid states,
-   * and updates the view accordingly.
+   * Resets the GridView to its initial state Clears the current simulation: pauses playback, resets
+   * speed to 1.0, resets generations to 0, resets the grid state, and updates the view
+   * accordingly.
    */
   public void clear() {
     pause();
@@ -126,12 +125,12 @@ public class Controller {
   }
 
   /**
-   * Stops the game loop, resets the generation counter to zero, and updates the view.
-   * This does not alter the underlying saved history beyond stopping playback.
+   * Pauses the game, resets the generation counter to zero, and updates the view. .
    */
   public void reset() {
-    gameLoop.stop();
+    pause();
     generations = 0;
+    game.reset();
     updateGrid();
   }
 
@@ -159,8 +158,8 @@ public class Controller {
   }
 
   /**
-   * Sets the playback speed for the automatic game loop. If a timeline exists,
-   * its rate is updated immediately.
+   * Sets the playback speed for the automatic game loop. If a timeline exists, its rate is updated
+   * immediately.
    *
    * @param gameSpeed the new playback rate to apply
    */
@@ -172,8 +171,8 @@ public class Controller {
   }
 
   /**
-   * Reads the slider value from the screen manager and applies it as the new game speed,
-   * then starts playback.
+   * Reads the slider value from the screen manager and applies it as the new game speed, then
+   * starts playback.
    */
   public void findGameSpeed() {
     setGameSpeed(screenManager.getSliderValue());
@@ -193,10 +192,10 @@ public class Controller {
    * Requests the screen manager to show the game screen and wires UI callbacks for
    * save/load/play/pause/clear and other controls.
    *
-   * @param onSave action to run when the user saves
-   * @param onLoad action to run when the user requests load
+   * @param onSave              action to run when the user saves
+   * @param onLoad              action to run when the user requests load
    * @param createNewGameAction action to create a new game
-   * @param loadForResults action used to reload the current configuration for results view
+   * @param loadForResults      action used to reload the current configuration for results view
    */
   public void gameScreenShow(Runnable onSave, Runnable onLoad, Runnable createNewGameAction,
       Runnable loadForResults) {
