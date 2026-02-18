@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>FallingSand</type>
+    <title>Dense Falling Sand</title>
+    <author>Michael</author>
+    <description>Large grid with all four particle types interacting.</description>
+    <grid>
+        <rows>30</rows>
+        <columns>30</columns>
+        <stateDistribution type="proportion">
+            <state id="0" proportion="0.25"/>
+            <state id="1" proportion="0.15"/>
+            <state id="2" proportion="0.35"/>
+            <state id="3" proportion="0.25"/>
+        </stateDistribution>
+    </grid>
+    <parameters>
+        <speed>5</speed>
+        <states>
+            <state id="0" name="EMPTY" color="#000000"/>
+            <state id="1" name="METAL" color="#808080"/>
+            <state id="2" name="SAND" color="#F4D03F"/>
+            <state id="3" name="WATER" color="#3498DB"/>
+        </states>
+    </parameters>
+</simulation>
