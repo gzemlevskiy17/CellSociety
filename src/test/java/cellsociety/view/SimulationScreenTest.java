@@ -4,7 +4,7 @@ import cellsociety.controller.Controller;
 import cellsociety.model.Game;
 import cellsociety.model.ModelFactory;
 import cellsociety.model.ParseResult;
-import cellsociety.model.XMLParser;
+import cellsociety.model.XMLReader;
 import java.io.File;
 import java.io.IOException;
 import javafx.stage.Stage;
@@ -29,7 +29,7 @@ public class SimulationScreenTest extends DukeApplicationTest {
     viewFactory = new ViewFactory();
     ParseResult parseResult = null;
     try {
-      parseResult = XMLParser.parse(new File(DATA_PATH + "GameOfLifeSimple.xml"));
+      parseResult = XMLReader.parse(new File(DATA_PATH + "GameOfLifeSimple.xml"));
     } catch (ParserConfigurationException | IOException e) {
       throw new RuntimeException(e);
     }

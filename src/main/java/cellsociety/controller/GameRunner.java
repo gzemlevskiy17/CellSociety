@@ -3,7 +3,8 @@ package cellsociety.controller;
 import cellsociety.model.ParseResult;
 import cellsociety.model.Game;
 import cellsociety.model.ModelFactory;
-import cellsociety.model.XMLParser;
+import cellsociety.model.XMLReader;
+import cellsociety.model.XMLWriter;
 import cellsociety.view.GridView;
 import cellsociety.view.ScreenManager;
 import cellsociety.view.ViewFactory;
@@ -48,7 +49,7 @@ public class GameRunner {
   private void handleRealLoad(File file) {
     ParseResult parseResult;
     try {
-      parseResult = XMLParser.parse(file);
+      parseResult = XMLReader.parse(file);
       currentParseResult = parseResult;
     } catch (Exception e) {
       screenManager.showError("Configuration Error", e.getMessage());
@@ -82,7 +83,7 @@ public class GameRunner {
         toBeChanged,
         currentParseResult.getColorMap());
     try {
-      XMLParser.save(snapshot, myStage);
+      XMLWriter.save(snapshot, myStage);
     } catch (ParserConfigurationException | TransformerException e) {
       throw new RuntimeException(e);
     }

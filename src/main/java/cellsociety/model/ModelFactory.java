@@ -28,7 +28,7 @@ package cellsociety.model;
  * </p>
  * 
  * <pre>{@code
- * ParseResult result = XMLParser.parse(new File("data/GameOfLifeSimple.xml"));
+ * ParseResult result = XMLReader.parse(new File("data/GameOfLifeSimple.xml"));
  * ModelFactory factory = new ModelFactory();
  * Game game = factory.createGame(result);
  * game.step();

@@ -7,7 +7,7 @@ import java.util.Map;
  * configuration file.
  *
  * <p>
- * Acts as the bridge between {@link cellsociety.model.XMLParser} and the rest
+ * Acts as the bridge between {@link cellsociety.model.XMLReader} and the rest
  * of the
  * application. The parser produces a {@code ParseResult}, which is then
  * consumed by
@@ -33,7 +33,7 @@ import java.util.Map;
  * </p>
  * 
  * <pre>{@code
- * ParseResult result = XMLParser.parse(new File("data/GameOfLifeSimple.xml"));
+ * ParseResult result = XMLReader.parse(new File("data/GameOfLifeSimple.xml"));
  * int rows = result.getRows();
  * String type = result.getGameType();
  * int[][] cells = result.getCells(); // may be null
