@@ -30,6 +30,7 @@ import java.util.List;
 public class Grid {
   private Cell[][] cells;
   private Deque<Cell[][]> history;
+  private Cell[][] initialState;
 
   private int[][] directions = {
       { -1, -1 }, { -1, 0 }, { -1, 1 },
@@ -47,7 +48,22 @@ public class Grid {
     cells = new Cell[numRows][numCols];
     defaultInitializeCells();
     history = new ArrayDeque<>();
+    initialState = copyGrid(cells);
     history.add(copyGrid(cells));
+  }
+
+
+  //TODO: test
+  public void revertState() {
+    if (history.size() > 1) { // Keep at least the initial state
+      history.removeFirst(); // Remove current state
+      Cell[][] previousState = history.peekFirst(); // Get previous state
+      for (int i = 0; i < cells.length; i++) {
+        for (int j = 0; j < cells[i].length; j++) {
+          cells[i][j].setState(previousState[i][j].getState());
+        }
+      }
+    }
   }
 
   //TODO: test this and possibly other methods

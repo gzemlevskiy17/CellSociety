@@ -45,6 +45,10 @@ public abstract class Game {
         commitChanges();
     }
 
+    public void stepBack() {
+        grid.revertState(); //TODO: verify logic
+    }
+
     /**
      * Computes the next state for every cell based on the simulation's rules.
      * Implementations should call {@link Cell#setNextState(int)} and must not

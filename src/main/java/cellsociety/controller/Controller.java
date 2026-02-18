@@ -19,7 +19,7 @@ public class Controller {
   private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 
   private double gameSpeed;
-  private int generations = 0;
+  private int generations = 0; //TODO: add to constructor
 
   public Controller(Game game, ScreenManager screenManager, GridView gridView, double gameSpeed,
       Runnable createNewGameAction) {
@@ -39,7 +39,7 @@ public class Controller {
     game.step();
     updateGrid();
     generations++;
-    screenManager.setGen(generations);
+    screenManager.setGenerations(generations);
   }
 
   public void updateGrid() {
@@ -74,6 +74,16 @@ public class Controller {
     updateGrid();
   }
 
+  //TODO: link to screenmanager
+  public void stepBack() {
+    if (generations > 0) {
+      game.stepBack();
+      updateGrid();
+      generations--;
+      screenManager.setGenerations(generations);
+    }
+  }
+
   public double getGameSpeed() {
     return gameSpeed;
   }
@@ -95,7 +105,8 @@ public class Controller {
     return generations;
   }
 
-  public void gameScreenShow(Runnable onSave, Runnable onLoad, Runnable createNewGameAction, Runnable loadForResults) {
+  public void gameScreenShow(Runnable onSave, Runnable onLoad, Runnable createNewGameAction,
+      Runnable loadForResults) {
     screenManager.gameScreen(onSave, onLoad, this::pause, this::play, loadForResults,
         this::findGameSpeed, createNewGameAction, this::clear, generations, gameSpeed);
   }
