@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 public class XMLReader {
 
   private static final List<String> VALID_TYPES = Arrays.asList(
-      "GameOfLife", "ForestFire", "Segregation", "Percolation", "WaTor");
+      "GameOfLife", "ForestFire", "Segregation", "Percolation", "WaTor", "FallingSand");
 
   public static ParseResult parse(File file)
       throws ParserConfigurationException, IOException {
@@ -92,7 +92,12 @@ public class XMLReader {
       validateCellStates(cells, colorMap.keySet());
     }
 
-    return new ParseResult(dims[0], dims[1], gameType, title, author, description, cells, params, colorMap);
+    String rulestring = "";
+    if (paramEl != null) {
+      rulestring = getTextValue(paramEl, "rulestring");
+    }
+
+    return new ParseResult(dims[0], dims[1], gameType, title, author, description, cells, params, colorMap, rulestring);
   }
 
   private static int[] parseDimensions(Element container) {
