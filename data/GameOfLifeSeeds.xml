@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>GameOfLife</type>
+    <title>Seeds</title>
+    <author>Michael</author>
+    <description>B2/S rulestring: dead cells with 2 neighbors are born, all live cells die. Creates chaotic explosive patterns.</description>
+    <grid>
+        <rows>50</rows>
+        <columns>50</columns>
+        <stateDistribution type="proportion">
+            <state id="0" proportion="0.95"/>
+            <state id="1" proportion="0.05"/>
+        </stateDistribution>
+    </grid>
+    <parameters>
+        <speed>3</speed>
+        <rulestring>B2/S</rulestring>
+        <states>
+            <state id="0" name="DEAD" color="#000000"/>
+            <state id="1" name="ALIVE" color="#E74C3C"/>
+        </states>
+    </parameters>
+</simulation>
