@@ -64,12 +64,13 @@ public class ModelFactory {
     }
 
     return switch (gameType) {
-      case "GameOfLife" -> new GameOfLife(grid);
+      case "GameOfLife" -> new GameOfLife(grid, result.getRulestring());
       case "ForestFire" ->
         new ForestFire(grid, result.getAParam("ignitionProbability"), result.getAParam("fillProbability"));
       case "Segregation" -> new Segregation(grid, result.getAParam("threshold"));
       case "WaTor" -> new WaTor(grid, result.getParams());
       case "Percolation" -> new Percolation(grid);
+      case "FallingSand" -> new FallingSand(grid);
       default -> throw new IllegalArgumentException("Unknown game type: " + gameType);
     };
   }

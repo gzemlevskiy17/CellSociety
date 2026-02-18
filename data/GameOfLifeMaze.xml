@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>GameOfLife</type>
+    <title>Maze Generator</title>
+    <author>Michael</author>
+    <description>B3/S12345 rulestring generates maze-like patterns from random initial states.</description>
+    <grid>
+        <rows>50</rows>
+        <columns>50</columns>
+        <stateDistribution type="proportion">
+            <state id="0" proportion="0.50"/>
+            <state id="1" proportion="0.50"/>
+        </stateDistribution>
+    </grid>
+    <parameters>
+        <speed>5</speed>
+        <rulestring>B3/S12345</rulestring>
+        <states>
+            <state id="0" name="DEAD" color="#000000"/>
+            <state id="1" name="ALIVE" color="#2ECC71"/>
+        </states>
+    </parameters>
+</simulation>
