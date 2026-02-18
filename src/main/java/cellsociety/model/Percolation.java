@@ -9,8 +9,7 @@ import java.util.List;
  * percolated (state 2) when they have a neighbor in the percolated state.</p>
  *
  * <p>Assumptions: Grid and Cell state encodings are consistent with the rule (0 = empty, 2 =
- * percolated).
- * The Game superclass handles state transitions and save/restore behavior.</p>
+ * percolated). The Game superclass handles state transitions and save/restore behavior.</p>
  *
  * <p>Dependencies: Grid, Game, Cell.</p>
  *

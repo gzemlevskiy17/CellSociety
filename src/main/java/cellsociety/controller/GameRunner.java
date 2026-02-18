@@ -85,9 +85,11 @@ public class GameRunner {
   private void loadForResults() {
     game = modelFactory.createGame(currentParseResult);
     gridView = viewFactory.createView(currentParseResult);
-    controller = new Controller(game, screenManager, gridView, currentParseResult.getSpeed(), createNewGameAction);
-    controller.gameScreenShow(this::handleSave, this::handleLoad, createNewGameAction, this::loadForResults);
-    controller.reset();
+    controller = new Controller(game, screenManager, gridView, currentParseResult.getSpeed(),
+        createNewGameAction);
+    controller.gameScreenShow(this::handleSave, this::handleLoad, createNewGameAction,
+        this::loadForResults);
+    controller.updateGrid();
   }
 
   private void handleSave() {

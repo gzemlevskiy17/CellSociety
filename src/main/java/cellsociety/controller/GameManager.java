@@ -24,6 +24,7 @@ import javafx.stage.Stage;
  * @author Georgiy Zemlevskiy
  */
 public class GameManager {
+
   private Stage primaryStage;
 
   /**
