@@ -22,7 +22,7 @@ package cellsociety.model;
  * cell.getState(); // returns 1
  * }</pre>
  *
- * @author Michael Li
+ * @author Georgiy Zemlevskiy
  */
 public class Cell {
   private int state;

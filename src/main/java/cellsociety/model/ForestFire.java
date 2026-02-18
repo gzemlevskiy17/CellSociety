@@ -17,7 +17,7 @@ import java.util.List;
  *
  * <p><b>Dependencies:</b> {@link Game}, {@link Grid}, {@link Cell}</p>
  *
- * @author Michael Li
+ * @author Georgiy Zemlevskiy
  * @see Game
  */
 public class ForestFire extends Game {

@@ -4,7 +4,6 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Optional;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -27,7 +26,7 @@ public class ScreenManager {
   private ButtonCreator buttons;
   private LanguageView languageView;
   private boolean onPlay;
-  private Label dynamicGen;
+  private Label dynamicGenerations;
   private Slider speedSlider;
   private int gen;
 
@@ -110,11 +109,11 @@ public class ScreenManager {
       speedSliderFunction(pause, setGameSpeed, newValue.doubleValue());
     });
 
-    dynamicGen = new Label();
-    dynamicGen.setText("Gen: " + String.valueOf(gen));
+    dynamicGenerations = new Label();
+    dynamicGenerations.setText("Gen: " + String.valueOf(gen));
 
     hbox.setAlignment(Pos.TOP_CENTER);
-    hbox.getChildren().addAll(speedSlider, dynamicGen);
+    hbox.getChildren().addAll(speedSlider, dynamicGenerations);
     return hbox;
   }
 
@@ -170,9 +169,9 @@ public class ScreenManager {
     return speedSlider.getValue();
   }
 
-  public void setGen(int genNum) {
-    gen = genNum;
-    dynamicGen.setText("#: " + String.valueOf(gen));
+  public void setGenerations(int generations) {
+    gen = generations;
+    dynamicGenerations.setText("#: " + String.valueOf(gen));
   }
 
   public Optional<File> startScreen(Stage stage) {
