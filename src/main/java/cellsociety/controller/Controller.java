@@ -4,8 +4,8 @@ import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.view.GridView;
 import cellsociety.view.ScreenManager;
-import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.util.Duration;
 
 public class Controller {
@@ -33,6 +33,8 @@ public class Controller {
     gameLoop.pause();
   }
 
+  //TODO: reevaluate scopes of methods
+
   public void loop() {
     game.step();
     updateGrid();
@@ -40,7 +42,7 @@ public class Controller {
     screenManager.setGen(generations);
   }
 
-  private void updateGrid() {
+  public void updateGrid() {
     int rows = gridView.getNumRows();
     int cols = gridView.getNumCols();
     for (int r = 0; r < rows; r++) {
