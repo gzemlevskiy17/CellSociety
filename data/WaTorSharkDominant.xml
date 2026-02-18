@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>WaTor</type>
+    <title>Shark Dominant</title>
+    <author>Michael</author>
+    <description>Many sharks with high energy. Sharks should eat most fish then starve.</description>
+    <grid>
+        <rows>20</rows>
+        <columns>20</columns>
+        <stateDistribution type="proportion">
+            <state id="0" proportion="0.30"/>
+            <state id="1" proportion="0.20"/>
+            <state id="2" proportion="0.50"/>
+        </stateDistribution>
+    </grid>
+    <parameters>
+        <speed>5</speed>
+        <pyRepro>4</pyRepro>
+        <pdrEner>8</pdrEner>
+        <pdrRepro>5</pdrRepro>
+        <pdrEatsFor>4</pdrEatsFor>
+        <states>
+            <state id="0" name="EMPTY" color="#1A5276"/>
+            <state id="1" name="FISH" color="#2ECC71"/>
+            <state id="2" name="SHARK" color="#E74C3C"/>
+        </states>
+    </parameters>
+</simulation>
