@@ -101,6 +101,14 @@ public class WaTor extends Game {
         this.pdrEatsFor = params.get("pdrEatsFor").intValue();
     }
 
+    public WaTor(Grid grid, double pyRepro, double pdrEner, double pdrRepro, double pdrEatsFor) {
+        super(grid);
+        this.pyRepro = (int) pyRepro;
+        this.pdrEner = (int) pdrEner;
+        this.pdrRepro = (int) pdrRepro;
+        this.pdrEatsFor = (int) pdrEatsFor;
+    }
+
     @Override
     protected void updateGame() {
         // first run the sharks

@@ -96,5 +96,6 @@ public class Controller {
   public void gameScreenShow(Runnable onSave, Runnable onLoad, Runnable createNewGameAction, Runnable loadForResults) {
     screenManager.gameScreen(onSave, onLoad, this::pause, this::play, loadForResults,
         this::findGameSpeed, createNewGameAction, this::clear, generations, gameSpeed);
+    setGameSpeed(gameSpeed);
   }
 }

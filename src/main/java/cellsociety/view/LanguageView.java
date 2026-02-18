@@ -12,9 +12,9 @@ public class LanguageView {
 
     private static final String DEFAULT_LANGUAGE = "English";
     private List<String> langChoices;
-    private String chosenLanguage;
+    private String chosenLanguage = DEFAULT_LANGUAGE;
 
-    public LanguageView() {
+    public void setup() {
         findingLanguages();
         languageScreen();
     }

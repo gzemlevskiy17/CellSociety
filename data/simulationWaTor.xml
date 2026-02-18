@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<simulation>
+    <type>WaTor</type>
+    <title>WaTor World Simple</title>
+    <author>Alexander Keewatin Dewdney</author>
+    <description>A simple 5x5 test grid.</description>
+    <grid>
+        <rows>5</rows>
+        <columns>5</columns>
+        <cells>
+            <row>0 2 0 0 0</row>
+            <row>0 2 0 0 0</row>
+            <row>0 0 0 0 0</row>
+            <row>0 0 2 0 0</row>
+            <row>0 0 2 0 0</row>
+        </cells>
+    </grid>
+    <parameters>
+        <states>
+            <state color="#FFFFFF" id="0"/>
+            <state color="#2ECC71" id="1"/>
+            <state color="#3498DB" id="2"/>
+        </states>
+    </parameters>
+</simulation>

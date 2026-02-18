@@ -25,15 +25,15 @@ public class ScreenManager {
   private Stage stageLive;
   private GridView gridView;
   private ButtonCreator buttons;
-  private LanguageView languageView;
+  private String language;
   private boolean onPlay;
   private Label dynamicGen;
   private Slider speedSlider;
   private int gen;
 
-  public ScreenManager(Stage stage) {
+  public ScreenManager(Stage stage, String langResult) {
     stageLive = stage;
-    languageView = new LanguageView();
+    language = langResult;
   }
 
   public void checkAllNotNull(Object... params) throws Exception {
@@ -58,7 +58,7 @@ public class ScreenManager {
     }
     gen = genNum;
     onPlay = true;
-    buttons = new ButtonCreator(languageView.getLanguage());
+    buttons = new ButtonCreator(language);
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
@@ -192,10 +192,6 @@ public class ScreenManager {
     File chosen = fileChooser.showOpenDialog(stage);
     return Optional.ofNullable(chosen);
   }
-
-  public String getLanguage() {
-    return languageView.getLanguage();
-  } // TODO: needed?
 
   public void showError(String title, String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR);

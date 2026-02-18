@@ -5,6 +5,8 @@ import cellsociety.model.Game;
 import cellsociety.model.ModelFactory;
 import cellsociety.model.XMLParser;
 import cellsociety.view.GridView;
+import cellsociety.view.LanguageView;
+import cellsociety.view.MainLauncher;
 import cellsociety.view.ScreenManager;
 import cellsociety.view.ViewFactory;
 import java.io.File;
@@ -26,6 +28,7 @@ public class GameRunner {
   private Controller controller;
   private GridView gridView;
   private ParseResult currentParseResult;
+  private MainLauncher startChoice;
 
   private Runnable createNewGameAction;
 
@@ -34,14 +37,18 @@ public class GameRunner {
     this.createNewGameAction = createNewGameAction;
     modelFactory = new ModelFactory();
     viewFactory = new ViewFactory();
-    screenManager = new ScreenManager(myStage);
-    setup(myStage);
-    myStage.show();
+    startChoice = new MainLauncher(myStage, this::firstStart);
   }
 
-  private void setup(Stage primaryStage) {
+  private void firstStart() {
+    screenManager = new ScreenManager(myStage, startChoice.getLanguage());
+    setup();
+  }
+
+  private void setup() {
+    myStage.show();
     // in contructor also calls the language screen
-    Optional<File> optionalFile = screenManager.startScreen(primaryStage);
+    Optional<File> optionalFile = screenManager.startScreen(myStage);
     optionalFile.ifPresent(file -> handleRealLoad(file));
   }
 
@@ -61,7 +68,7 @@ public class GameRunner {
     game = modelFactory.createGame(currentParseResult);
     gridView = viewFactory.createView(currentParseResult);
     controller = new Controller(game, screenManager, gridView, currentParseResult.getSpeed(), createNewGameAction);
-    controller.gameScreenShow(this::handleSave, this::handleLoad, createNewGameAction, this::loadForResults);
+    controller.gameScreenShow(this::handleSave, this::setup, createNewGameAction, this::loadForResults);
     controller.reset();
   }
 
@@ -86,9 +93,5 @@ public class GameRunner {
     } catch (ParserConfigurationException | TransformerException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  private void handleLoad() {
-    setup(myStage);
   }
 }
