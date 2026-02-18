@@ -14,6 +14,27 @@ import javafx.stage.Stage;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+/**
+ * Orchestrates application flow for a single window: shows start screen, loads XML, constructs
+ * model/view/controller, and wires save/load actions.
+ *
+ * <p>Purpose: Manage one application's lifecycle in a single JavaFX Stage. It is
+ * responsible for reading a configuration file, creating the Game and GridView via factories, and
+ * instantiating Controller to drive the simulation.</p>
+ *
+ * <p>Assumptions: The provided Stage is valid and JavaFX runtime is initialized.
+ * XML configuration files must be valid for the ModelFactory and XMLParser to succeed.</p>
+ *
+ * <p>Dependencies: ModelFactory, ViewFactory, XMLParser, ScreenManager, Controller.</p>
+ *
+ * <p>Example usage:</p>
+ * <pre>{@code
+ * new GameRunner(primaryStage, () -> { /* create new window *\/ });
+ * }</pre>
+ *
+ * @author Georgiy Zemlevskiy
+ * @author Michael Li
+ */
 public class GameRunner {
 
   private Stage myStage;
@@ -27,6 +48,13 @@ public class GameRunner {
 
   private Runnable createNewGameAction;
 
+  /**
+   * Creates a GameRunner that drives the application flow on the provided stage. Shows the start
+   * screen and, if a configuration file is chosen, loads it.
+   *
+   * @param myStage             the primary JavaFX stage to use for UI
+   * @param createNewGameAction action invoked when a new game window should be created
+   */
   public GameRunner(Stage myStage, Runnable createNewGameAction) {
     this.myStage = myStage;
     this.createNewGameAction = createNewGameAction;
@@ -38,7 +66,6 @@ public class GameRunner {
   }
 
   private void setup(Stage primaryStage) {
-    // in contructor also calls the language screen
     Optional<File> optionalFile = screenManager.startScreen(primaryStage);
     optionalFile.ifPresent(file -> handleRealLoad(file));
   }
