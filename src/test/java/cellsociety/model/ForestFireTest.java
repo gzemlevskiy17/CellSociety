@@ -8,6 +8,7 @@ class ForestFireTest {
     Grid defaultGrid = new Grid(3, 3);
     Game defaultGame = new ForestFire(defaultGrid, 0.0, 0.0);
 
+  //TODO: follow consistent naming convention from PercolationTest
   //TODO: add more negative tests?
 
   @Test
