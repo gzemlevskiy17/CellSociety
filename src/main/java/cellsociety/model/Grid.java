@@ -61,17 +61,19 @@ public class Grid {
    * @param numCols the number of columns
    */
   public Grid(int numRows, int numCols) {
-    cells = new Cell[numRows][numCols];
-    defaultInitializeCells();
-    history = new ArrayDeque<>();
+    emptyConstruction(numRows, numCols);
     createFirstState(numRows, numCols, null);
   }
 
   public Grid(int numRows, int numCols, int[][] cellStates) {
+    emptyConstruction(numRows, numCols);
+    createFirstState(numRows, numCols, cellStates);
+  }
+
+  private void emptyConstruction(int numRows, int numCols) {
     cells = new Cell[numRows][numCols];
     defaultInitializeCells();
     history = new ArrayDeque<>();
-    createFirstState(numRows, numCols, cellStates);
   }
 
   /**
