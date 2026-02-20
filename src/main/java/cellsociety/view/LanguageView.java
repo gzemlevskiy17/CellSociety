@@ -21,6 +21,7 @@ public class LanguageView {
 
     private void findingLanguages() {
         ResourceBundle myResources = null;
+        // change the way ResourceBundle loads to include Locale
         try {
             myResources = PropertiesLoader.loadProperties("Languages/CellSocietyLanguages");
         } catch (Exception e) {
@@ -34,7 +35,7 @@ public class LanguageView {
 
     private void languageScreen() {
         ChoiceDialog<String> dialog = new ChoiceDialog<>(DEFAULT_LANGUAGE, langChoices);
-        dialog.setTitle("Initializing Cell Society");
+        dialog.setTitle("Language of Cell Society");
         dialog.setHeaderText("Language Setting");
         dialog.setContentText("Choose your language:");
         Optional<String> result = dialog.showAndWait();

@@ -60,15 +60,7 @@ public class ModelFactory {
     String gameType = result.getGameType();
     int[][] cells = result.getCells();
 
-    Grid grid = new Grid(rows, cols);
-
-    if (cells != null) {
-      for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-          grid.getCell(i, j).setState(cells[i][j]);
-        }
-      }
-    }
+    Grid grid = new Grid(rows, cols, cells);
 
     return switch (gameType) {
       case "GameOfLife" -> new GameOfLife(grid, result.getRulestring());

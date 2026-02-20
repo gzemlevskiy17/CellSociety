@@ -6,18 +6,32 @@ import java.util.Deque;
 import java.util.List;
 
 /**
- * A 2D grid of {@link Cell} objects that serves as the spatial structure for all simulations.
+ * A 2D grid of {@link Cell} objects that serves as the spatial structure for
+ * all simulations.
  *
- * <p>Provides access to individual cells, their 8-directional (Moore) neighbors, and
- * bulk operations like extracting all cell states as a 2D array. All cells are initialized to state
- * 0 by default.</p>
+ * <p>
+ * Provides access to individual cells, their 8-directional (Moore) neighbors,
+ * and
+ * bulk operations like extracting all cell states as a 2D array. All cells are
+ * initialized to state
+ * 0 by default.
+ * </p>
  *
- * <p><b>Assumptions:</b> Row and column counts must be positive. Out-of-bounds access to
- * {@link #getCell(int, int)} will throw an {@code ArrayIndexOutOfBoundsException}.</p>
+ * <p>
+ * <b>Assumptions:</b> Row and column counts must be positive. Out-of-bounds
+ * access to
+ * {@link #getCell(int, int)} will throw an
+ * {@code ArrayIndexOutOfBoundsException}.
+ * </p>
  *
- * <p><b>Dependencies:</b> {@link Cell}</p>
+ * <p>
+ * <b>Dependencies:</b> {@link Cell}
+ * </p>
  *
- * <p><b>Example usage:</b></p>
+ * <p>
+ * <b>Example usage:</b>
+ * </p>
+ * 
  * <pre>{@code
  * Grid grid = new Grid(10, 10);
  * grid.getCell(0, 0).setState(1);
@@ -34,13 +48,14 @@ public class Grid {
   private Cell[][] initialState;
 
   private int[][] directions = {
-      {-1, -1}, {-1, 0}, {-1, 1},
-      {0, -1}, {0, 1},
-      {1, -1}, {1, 0}, {1, 1}
+      { -1, -1 }, { -1, 0 }, { -1, 1 },
+      { 0, -1 }, { 0, 1 },
+      { 1, -1 }, { 1, 0 }, { 1, 1 }
   };
 
   /**
-   * Constructs a grid with the given dimensions, initializing all cells to state 0.
+   * Constructs a grid with the given dimensions, initializing all cells to state
+   * 0.
    *
    * @param numRows the number of rows
    * @param numCols the number of columns
@@ -49,12 +64,36 @@ public class Grid {
     cells = new Cell[numRows][numCols];
     defaultInitializeCells();
     history = new ArrayDeque<>();
+    createFirstState(numRows, numCols, null);
+  }
+
+  public Grid(int numRows, int numCols, int[][] cellStates) {
+    cells = new Cell[numRows][numCols];
+    defaultInitializeCells();
+    history = new ArrayDeque<>();
+    createFirstState(numRows, numCols, cellStates);
+  }
+
+  /**
+   * Set the Deque's first state to the grid coppied from ParseResults
+   * 
+   * @param rows       number of rows of initialized grid
+   * @param cols       number of columns of initialized grid
+   * @param cellStates cell States to pass into initialized grid
+   */
+  private void createFirstState(int rows, int cols, int[][] cellStates) {
+    if (cellStates != null) {
+      for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+          getCell(i, j).setState(cellStates[i][j]);
+        }
+      }
+    }
     initialState = copyGrid(cells);
     history.add(copyGrid(cells));
   }
 
-
-  //TODO: test
+  // TODO: test
   public void revertState() {
     if (history.size() > 1) { // Keep at least the initial state
       history.removeFirst(); // Remove current state
@@ -67,9 +106,9 @@ public class Grid {
     }
   }
 
-  //TODO: test this and possibly other methods
+  // TODO: test this and possibly other methods
   public void saveState() {
-    if (history.size() >= 20) { //TODO: extract magic number into config file
+    if (history.size() >= 20) { // TODO: extract magic number into config file
       history.removeLast();
     }
     history.addFirst(copyGrid(cells));
@@ -97,7 +136,8 @@ public class Grid {
   }
 
   /**
-   * Returns all in-bounds Moore neighbors (up to 8) of the cell at the given position. Corner cells
+   * Returns all in-bounds Moore neighbors (up to 8) of the cell at the given
+   * position. Corner cells
    * return 3 neighbors, edge cells return 5, and interior cells return 8.
    *
    * @param row the row index of the target cell
@@ -147,10 +187,12 @@ public class Grid {
   }
 
   /**
-   * Returns a snapshot of all current cell states as a 2D int array. Useful for saving the
+   * Returns a snapshot of all current cell states as a 2D int array. Useful for
+   * saving the
    * simulation state to XML.
    *
-   * @return a new 2D array where each entry is the state of the corresponding cell
+   * @return a new 2D array where each entry is the state of the corresponding
+   *         cell
    */
   public int[][] getCellStates() {
     int[][] states = new int[getRows()][getColumns()];
@@ -174,7 +216,8 @@ public class Grid {
   }
 
   /*
-   * Resets the grid to its initial state. Clears the history and sets all cells back to their
+   * Resets the grid to its initial state. Clears the history and sets all cells
+   * back to their
    * original states as captured at construction.
    */
   public void resetToInitialState() {

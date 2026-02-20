@@ -5,6 +5,7 @@ import cellsociety.model.Game;
 import cellsociety.model.ModelFactory;
 import cellsociety.model.XMLReader;
 import cellsociety.model.XMLWriter;
+import cellsociety.view.ErrorView;
 import cellsociety.view.GridView;
 import cellsociety.view.MainLauncher;
 import cellsociety.view.ScreenManager;
@@ -100,7 +101,7 @@ public class GameRunner {
       parseResult = XMLReader.parse(file);
       currentParseResult = parseResult;
     } catch (Exception e) {
-      screenManager.showError("Configuration Error", e.getMessage());
+      new ErrorView("Configuration Error", e.getMessage());
       return;
     }
     loadForResults();

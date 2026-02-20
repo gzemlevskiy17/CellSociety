@@ -8,6 +8,7 @@ public class PropertiesLoader {
     public static final String DEFAULT_RESOURCE_FOLDER = "/" + DEFAULT_RESOURCE_PACKAGE;
 
     public static ResourceBundle loadProperties(String fileName) throws Exception {
+        // crashes if Locale is not changed
         try {
             return ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + fileName);
         } catch (NullPointerException | MissingResourceException e) {

@@ -26,7 +26,7 @@ public class MainLauncher {
     private ButtonCreator firstButt;
 
     private static final String DEFAULT_THEME = "Light";
-    private String[] langChoices = { "Light", "Dark" };
+    private String[] themeChoices = { "Light", "Dark" };
     private String chosenTheme = DEFAULT_THEME;
 
     public MainLauncher(Stage stage, Runnable start) {
@@ -38,7 +38,7 @@ public class MainLauncher {
         for (String name : names) {
             firstButt.addEmptyButton(name);
         }
-        firstButt.addActionToButton("Language", e -> languageView.setup());
+        firstButt.addActionToButton("Language", e -> findLanguage());
         firstButt.addActionToButton("Theme", e -> findTheme());
         firstButt.addActionToButton("Choice", e -> start.run());
 
@@ -65,11 +65,11 @@ public class MainLauncher {
 
         File cssFile = new File(Paths.get(".").toAbsolutePath().normalize()
                 .resolve("src/main/resources/cellsociety/view/Screen/MainScreen.css").toString());
-        try {
-            scene.getStylesheets().add(cssFile.toURI().toURL().toExternalForm());
-        } catch (MalformedURLException e1) {
-            e1.printStackTrace();
-        }
+        // try {
+        // scene.getStylesheets().add(cssFile.toURI().toURL().toExternalForm());
+        // } catch (MalformedURLException e1) {
+        // e1.printStackTrace();
+        // }
 
         stage.setTitle("Launcher");
         stage.setScene(scene);
@@ -78,7 +78,7 @@ public class MainLauncher {
     }
 
     private void findTheme() {
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(DEFAULT_THEME, Arrays.asList(langChoices));
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(DEFAULT_THEME, Arrays.asList(themeChoices));
         dialog.setTitle("Theming Cell Society");
         dialog.setHeaderText("Theme Setting");
         dialog.setContentText("Choose your theme:");
@@ -88,6 +88,11 @@ public class MainLauncher {
 
     private void setTheme(String theme) {
         chosenTheme = theme;
+    }
+
+    private void findLanguage() {
+        languageView.setup();
+        firstButt.changeLanguage(getLanguage());
     }
 
     public String getLanguage() {

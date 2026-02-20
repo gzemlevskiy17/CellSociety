@@ -51,4 +51,15 @@ public class ButtonCreator {
     public Iterator<Button> returnAll() {
         return buttonHolder.iterator();
     }
+
+    public void changeLanguage(String language) { // resource bundle does not work, rewrite
+        try {
+            myResources = PropertiesLoader.loadProperties("Buttons/" + language);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        for (String name : buttonIndex.keySet()) {
+            setButtonText(name, myResources.getString(name));
+        }
+    }
 }
