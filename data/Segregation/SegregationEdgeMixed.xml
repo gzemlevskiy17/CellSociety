@@ -17,7 +17,7 @@
         </cells>
     </grid>
     <parameters>
-        <probCatch>0.5</probCatch>
+        <threshold>0.5</threshold>
         <states>
             <state id="0" color="#FFFFFF"/>
             <state id="1" color="#3498DB"/>
