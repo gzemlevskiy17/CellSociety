@@ -3,23 +3,36 @@ package cellsociety.model.games;
 import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.model.Grid;
+import cellsociety.model.XMLReader;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Schelling's Model of Segregation simulation.
  *
- * <p>Uses three states: 0 (empty), 1 (group A), 2 (group B). Each occupied cell checks
- * whether the ratio of same-type neighbors to total non-empty neighbors meets the
- * {@code satisfactionThreshold}. Dissatisfied agents are randomly relocated to empty cells.</p>
+ * <p>
+ * Uses three states: 0 (empty), 1 (group A), 2 (group B). Each occupied cell
+ * checks
+ * whether the ratio of same-type neighbors to total non-empty neighbors meets
+ * the
+ * {@code satisfactionThreshold}. Dissatisfied agents are randomly relocated to
+ * empty cells.
+ * </p>
  *
- * <p><b>Assumptions:</b> Threshold should be in the range [0.0, 1.0]. A cell with no
- * non-empty neighbors is considered satisfied. Population counts are conserved across steps
- * — agents are moved, never created or destroyed.</p>
+ * <p>
+ * <b>Assumptions:</b> Threshold should be in the range [0.0, 1.0]. A cell with
+ * no
+ * non-empty neighbors is considered satisfied. Population counts are conserved
+ * across steps
+ * — agents are moved, never created or destroyed.
+ * </p>
  *
- * <p><b>Dependencies:</b> {@link Game}, {@link Grid}, {@link Cell}</p>
+ * <p>
+ * <b>Dependencies:</b> {@link Game}, {@link Grid}, {@link Cell}
+ * </p>
  *
  * @author Michael Li
  * @see Game
@@ -31,12 +44,26 @@ public class Segregation extends Game {
   /**
    * Constructs a Segregation simulation with the given satisfaction threshold.
    *
-   * @param grid the grid of cells; states should be 0 (empty), 1 (group A), or 2 (group B)
-   * @param satisfactionThreshold minimum ratio of same-type neighbors for a cell to stay put
+   * @param grid                  the grid of cells; states should be 0 (empty), 1
+   *                              (group A), or 2 (group B)
+   * @param satisfactionThreshold minimum ratio of same-type neighbors for a cell
+   *                              to stay put
    */
   public Segregation(Grid grid, double satisfactionThreshold) {
     super(grid);
     this.satisfactionThreshold = satisfactionThreshold;
+  }
+
+  public Segregation(Grid grid, Map<String, String> params) {
+    super(grid);
+    double satisfy = XMLReader.parseDouble(params.get("threshold"), 0.0);
+    if (satisfy >= 0 && satisfy <= 1) {
+      this.satisfactionThreshold = satisfy;
+      // System.out.println("Ignition Probability: " + ignitionProbability);
+    } else {
+      throw new IllegalArgumentException("Illegal ignition probability: " + satisfy);
+    }
+
   }
 
   @Override
@@ -48,9 +75,9 @@ public class Segregation extends Game {
       for (int j = 0; j < grid.getColumns(); j++) {
         Cell cell = grid.getCell(i, j);
         if (cell.getState() == 0) {
-          emptyCells.add(new int[]{i, j});
+          emptyCells.add(new int[] { i, j });
         } else if (!isSatisfied(i, j)) {
-          dissatisfied.add(new int[]{i, j});
+          dissatisfied.add(new int[] { i, j });
         }
       }
     }

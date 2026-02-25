@@ -3,23 +3,31 @@ package cellsociety.model.games;
 import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.model.Grid;
+import cellsociety.model.XMLReader;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Forest Fire spreading simulation.
  *
- * <p>Uses three states: 0 (empty), 1 (tree), 2 (burning). Transition rules:</p>
+ * <p>
+ * Uses three states: 0 (empty), 1 (tree), 2 (burning). Transition rules:
+ * </p>
  * <ul>
- *   <li>A burning cell becomes empty.</li>
- *   <li>A tree catches fire if any neighbor is burning, or spontaneously with
- *       probability {@code ignitionProbability}.</li>
- *   <li>An empty cell grows a tree with probability {@code fillProbability}.</li>
+ * <li>A burning cell becomes empty.</li>
+ * <li>A tree catches fire if any neighbor is burning, or spontaneously with
+ * probability {@code ignitionProbability}.</li>
+ * <li>An empty cell grows a tree with probability {@code fillProbability}.</li>
  * </ul>
  *
- * <p><b>Assumptions:</b> Probabilities should be in the range [0.0, 1.0].</p>
+ * <p>
+ * <b>Assumptions:</b> Probabilities should be in the range [0.0, 1.0].
+ * </p>
  *
- * <p><b>Dependencies:</b> {@link Game}, {@link Grid}, {@link Cell}</p>
+ * <p>
+ * <b>Dependencies:</b> {@link Game}, {@link Grid}, {@link Cell}
+ * </p>
  *
  * @author Georgiy Zemlevskiy
  * @see Game
@@ -32,24 +40,44 @@ public class ForestFire extends Game {
   /**
    * Constructs a Forest Fire simulation with the given probabilities.
    *
-   * @param grid the grid of cells; states should be 0 (empty), 1 (tree), or 2 (burning)
+   * @param grid                the grid of cells; states should be 0 (empty), 1
+   *                            (tree), or 2 (burning)
    * @param ignitionProbability chance a tree spontaneously catches fire each step
-   * @param fillProbability chance an empty cell grows a new tree each step
+   * @param fillProbability     chance an empty cell grows a new tree each step
    */
   public ForestFire(Grid grid, double ignitionProbability, double fillProbability) {
     super(grid);
     if (ignitionProbability >= 0 && ignitionProbability <= 1) {
       this.ignitionProbability = ignitionProbability;
-//      System.out.println("Ignition Probability: " + ignitionProbability);
+      // System.out.println("Ignition Probability: " + ignitionProbability);
     } else {
       throw new IllegalArgumentException("Illegal ignition probability: " + ignitionProbability);
     }
 
     if (fillProbability >= 0 && fillProbability <= 1) {
       this.fillProbability = fillProbability;
-//      System.out.println("Fill Probability: " + fillProbability);
+      // System.out.println("Fill Probability: " + fillProbability);
     } else {
       throw new IllegalArgumentException("Illegal fill probability: " + fillProbability);
+    }
+  }
+
+  public ForestFire(Grid grid, Map<String, String> params) {
+    super(grid);
+    double probCatch = XMLReader.parseDouble(params.get("ignitionProbability"), 0.0);
+    double probGrow = XMLReader.parseDouble(params.get("fillProbability"), 0.0);
+    if (probCatch >= 0 && probCatch <= 1) {
+      this.ignitionProbability = probCatch;
+      // System.out.println("Ignition Probability: " + ignitionProbability);
+    } else {
+      throw new IllegalArgumentException("Illegal ignition probability: " + probCatch);
+    }
+
+    if (probGrow >= 0 && probGrow <= 1) {
+      this.fillProbability = probGrow;
+      // System.out.println("Fill Probability: " + fillProbability);
+    } else {
+      throw new IllegalArgumentException("Illegal fill probability: " + probGrow);
     }
   }
 
@@ -78,7 +106,7 @@ public class ForestFire extends Game {
       }
       if (cell.getNextState() == 1) {
         if (Math.random() < ignitionProbability) {
-//          System.out.println("ignition");
+          // System.out.println("ignition");
           cell.setNextState(2);
         }
       }
@@ -86,7 +114,7 @@ public class ForestFire extends Game {
 
     if (cell.getState() == 0) {
       if (Math.random() < fillProbability) {
-//        System.out.println("fill");
+        // System.out.println("fill");
         cell.setNextState(1);
       }
     }

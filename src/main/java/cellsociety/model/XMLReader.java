@@ -231,7 +231,7 @@ public class XMLReader {
     return colorMap;
   }
 
-  private static double parseDouble(String value, double defaultValue) {
+  public static double parseDouble(String value, double defaultValue) {
     if (value.isEmpty()) {
       return defaultValue;
     }

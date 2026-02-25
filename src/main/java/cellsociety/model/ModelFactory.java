@@ -3,13 +3,6 @@ package cellsociety.model;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
-import cellsociety.model.games.FallingSand;
-import cellsociety.model.games.ForestFire;
-import cellsociety.model.games.GameOfLife;
-import cellsociety.model.games.Percolation;
-import cellsociety.model.games.Segregation;
-import cellsociety.model.games.WaTor;
-
 /**
  * Factory that creates {@link Game} instances from parsed XML configuration
  * data.
