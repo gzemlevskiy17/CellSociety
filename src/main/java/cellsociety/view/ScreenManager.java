@@ -7,7 +7,6 @@ import java.util.Optional;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -28,7 +27,7 @@ public class ScreenManager {
   private boolean onPlay;
   private Label dynamicGenerations;
   private Slider speedSlider;
-  private int gen;
+  private int generations;
 
   public ScreenManager(Stage stage, String langResult) {
     stageLive = stage;
@@ -51,11 +50,12 @@ public class ScreenManager {
       Runnable reset, Runnable setGameSpeed,
       Runnable createNewGameAction, Runnable clear, int genNum, double startSpeed) {
     try {
-      checkAllNotNull(onSave, onLoad, pause, play, reset, setGameSpeed, createNewGameAction, clear);
+      checkAllNotNull(onSave, onLoad, pause, play, reset, setGameSpeed, createNewGameAction,
+          clear); //TODO: remove null checks
     } catch (Exception e) {
       e.printStackTrace();
     }
-    gen = genNum;
+    generations = genNum;
     onPlay = true;
     buttons = new ButtonCreator(language);
 
@@ -68,23 +68,24 @@ public class ScreenManager {
     titleBox.setAlignment(Pos.TOP_CENTER);
     mainScreen.setTop(titleBox);
 
-    String[] names = { "Play", "Reset", "Clear", "Save", "Load", "Edit", "NewGame" };
+    String[] names = {"Play", "Reset", "Clear", "Save", "Load", "Edit", "NewGame"};
 
     VBox simulationControl = createControlArea(names, onSave, onLoad, pause, play,
         reset, setGameSpeed, createNewGameAction, clear, startSpeed);
     mainScreen.setBottom(simulationControl);
 
     Scene scene = new Scene(mainScreen, 1000, 800);
-    String titleOfWindow = "Cell Society: Running " + gridView.gameName;
+    String titleOfWindow = "Cell Society: Running " + gridView.gameName; //TODO: language
     stageLive.setTitle(titleOfWindow);
     stageLive.setScene(scene);
   }
 
   private VBox createControlArea(String[] names, Runnable onSave, Runnable onLoad, Runnable pause,
-      Runnable play, Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction, Runnable clear,
+      Runnable play, Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction,
+      Runnable clear,
       double startSpeed) {
 
-    HBox timeArea = createTimeAreaBox(pause, setGameSpeed, startSpeed);
+    HBox timeArea = createTimeAreaBox(setGameSpeed, startSpeed);
 
     HBox buttonArea = createButtonBoxArea(names, onSave, onLoad, pause, play,
         reset, createNewGameAction, clear);
@@ -95,7 +96,7 @@ public class ScreenManager {
     return simulationControl;
   }
 
-  private HBox createTimeAreaBox(Runnable pause, Runnable setGameSpeed, double startSpeed) {
+  private HBox createTimeAreaBox(Runnable setGameSpeed, double startSpeed) {
     HBox hbox = new HBox(20);
 
     speedSlider = new Slider(0, 10, startSpeed);
@@ -105,12 +106,10 @@ public class ScreenManager {
     speedSlider.setMajorTickUnit(1);
     speedSlider.setSnapToTicks(true);
 
-    speedSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
-      speedSliderFunction(pause, setGameSpeed, newValue.doubleValue());
-    });
+    speedSlider.valueProperty().addListener((observable) -> setGameSpeed.run());
 
     dynamicGenerations = new Label();
-    dynamicGenerations.setText("Gen: " + String.valueOf(gen));
+    dynamicGenerations.setText("Gen: " + generations); //TODO: add language
 
     hbox.setAlignment(Pos.TOP_CENTER);
     hbox.getChildren().addAll(speedSlider, dynamicGenerations);
@@ -155,13 +154,6 @@ public class ScreenManager {
     }
   }
 
-  private void speedSliderFunction(Runnable pause, Runnable setGameSpeed, double newValue) {
-    pause.run();
-    onPlay = true;
-    buttons.setButtonText("Play", "Play");
-    setGameSpeed.run();
-  } // TODO: refactor so that this is called from the controller on button press.
-
   public double getSliderValue() {
     if (speedSlider.getValue() <= 0) {
       return 1;
@@ -170,8 +162,8 @@ public class ScreenManager {
   }
 
   public void setGenerations(int generations) {
-    gen = generations;
-    dynamicGenerations.setText("#: " + String.valueOf(gen));
+    this.generations = generations;
+    dynamicGenerations.setText("#: " + this.generations); //TODO: fix "Gen" getting overwritten here
   }
 
   public Optional<File> startScreen(Stage stage) {

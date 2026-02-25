@@ -60,7 +60,7 @@ public abstract class Game {
    */
   public void reset() {
     grid.resetToInitialState();
-  }
+  } //TODO: test
 
   /**
    * Computes the next state for every cell based on the simulation's rules. Implementations should

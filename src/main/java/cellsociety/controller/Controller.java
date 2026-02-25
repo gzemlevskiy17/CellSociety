@@ -176,7 +176,6 @@ public class Controller {
    */
   public void findGameSpeed() {
     setGameSpeed(screenManager.getSliderValue());
-    gameLoop.play();
   }
 
   /**
