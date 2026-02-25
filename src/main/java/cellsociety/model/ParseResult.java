@@ -46,12 +46,11 @@ public class ParseResult {
     private final int cols;
     private final String gameType;
     private final int[][] cells;
-    private final Map<String, Double> params;
+    private final Map<String, String> params;
     private final Map<Integer, String> colorMap;
     private final String author;
     private final String title;
     private final String description;
-    private final String rulestring;
 
     /**
      * Constructs a ParseResult with all simulation configuration values.
@@ -69,11 +68,12 @@ public class ParseResult {
      * @param probGrow    tree growth probability (ForestFire)
      * @param speed       simulation speed multiplier
      * @param threshold   satisfaction threshold (Segregation)
+     * @param params      parameters for all games
      * @param colorMap    mapping of state IDs to hex color strings
      */
     public ParseResult(int rows, int cols, String gameType, String title, String author, String description,
-            int[][] cells, Map<String, Double> params,
-            Map<Integer, String> colorMap, String rulestring) {
+            int[][] cells, Map<String, String> params,
+            Map<Integer, String> colorMap) {
         this.rows = rows;
         this.cols = cols;
         this.gameType = gameType;
@@ -83,7 +83,6 @@ public class ParseResult {
         this.cells = cells;
         this.params = params;
         this.colorMap = colorMap;
-        this.rulestring = rulestring;
     }
 
     /** @return mapping of state IDs to hex color strings (e.g., 0 -> "#FFFFFF") */
@@ -127,46 +126,64 @@ public class ParseResult {
     }
 
     /** @return Map of parameters */
-    public Map<String, Double> getParams() {
+    public Map<String, String> getParams() {
         return params;
     }
 
     /** @return parameter from Map of parameters */
-    public double getAParam(String param) {
+    public double getADoubleParam(String param) throws NumberFormatException {
         if (params.containsKey(param)) {
-            return params.get(param);
+            try {
+                return Double.parseDouble(params.get(param).trim());
+            } catch (NumberFormatException e) {
+                throw e;
+            }
         }
         return 0.0;
     }
 
-    /** @return fire ignition probability for ForestFire simulations */
-    public double getProbCatch() {
-        return getAParam("ignitionProbability");
+    public String getAStringParam(String param) {
+        if (params.containsKey(param)) {
+            return params.get(param);
+        }
+        return "";
     }
+
+    /** @return fire ignition probability for ForestFire simulations */
+    /*
+     * public double getProbCatch() {
+     * return getADoubleParam("ignitionProbability");
+     * }
+     */
 
     /** @return tree growth probability for ForestFire simulations */
-    public double getProbGrow() {
-        return getAParam("fillProbability");
-    }
+    /*
+     * public double getProbGrow() {
+     * return getADoubleParam("fillProbability");
+     * }
+     */
 
     /** @return simulation speed multiplier */
-    public double getSpeed() {
-        return getAParam("speed");
-    }
+    /*
+     * public double getSpeed() {
+     * return getADoubleParam("speed");
+     * }
+     */
 
     /** @return satisfaction threshold for Segregation simulations */
-    public double getThreshold() {
-        return getAParam("threshold");
-    }
+    /*
+     * public double getThreshold() {
+     * return getADoubleParam("threshold");
+     * }
+     */
 
     /**
      * @return rulestring for Game of Life variations (e.g., "B3/S23"), or empty
      *         string if not set
      */
-    public String getRulestring() {
-        if (rulestring == null) {
-            return "";
-        }
-        return rulestring;
-    }
+    /*
+     * public String getRulestring() {
+     * return getAStringParam("rulestring");
+     * }
+     */
 }

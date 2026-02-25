@@ -78,11 +78,21 @@ public class XMLWriter {
 
     Element paramEl = doc.createElement("parameters");
     root.appendChild(paramEl);
-    if (result.getProbCatch() != 0.0) {
-      appendTextElement(doc, paramEl, "probCatch", String.valueOf(result.getProbCatch()));
-    }
-    if (result.getProbGrow() != 0.0) {
-      appendTextElement(doc, paramEl, "probGrow", String.valueOf(result.getProbGrow()));
+    /*
+     * if (result.getProbCatch() != 0.0) {
+     * appendTextElement(doc, paramEl, "probCatch",
+     * String.valueOf(result.getProbCatch()));
+     * }
+     * if (result.getProbGrow() != 0.0) {
+     * appendTextElement(doc, paramEl, "probGrow",
+     * String.valueOf(result.getProbGrow()));
+     * }
+     */
+
+    if (result.getParams() != null && !result.getParams().isEmpty()) {
+      for (Map.Entry<String, String> entry : result.getParams().entrySet()) {
+        appendTextElement(doc, paramEl, entry.getKey(), entry.getValue());
+      }
     }
 
     if (result.getColorMap() != null && !result.getColorMap().isEmpty()) {

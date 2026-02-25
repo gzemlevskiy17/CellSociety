@@ -78,12 +78,12 @@ public class XMLReader {
       }
     }
 
-    Map<String, Double> params = null;
+    Map<String, String> params = null;
     if (paramEl != null) {
       params = parseParameters(paramEl);
     } else {
-      params = new HashMap<String, Double>();
-      params.put("speed", 1.0);
+      params = new HashMap<String, String>();
+      params.put("speed", "1");
     }
     Element colorEl = getFirstElement(paramEl, "states");
     Map<Integer, String> colorMap = parseColors(colorEl);
@@ -97,7 +97,7 @@ public class XMLReader {
       rulestring = getTextValue(paramEl, "rulestring");
     }
 
-    return new ParseResult(dims[0], dims[1], gameType, title, author, description, cells, params, colorMap, rulestring);
+    return new ParseResult(dims[0], dims[1], gameType, title, author, description, cells, params, colorMap);
   }
 
   private static int[] parseDimensions(Element container) {
@@ -199,17 +199,17 @@ public class XMLReader {
     }
   }
 
-  private static Map<String, Double> parseParameters(Element paramEl) {
-    Map<String, Double> holding = new HashMap<String, Double>();
+  private static Map<String, String> parseParameters(Element paramEl) {
+    Map<String, String> holding = new HashMap<String, String>();
     NodeList nodes = paramEl.getChildNodes();
     for (int i = 0; i < nodes.getLength(); i++) {
       if (!nodes.item(i).getNodeName().equals("states") && !nodes.item(i).getNodeName().equals("#text")) {
-        Double value = parseDouble(getTextValue(paramEl, nodes.item(i).getNodeName()), 0.0);
+        String value = getTextValue(paramEl, nodes.item(i).getNodeName());
         holding.put(nodes.item(i).getNodeName(), value);
       }
     }
-    if (!holding.containsKey("speed") || holding.get("speed") < 0.0) {
-      holding.put("speed", 1.0);
+    if (!holding.containsKey("speed") || parseDouble(holding.get("speed"), 0.0) <= 0.0) {
+      holding.put("speed", "1");
     }
     return holding;
   }

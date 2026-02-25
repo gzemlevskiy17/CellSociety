@@ -3,6 +3,7 @@ package cellsociety.model.games;
 import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.model.Grid;
+import cellsociety.view.ErrorView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -97,20 +98,16 @@ public class WaTor extends Game {
     private HashMap<Cell, Shark> sharkLives = new HashMap<Cell, Shark>();
     private HashMap<Cell, Fish> fishLives = new HashMap<Cell, Fish>();
 
-    public WaTor(Grid grid, Map<String, Double> params) {
+    public WaTor(Grid grid, Map<String, String> params) throws Exception {
         super(grid);
-        this.pyRepro = params.get("pyRepro").intValue();
-        this.pdrEner = params.get("pdrEner").intValue();
-        this.pdrRepro = params.get("pdrRepro").intValue();
-        this.pdrEatsFor = params.get("pdrEatsFor").intValue();
-    }
-
-    public WaTor(Grid grid, double pyRepro, double pdrEner, double pdrRepro, double pdrEatsFor) {
-        super(grid);
-        this.pyRepro = (int) pyRepro;
-        this.pdrEner = (int) pdrEner;
-        this.pdrRepro = (int) pdrRepro;
-        this.pdrEatsFor = (int) pdrEatsFor;
+        try {
+            pyRepro = Integer.parseInt(params.get("pyRepro"));
+            pdrEner = Integer.parseInt(params.get("pdrEner"));
+            pdrRepro = Integer.parseInt(params.get("pdrRepro"));
+            pdrEatsFor = Integer.parseInt(params.get("pdrEatsFor"));
+        } catch (NumberFormatException e) {
+            throw e;
+        }
     }
 
     @Override

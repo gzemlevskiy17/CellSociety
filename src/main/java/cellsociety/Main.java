@@ -7,13 +7,21 @@ import javafx.stage.Stage;
 /**
  * JavaFX application entry point that launches the Cellsociety UI.
  *
- * <p>Purpose: Bootstraps the JavaFX runtime and constructs a GameManager for the primary
- * stage.</p>
+ * <p>
+ * Purpose: Bootstraps the JavaFX runtime and constructs a GameManager for the
+ * primary
+ * stage.
+ * </p>
  *
- * <p>Assumptions: JavaFX environment is available. main(...) should be invoked to start the JavaFX
- * platform.</p>
+ * <p>
+ * Assumptions: JavaFX environment is available. main(...) should be invoked to
+ * start the JavaFX
+ * platform.
+ * </p>
  *
- * <p>Dependencies: cellsociety.controller.GameManager and JavaFX Application APIs.</p>
+ * <p>
+ * Dependencies: cellsociety.controller.GameManager and JavaFX Application APIs.
+ * </p>
  *
  * @author Georgiy Zemlevskiy
  */

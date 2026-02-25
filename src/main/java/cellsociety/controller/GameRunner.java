@@ -89,27 +89,39 @@ public class GameRunner {
 
   private void setup() {
     myStage.show();
-    // in contructor also calls the language screen
     Optional<File> optionalFile = screenManager.startScreen(myStage);
-    optionalFile.ifPresent(file -> handleRealLoad(file));
+    optionalFile.ifPresent(file -> {
+      try {
+        handleRealLoad(file);
+        return;
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    });
   }
 
-  private void handleRealLoad(File file) {
+  private void handleRealLoad(File file) throws Exception {
     ParseResult parseResult;
     try {
       parseResult = XMLReader.parse(file);
       currentParseResult = parseResult;
     } catch (Exception e) {
       new ErrorView("Configuration Error", e.getMessage());
-      return;
+      throw new Exception();
     }
-    loadForResults();
+    try {
+      loadForResults();
+    } catch (IllegalArgumentException e) {
+      new ErrorView("Wrong Arguments", e.getMessage());
+      throw new Exception();
+    }
   }
 
-  private void loadForResults() {
+  private void loadForResults() throws IllegalArgumentException {
     game = modelFactory.createGame(currentParseResult);
     gridView = viewFactory.createView(currentParseResult);
-    controller = new Controller(game, screenManager, gridView, currentParseResult.getSpeed(), createNewGameAction);
+    controller = new Controller(game, screenManager, gridView, currentParseResult.getADoubleParam("speed"),
+        createNewGameAction);
     controller.gameScreenShow(this::handleSave, this::setup, createNewGameAction, this::loadForResults);
     controller.reset();
   }
@@ -117,8 +129,8 @@ public class GameRunner {
   private void handleSave() {
     controller.pause();
     int[][] currentCells = game.getGrid().getCellStates();
-    double currentSpeed = controller.getGameSpeed();
-    Map<String, Double> toBeChanged = currentParseResult.getParams();
+    String currentSpeed = controller.getGameSpeed() + "";
+    Map<String, String> toBeChanged = currentParseResult.getParams();
     toBeChanged.replace("speed", currentSpeed);
     ParseResult snapshot = new ParseResult(
         currentParseResult.getRows(),
@@ -129,8 +141,7 @@ public class GameRunner {
         currentParseResult.getDescription(),
         currentCells,
         toBeChanged,
-        currentParseResult.getColorMap(),
-        currentParseResult.getRulestring());
+        currentParseResult.getColorMap());
     try {
       XMLWriter.save(snapshot, myStage);
     } catch (ParserConfigurationException | TransformerException e) {

@@ -6,6 +6,7 @@ import cellsociety.model.Grid;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,13 +14,17 @@ import java.util.regex.Pattern;
 /**
  * General Game of Life simulation supporting rulestring variations.
  *
- * <p>Supports two rulestring formats:</p>
+ * <p>
+ * Supports two rulestring formats:
+ * </p>
  * <ul>
- *   <li>B/S notation: "B3/S23" (birth digits / survival digits)</li>
- *   <li>S/B notation: "23/3" (survival digits / birth digits)</li>
+ * <li>B/S notation: "B3/S23" (birth digits / survival digits)</li>
+ * <li>S/B notation: "23/3" (survival digits / birth digits)</li>
  * </ul>
  *
- * <p>Defaults to classic Conway rules (B3/S23) if no rulestring is provided.</p>
+ * <p>
+ * Defaults to classic Conway rules (B3/S23) if no rulestring is provided.
+ * </p>
  *
  * @author Michael Li
  * @see Game
@@ -38,6 +43,28 @@ public class GameOfLife extends Game {
 
     public GameOfLife(Grid grid, String rulestring) {
         super(grid);
+        if (rulestring == null || rulestring.isEmpty()) {
+            // Default: classic Conway B3/S23
+            birthCounts = digitsToSet("3");
+            survivalCounts = digitsToSet("23");
+        } else {
+            Matcher bsMatcher = BS_PATTERN.matcher(rulestring);
+            Matcher sbMatcher = SB_PATTERN.matcher(rulestring);
+            if (bsMatcher.matches()) {
+                birthCounts = digitsToSet(bsMatcher.group(1));
+                survivalCounts = digitsToSet(bsMatcher.group(2));
+            } else if (sbMatcher.matches()) {
+                survivalCounts = digitsToSet(sbMatcher.group(1));
+                birthCounts = digitsToSet(sbMatcher.group(2));
+            } else {
+                throw new IllegalArgumentException("Invalid rulestring: " + rulestring);
+            }
+        }
+    }
+
+    public GameOfLife(Grid grid, Map<String, String> params) {
+        super(grid);
+        String rulestring = params.get("ruleString");
         if (rulestring == null || rulestring.isEmpty()) {
             // Default: classic Conway B3/S23
             birthCounts = digitsToSet("3");

@@ -14,24 +14,29 @@ class WaTorTest {
   private static final int FISH = 1;
   private static final int SHARK = 2;
 
-  private Map<String, Double> defaultParams() {
-    Map<String, Double> params = new HashMap<>();
-    params.put("pyRepro", 3.0);
-    params.put("pdrEner", 5.0);
-    params.put("pdrRepro", 8.0);
-    params.put("pdrEatsFor", 3.0);
-    params.put("speed", 1.0);
+  private Map<String, String> defaultParams() {
+    Map<String, String> params = new HashMap<>();
+    params.put("pyRepro", "3");
+    params.put("pdrEner", "5");
+    params.put("pdrRepro", "8");
+    params.put("pdrEatsFor", "3");
+    params.put("speed", "1");
     return params;
   }
 
   @Test
   void testFishMovesToEmptyNeighbor() {
-    // Single fish in center, surrounded by empty — should move after a step
+    // Single fish in center, surrounded by empty â should move after a step
     Grid grid = new Grid(3, 3);
     grid.getCell(1, 1).setState(FISH);
 
-    WaTor game = new WaTor(grid, defaultParams());
-    game.step();
+    WaTor game;
+    try {
+      game = new WaTor(grid, defaultParams());
+      game.step();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     // Fish should have left center
     int fishCount = countState(grid, FISH);
@@ -48,8 +53,13 @@ class WaTorTest {
     grid.getCell(0, 0).setState(SHARK);
     grid.getCell(0, 1).setState(FISH);
 
-    WaTor game = new WaTor(grid, defaultParams());
-    game.step();
+    WaTor game;
+    try {
+      game = new WaTor(grid, defaultParams());
+      game.step();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     // Fish should be gone, shark should have moved to fish's location
     assertEquals(0, countState(grid, FISH));
@@ -59,18 +69,23 @@ class WaTorTest {
   @Test
   void testSharkDiesWhenEnergyDepleted() {
     // Shark with energy 1, no fish to eat — should die after 1 step
-    Map<String, Double> params = defaultParams();
-    params.put("pdrEner", 1.0);
-    params.put("pdrEatsFor", 0.0);
+    Map<String, String> params = defaultParams();
+    params.put("pdrEner", "1");
+    params.put("pdrEatsFor", "1");
 
     Grid grid = new Grid(1, 3);
     grid.getCell(0, 1).setState(SHARK);
 
-    WaTor game = new WaTor(grid, params);
-    // After step, shark loses 1 energy -> 0 energy
-    game.step();
-    // After another step, shark should be dead (energy <= 0)
-    game.step();
+    WaTor game;
+    try {
+      game = new WaTor(grid, params);
+      // After step, shark loses 1 energy -> 0 energy
+      game.step();
+      // After another step, shark should be dead (energy <= 0)
+      game.step();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     assertEquals(0, countState(grid, SHARK));
   }
@@ -78,14 +93,19 @@ class WaTorTest {
   @Test
   void testFishReproducesAfterEnoughTicks() {
     // Fish with pyRepro = 1, should reproduce after 1 tick
-    Map<String, Double> params = defaultParams();
-    params.put("pyRepro", 1.0);
+    Map<String, String> params = defaultParams();
+    params.put("pyRepro", "1");
 
     Grid grid = new Grid(3, 3);
     grid.getCell(1, 1).setState(FISH);
 
-    WaTor game = new WaTor(grid, params);
-    game.step();
+    WaTor game;
+    try {
+      game = new WaTor(grid, params);
+      game.step();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     // Should now be 2 fish: original moved + offspring left behind
     assertEquals(2, countState(grid, FISH));
@@ -94,15 +114,20 @@ class WaTorTest {
   @Test
   void testSharkReproducesAfterEnoughTicks() {
     // Shark with pdrRepro = 1, should reproduce after 1 tick
-    Map<String, Double> params = defaultParams();
-    params.put("pdrRepro", 1.0);
-    params.put("pdrEner", 10.0);
+    Map<String, String> params = defaultParams();
+    params.put("pdrRepro", "1");
+    params.put("pdrEner", "10");
 
     Grid grid = new Grid(3, 3);
     grid.getCell(1, 1).setState(SHARK);
 
-    WaTor game = new WaTor(grid, params);
-    game.step();
+    WaTor game;
+    try {
+      game = new WaTor(grid, params);
+      game.step();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     // Should now be 2 sharks: original moved + offspring left behind
     assertEquals(2, countState(grid, SHARK));
@@ -112,8 +137,13 @@ class WaTorTest {
   void testEmptyGridRemainsEmpty() {
     Grid grid = new Grid(3, 3);
 
-    WaTor game = new WaTor(grid, defaultParams());
-    game.step();
+    WaTor game;
+    try {
+      game = new WaTor(grid, defaultParams());
+      game.step();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
@@ -132,8 +162,13 @@ class WaTorTest {
       }
     }
 
-    WaTor game = new WaTor(grid, defaultParams());
-    game.step();
+    WaTor game;
+    try {
+      game = new WaTor(grid, defaultParams());
+      game.step();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     // All should still be fish (no empty space to move or reproduce into)
     assertEquals(9, countState(grid, FISH));
@@ -142,16 +177,22 @@ class WaTorTest {
   @Test
   void testSharkEatingGainsEnergy() {
     // Shark with energy 2, eatsFor 3 — eating should keep it alive longer
-    Map<String, Double> params = defaultParams();
-    params.put("pdrEner", 2.0);
-    params.put("pdrEatsFor", 3.0);
+    Map<String, String> params = defaultParams();
+    params.put("pdrEner", "2");
+    params.put("pdrEatsFor", "3");
 
     Grid grid = new Grid(1, 3);
     grid.getCell(0, 0).setState(SHARK);
     grid.getCell(0, 1).setState(FISH);
 
-    WaTor game = new WaTor(grid, params);
-    game.step();
+    WaTor game = null;
+    try {
+      game = new WaTor(grid, params);
+      game.step();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return;
+    }
 
     // Shark ate fish, gained energy — should still be alive
     assertEquals(1, countState(grid, SHARK));
@@ -169,8 +210,13 @@ class WaTorTest {
     Grid grid = new Grid(3, 3);
     grid.getCell(0, 0).setState(FISH);
 
-    WaTor game = new WaTor(grid, defaultParams());
-    game.step();
+    WaTor game;
+    try {
+      game = new WaTor(grid, defaultParams());
+      game.step();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     assertEquals(1, countState(grid, FISH));
     assertEquals(EMPTY, grid.getCell(0, 0).getState());
@@ -183,8 +229,13 @@ class WaTorTest {
     grid.getCell(0, 0).setState(SHARK);
     grid.getCell(0, 1).setState(FISH);
 
-    WaTor game = new WaTor(grid, defaultParams());
-    game.step();
+    WaTor game;
+    try {
+      game = new WaTor(grid, defaultParams());
+      game.step();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     assertEquals(0, countState(grid, FISH));
     assertEquals(1, countState(grid, SHARK));

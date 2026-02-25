@@ -1,5 +1,8 @@
 package cellsociety.model;
 
+import java.lang.reflect.Constructor;
+import java.util.Map;
+
 import cellsociety.model.games.FallingSand;
 import cellsociety.model.games.ForestFire;
 import cellsociety.model.games.GameOfLife;
@@ -54,7 +57,7 @@ public class ModelFactory {
    * @return a new {@link Game} subclass instance ready to run
    * @throws IllegalArgumentException if the game type is not recognized
    */
-  public Game createGame(ParseResult result) {
+  public Game createGame(ParseResult result) throws IllegalArgumentException {
     int rows = result.getRows();
     int cols = result.getCols();
     String gameType = result.getGameType();
@@ -62,15 +65,42 @@ public class ModelFactory {
 
     Grid grid = new Grid(rows, cols, cells);
 
-    return switch (gameType) {
-      case "GameOfLife" -> new GameOfLife(grid, result.getRulestring());
-      case "ForestFire" ->
-        new ForestFire(grid, result.getAParam("ignitionProbability"), result.getAParam("fillProbability"));
-      case "Segregation" -> new Segregation(grid, result.getAParam("threshold"));
-      case "WaTor" -> new WaTor(grid, result.getParams());
-      case "Percolation" -> new Percolation(grid);
-      case "FallingSand" -> new FallingSand(grid);
-      default -> throw new IllegalArgumentException("Unknown game type: " + gameType);
-    };
+    Class<?> superClazzReq = Game.class;
+    try {
+      Class<?> gameClazz = Class.forName("cellsociety.model.games." + gameType);
+      if (!gameClazz.getSuperclass().equals(superClazzReq)) {
+        throw new IllegalArgumentException("Unknown game type: " + gameType);
+      }
+      Class<?>[] paramTypes = new Class<?>[] { Grid.class, Map.class };
+      try {
+        Constructor<?> gameCalled = gameClazz.getDeclaredConstructor(paramTypes);
+        return (Game) gameCalled.newInstance(new Object[] { grid, result.getParams() });
+      } catch (Exception e) {
+        try {
+          paramTypes = new Class<?>[] { Grid.class };
+          Constructor<?> gameCalled = gameClazz.getDeclaredConstructor(paramTypes);
+          return (Game) gameCalled.newInstance(new Object[] { grid });
+        } catch (Exception eRet) {
+          eRet.printStackTrace();
+          throw new IllegalArgumentException(gameType + " takes no such arguments");
+        }
+      }
+    } catch (ClassNotFoundException e) {
+      throw new IllegalArgumentException("Unknown game type: " + gameType);
+    }
+    /*
+     * return switch (gameType) {
+     * case "GameOfLife" -> new GameOfLife(grid, result.getRulestring());
+     * case "ForestFire" ->
+     * new ForestFire(grid, result.getAParam("ignitionProbability"),
+     * result.getAParam("fillProbability"));
+     * case "Segregation" -> new Segregation(grid, result.getAParam("threshold"));
+     * case "WaTor" -> new WaTor(grid, result.getParams());
+     * case "Percolation" -> new Percolation(grid);
+     * case "FallingSand" -> new FallingSand(grid);
+     * default -> throw new IllegalArgumentException("Unknown game type: " +
+     * gameType);
+     * };
+     */
   }
 }
