@@ -64,7 +64,7 @@ public class GameOfLife extends Game {
     }
 
     public GameOfLife(Grid grid, Map<String, String> params) {
-        super(grid);
+        super(grid, params);
         String rulestring = getParam(newVariables[0]);
         if (rulestring == null || rulestring.isEmpty()) {
             // Default: classic Conway B3/S23

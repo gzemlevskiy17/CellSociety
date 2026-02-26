@@ -55,19 +55,19 @@ public class WaTor extends Game {
             this.energy = energy;
         }
 
-        public boolean isDead() {
+        private boolean isDead() {
             return energy <= 0;
         }
 
-        public int reProd() {
+        private int reProd() {
             return life;
         }
 
-        public void reset() {
+        private void reset() {
             life = 0;
         }
 
-        public void moved(int eat) {
+        private void moved(int eat) {
             energy += eat;
             life++;
         }
@@ -76,15 +76,15 @@ public class WaTor extends Game {
     private class Fish {
         private int life = 0;
 
-        public int reProd() {
+        private int reProd() {
             return life;
         }
 
-        public void reset() {
+        private void reset() {
             life = 0;
         }
 
-        public void moved() {
+        private void moved() {
             life++;
         }
     }
@@ -112,6 +112,12 @@ public class WaTor extends Game {
     @Override
     protected void updateGame() {
         // first run the sharks
+        sharkMove();
+        // finally run the fish
+        fishMove();
+    }
+
+    private void sharkMove() {
         for (int i = 0; i < grid.getRows(); i++) {
             for (int j = 0; j < grid.getColumns(); j++) {
                 Cell cell = grid.getCell(i, j);
@@ -144,7 +150,9 @@ public class WaTor extends Game {
                 }
             }
         }
-        // finally run the fish
+    }
+
+    public void fishMove() {
         for (int i = 0; i < grid.getRows(); i++) {
             for (int j = 0; j < grid.getColumns(); j++) {
                 Cell cell = grid.getCell(i, j);

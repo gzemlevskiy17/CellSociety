@@ -69,31 +69,11 @@ public class ModelFactory {
         Constructor<?> gameCalled = gameClazz.getDeclaredConstructor(paramTypes);
         return (Game) gameCalled.newInstance(new Object[] { grid, result.getParams() });
       } catch (Exception e) {
-        try {
-          paramTypes = new Class<?>[] { Grid.class };
-          Constructor<?> gameCalled = gameClazz.getDeclaredConstructor(paramTypes);
-          return (Game) gameCalled.newInstance(new Object[] { grid });
-        } catch (Exception eRet) {
-          eRet.printStackTrace();
-          throw new IllegalArgumentException(gameType + " takes no such arguments");
-        }
+        e.printStackTrace();
+        throw new IllegalArgumentException(gameType + " takes no such arguments");
       }
     } catch (ClassNotFoundException e) {
       throw new IllegalArgumentException("Unknown game type: " + gameType);
     }
-    /*
-     * return switch (gameType) {
-     * case "GameOfLife" -> new GameOfLife(grid, result.getRulestring());
-     * case "ForestFire" ->
-     * new ForestFire(grid, result.getAParam("ignitionProbability"),
-     * result.getAParam("fillProbability"));
-     * case "Segregation" -> new Segregation(grid, result.getAParam("threshold"));
-     * case "WaTor" -> new WaTor(grid, result.getParams());
-     * case "Percolation" -> new Percolation(grid);
-     * case "FallingSand" -> new FallingSand(grid);
-     * default -> throw new IllegalArgumentException("Unknown game type: " +
-     * gameType);
-     * };
-     */
   }
 }
