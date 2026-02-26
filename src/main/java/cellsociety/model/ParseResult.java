@@ -130,15 +130,4 @@ public class ParseResult {
         return params;
     }
 
-    /** @return parameter from Map of parameters */
-    public double getADoubleParam(String param) throws NumberFormatException {
-        if (params.containsKey(param)) {
-            try {
-                return Double.parseDouble(params.get(param).trim());
-            } catch (NumberFormatException e) {
-                throw e;
-            }
-        }
-        return 0.0;
-    }
 }

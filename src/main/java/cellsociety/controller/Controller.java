@@ -2,6 +2,7 @@ package cellsociety.controller;
 
 import cellsociety.model.Cell;
 import cellsociety.model.Game;
+import cellsociety.model.ParseResult;
 import cellsociety.view.GridView;
 import cellsociety.view.InfoView;
 import cellsociety.view.ScreenManager;
@@ -76,13 +77,17 @@ public class Controller {
    * @param gameSpeed           the initial playback rate for the game loop
    * @param createNewGameAction action invoked to create a new game
    */
-  public Controller(Game game, ScreenManager screenManager, GridView gridView, double gameSpeed,
+  public Controller(Game game, ScreenManager screenManager, GridView gridView, ParseResult InfoResult,
       Runnable createNewGameAction) {
     this.game = game;
     this.screenManager = screenManager;
     this.gridView = gridView;
     screenManager.setGridView(gridView);
-    this.gameSpeed = gameSpeed;
+    try {
+      this.gameSpeed = Double.valueOf(InfoResult.getParams().get("speed"));
+    } catch (Exception e) {
+      this.gameSpeed = 1.0;
+    }
     gameLoop = new Timeline(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> loop()));
     gameLoop.setCycleCount(Timeline.INDEFINITE);
     gameLoop.pause();

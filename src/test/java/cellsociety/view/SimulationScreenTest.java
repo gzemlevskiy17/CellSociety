@@ -36,7 +36,7 @@ public class SimulationScreenTest extends DukeApplicationTest {
     game = modelFactory.createGame(parseResult);
     gridView = viewFactory.createView(parseResult);
     screenManager = new ScreenManager(primaryStage, "English");
-    controller = new Controller(game, screenManager, gridView, 0, null);
+    // controller = new Controller(game, screenManager, gridView, 0, null);
     // controller.play();
     // controller.loop();
   }

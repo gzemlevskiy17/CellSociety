@@ -120,7 +120,7 @@ public class GameRunner {
   private void loadForResults() throws IllegalArgumentException {
     game = modelFactory.createGame(currentParseResult);
     gridView = viewFactory.createView(currentParseResult);
-    controller = new Controller(game, screenManager, gridView, currentParseResult.getADoubleParam("speed"),
+    controller = new Controller(game, screenManager, gridView, currentParseResult,
         createNewGameAction);
     controller.gameScreenShow(this::handleSave, this::setup, createNewGameAction, this::loadForResults);
     controller.reset();
