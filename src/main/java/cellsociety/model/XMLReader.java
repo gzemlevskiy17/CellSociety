@@ -80,12 +80,6 @@ public class XMLReader {
     }
 
     LinkedHashMap<String, String> params = new LinkedHashMap<>();
-    params.put("gameType", gameType);
-    params.put("title", title);
-    params.put("author", author);
-    params.put("description", description);
-    params.put("rows", String.valueOf(dims[0]));
-    params.put("cols", String.valueOf(dims[1]));
     if (paramEl != null) {
       parseParameters(paramEl, params);
     } else {

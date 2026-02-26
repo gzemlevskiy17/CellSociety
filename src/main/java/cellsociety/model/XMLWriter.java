@@ -92,10 +92,7 @@ public class XMLWriter {
     if (result.getParams() != null && !result.getParams().isEmpty()) {
       for (Map.Entry<String, String> entry : result.getParams().entrySet()) {
         String keytoPut = entry.getKey();
-        if (!keytoPut.equals("rows") && !keytoPut.equals("cols") && !keytoPut.equals("gameType")
-            && !keytoPut.equals("title") && !keytoPut.equals("author") && !keytoPut.equals("description")) {
-          appendTextElement(doc, paramEl, keytoPut, entry.getValue());
-        }
+        appendTextElement(doc, paramEl, keytoPut, entry.getValue());
       }
     }
 
