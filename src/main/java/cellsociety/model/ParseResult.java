@@ -85,19 +85,6 @@ public class ParseResult {
         this.colorMap = colorMap;
     }
 
-    public ParseResult(int[][] cells, Map<String, String> params,
-            Map<Integer, String> colorMap) {
-        this.rows = Integer.valueOf(params.get("rows"));
-        this.cols = Integer.valueOf(params.get("cols"));
-        this.gameType = params.get("gameType");
-        this.title = params.get("title");
-        this.author = params.get("author");
-        this.description = params.get("description");
-        this.cells = cells;
-        this.params = params;
-        this.colorMap = colorMap;
-    }
-
     /** @return mapping of state IDs to hex color strings (e.g., 0 -> "#FFFFFF") */
     public Map<Integer, String> getColorMap() {
         return colorMap;

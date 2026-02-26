@@ -93,7 +93,7 @@ public class XMLReader {
       validateCellStates(cells, colorMap.keySet());
     }
 
-    return new ParseResult(cells, params, colorMap);
+    return new ParseResult(dims[0], dims[1], gameType, title, author, description, cells, params, colorMap);
   }
 
   private static int[] parseDimensions(Element container) {
