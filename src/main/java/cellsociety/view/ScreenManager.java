@@ -2,12 +2,10 @@ package cellsociety.view;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.Iterator;
 import java.util.Optional;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
@@ -48,47 +46,65 @@ public class ScreenManager {
 
   public void gameScreen(Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
       Runnable reset, Runnable setGameSpeed,
-      Runnable createNewGameAction, Runnable clear, int genNum, double startSpeed) {
+      Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack, int genNum,
+      double startSpeed) {
     try {
       checkAllNotNull(onSave, onLoad, pause, play, reset, setGameSpeed, createNewGameAction,
-          clear); //TODO: remove null checks
+          clear); // TODO: remove null checks
     } catch (Exception e) {
       e.printStackTrace();
     }
     generations = genNum;
     onPlay = true;
     buttons = new ButtonCreator(language);
+    String[] names = { "Play", "Reset", "+", "--", "Clear", "Save", "Load", "Edit", "NewGame" };
+    String[] info = { "Info", "EditInfo" };
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
-    Label topLabel = new Label(gridView.gameName);
-    topLabel.setFont(new Font("Comic Sans", 50)); // TODO: put in style
-    topLabel.setAlignment(Pos.CENTER);
-    VBox titleBox = new VBox(topLabel);
-    titleBox.setAlignment(Pos.TOP_CENTER);
+    BorderPane titleBox = createTopBox(info);
     mainScreen.setTop(titleBox);
 
-    String[] names = {"Play", "Reset", "Clear", "Save", "Load", "Edit", "NewGame"};
-
     VBox simulationControl = createControlArea(names, onSave, onLoad, pause, play,
-        reset, setGameSpeed, createNewGameAction, clear, startSpeed);
+        reset, setGameSpeed, createNewGameAction, clear, stepForward, stepBack, startSpeed);
     mainScreen.setBottom(simulationControl);
 
     Scene scene = new Scene(mainScreen, 1000, 800);
-    String titleOfWindow = "Cell Society: Running " + gridView.gameName; //TODO: language
+    String titleOfWindow = "Cell Society: Running " + gridView.gameName; // TODO: language
     stageLive.setTitle(titleOfWindow);
     stageLive.setScene(scene);
   }
 
+  private BorderPane createTopBox(String[] names) {
+    Label topLabel = new Label(gridView.gameName);
+    topLabel.setFont(new Font("Comic Sans", 50)); // TODO: put in style
+    topLabel.setAlignment(Pos.CENTER);
+    BorderPane titleBox = new BorderPane(topLabel);
+
+    for (String name : names) {
+      buttons.addEmptyButton(name);
+    }
+
+    // buttons.addActionToButton("Info", e -> );
+    // buttons.addActionToButton("EditInfo", e -> );
+    VBox infoControl = new VBox(10);
+    infoControl.setPadding(new Insets(10, 10, 0, 0));
+    for (String name : names) {
+      infoControl.getChildren().add(buttons.getButton(name));
+    }
+    titleBox.setRight(infoControl);
+    return titleBox;
+  }
+
   private VBox createControlArea(String[] names, Runnable onSave, Runnable onLoad, Runnable pause,
       Runnable play, Runnable reset, Runnable setGameSpeed, Runnable createNewGameAction,
-      Runnable clear,
+      Runnable clear, Runnable stepForward, Runnable stepBack,
       double startSpeed) {
 
     HBox timeArea = createTimeAreaBox(setGameSpeed, startSpeed);
 
     HBox buttonArea = createButtonBoxArea(names, onSave, onLoad, pause, play,
-        reset, createNewGameAction, clear);
+        reset, createNewGameAction, clear, stepForward, stepBack);
 
     VBox simulationControl = new VBox(15);
     simulationControl.getChildren().addAll(timeArea, buttonArea);
@@ -109,7 +125,7 @@ public class ScreenManager {
     speedSlider.valueProperty().addListener((observable) -> setGameSpeed.run());
 
     dynamicGenerations = new Label();
-    dynamicGenerations.setText("Gen: " + generations); //TODO: add language
+    dynamicGenerations.setText("Gen: " + generations); // TODO: add language
 
     hbox.setAlignment(Pos.TOP_CENTER);
     hbox.getChildren().addAll(speedSlider, dynamicGenerations);
@@ -117,8 +133,8 @@ public class ScreenManager {
   }
 
   private HBox createButtonBoxArea(String[] names, Runnable onSave, Runnable onLoad, Runnable pause,
-      Runnable play,
-      Runnable reset, Runnable createNewGameAction, Runnable clear) {
+      Runnable play, Runnable reset, Runnable createNewGameAction, Runnable clear, Runnable stepForward,
+      Runnable stepBack) {
     for (String name : names) {
       buttons.addEmptyButton(name);
     }
@@ -127,6 +143,8 @@ public class ScreenManager {
     buttons.addActionToButton("Reset", e -> reset.run());
     buttons.addActionToButton("Save", e -> onSave.run());
     buttons.addActionToButton("Load", e -> onLoad.run());
+    buttons.addActionToButton("+", e -> stepForward.run());
+    buttons.addActionToButton("--", e -> stepBack.run());
     buttons.addActionToButton("Play", e -> playButtonFunction(play, pause));
     buttons.addActionToButton("NewGame", e -> createNewGameAction.run());
 
@@ -134,9 +152,8 @@ public class ScreenManager {
     hbox.setAlignment(Pos.BOTTOM_CENTER);
     hbox.setPadding(new Insets(0, 0, 30, 0));
 
-    Iterator<Button> currentButtons = buttons.returnAll();
-    while (currentButtons.hasNext()) {
-      hbox.getChildren().add(currentButtons.next());
+    for (String name : names) {
+      hbox.getChildren().add(buttons.getButton(name));
     }
 
     return hbox;
@@ -144,14 +161,18 @@ public class ScreenManager {
 
   private void playButtonFunction(Runnable play, Runnable pause) {
     if (onPlay) {
-      onPlay = false;
-      buttons.setButtonText("Play", "Pause");
-      play.run();
+      simPausedButtonChange();
+      pause.run();
     } else {
       onPlay = true;
-      buttons.setButtonText("Play", "Play");
-      pause.run();
+      buttons.setButtonText("Play", "Pause");
+      play.run();
     }
+  }
+
+  public void simPausedButtonChange() {
+    onPlay = false;
+    buttons.setButtonText("Play", "Play");
   }
 
   public double getSliderValue() {
@@ -163,7 +184,7 @@ public class ScreenManager {
 
   public void setGenerations(int generations) {
     this.generations = generations;
-    dynamicGenerations.setText("#: " + this.generations); //TODO: fix "Gen" getting overwritten here
+    dynamicGenerations.setText("Gen: " + this.generations); // TODO: fix "Gen" getting overwritten here
   }
 
   public Optional<File> startScreen(Stage stage) {

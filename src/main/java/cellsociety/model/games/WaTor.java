@@ -3,7 +3,6 @@ package cellsociety.model.games;
 import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.model.Grid;
-import cellsociety.view.ErrorView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -90,23 +89,23 @@ public class WaTor extends Game {
         }
     }
 
-    private int pyRepro;
-    private int pdrEner;
-    private int pdrRepro;
-    private int pdrEatsFor;
     private boolean moved = false;
     private HashMap<Cell, Shark> sharkLives = new HashMap<Cell, Shark>();
     private HashMap<Cell, Fish> fishLives = new HashMap<Cell, Fish>();
+    private final String[] newVariables = new String[] { "pyRepro", "pdrEner", "pdrRepro", "pdrEatsFor" };
 
     public WaTor(Grid grid, Map<String, String> params) throws Exception {
-        super(grid);
-        try {
-            pyRepro = Integer.parseInt(params.get("pyRepro"));
-            pdrEner = Integer.parseInt(params.get("pdrEner"));
-            pdrRepro = Integer.parseInt(params.get("pdrRepro"));
-            pdrEatsFor = Integer.parseInt(params.get("pdrEatsFor"));
-        } catch (NumberFormatException e) {
-            throw e;
+        super(grid, params);
+        int val = -1;
+        for (String vari : newVariables) {
+            try {
+                val = (int) Double.parseDouble(getParam(vari));
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Illegal " + vari + ": " + getParam(vari));
+            }
+
+            if (val < 0)
+                throw new IllegalArgumentException("Illegal " + vari + ": " + getParam(vari));
         }
     }
 
@@ -120,7 +119,7 @@ public class WaTor extends Game {
                     moved = false;
                     Shark sharky;
                     if (!sharkLives.containsKey(cell)) {
-                        sharky = new Shark(pdrEner);
+                        sharky = new Shark((int) Double.parseDouble(getParam(newVariables[1])));
                         sharkLives.put(cell, sharky);
                     } else {
                         sharky = sharkLives.get(cell);
@@ -135,10 +134,10 @@ public class WaTor extends Game {
                         moves.setNextState(2);
                         sharkLives.remove(cell);
                         sharkLives.put(moves, sharky);
-                        if (moved && sharky.reProd() >= pdrRepro) {
+                        if (moved && sharky.reProd() >= (int) Double.parseDouble(getParam(newVariables[2]))) {
                             sharky.reset();
                             cell.setNextState(2);
-                            Shark child = new Shark(pdrEner);
+                            Shark child = new Shark((int) Double.parseDouble(getParam(newVariables[1])));
                             sharkLives.put(cell, child);
                         }
                     }
@@ -164,7 +163,7 @@ public class WaTor extends Game {
                     fishLives.remove(cell);
                     fishLives.put(moves, fishy);
                     fishy.moved();
-                    if (moved && fishy.reProd() >= pyRepro) {
+                    if (moved && fishy.reProd() >= (int) Double.parseDouble(getParam(newVariables[0]))) {
                         fishy.reset();
                         cell.setNextState(1);
                         Fish child = new Fish();
@@ -180,7 +179,7 @@ public class WaTor extends Game {
         fishFood = findFood(fishFood);
         if (!fishFood.isEmpty()) {
             Collections.shuffle(fishFood);
-            sharky.moved(pdrEatsFor);
+            sharky.moved((int) Double.parseDouble(getParam(newVariables[3])));
             fishLives.remove(fishFood.get(0));
             moved = true;
             return fishFood.get(0);

@@ -129,9 +129,7 @@ public class GameRunner {
   private void handleSave() {
     controller.pause();
     int[][] currentCells = game.getGrid().getCellStates();
-    String currentSpeed = controller.getGameSpeed() + "";
-    Map<String, String> toBeChanged = currentParseResult.getParams();
-    toBeChanged.replace("speed", currentSpeed);
+    updateParams("speed", controller.getGameSpeed() + "");
     ParseResult snapshot = new ParseResult(
         currentParseResult.getRows(),
         currentParseResult.getCols(),
@@ -140,12 +138,17 @@ public class GameRunner {
         currentParseResult.getAuthor(),
         currentParseResult.getDescription(),
         currentCells,
-        toBeChanged,
+        currentParseResult.getParams(),
         currentParseResult.getColorMap());
     try {
       XMLWriter.save(snapshot, myStage);
     } catch (ParserConfigurationException | TransformerException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private void updateParams(String name, String newValue) {
+    Map<String, String> toBeChanged = currentParseResult.getParams();
+    toBeChanged.put(name, newValue);
   }
 }

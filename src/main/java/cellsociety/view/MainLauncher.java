@@ -1,17 +1,13 @@
 package cellsociety.view;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
 
-import java.util.Iterator;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -56,9 +52,8 @@ public class MainLauncher {
         HBox buttonHBox = new HBox(30);
         buttonHBox.setPadding(new Insets(0, 30, 30, 30));
 
-        Iterator<Button> currentButtons = firstButt.returnAll();
-        while (currentButtons.hasNext()) {
-            buttonHBox.getChildren().add(currentButtons.next());
+        for (String name : names) {
+            buttonHBox.getChildren().add(firstButt.getButton(name));
         }
         root.setTop(hBox);
         root.setCenter(buttonHBox);

@@ -3,8 +3,6 @@ package cellsociety.model.games;
 import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.model.Grid;
-import cellsociety.model.XMLReader;
-
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +32,7 @@ import java.util.Map;
  */
 public class ForestFire extends Game {
 
-  private double ignitionProbability;
-  private double fillProbability;
+  private final String[] newVariables = new String[] { "ignitionProbability", "fillProbability" };
 
   /**
    * Constructs a Forest Fire simulation with the given probabilities.
@@ -47,37 +44,28 @@ public class ForestFire extends Game {
    */
   public ForestFire(Grid grid, double ignitionProbability, double fillProbability) {
     super(grid);
-    if (ignitionProbability >= 0 && ignitionProbability <= 1) {
-      this.ignitionProbability = ignitionProbability;
-      // System.out.println("Ignition Probability: " + ignitionProbability);
-    } else {
+    if (ignitionProbability < 0 && ignitionProbability > 1)
       throw new IllegalArgumentException("Illegal ignition probability: " + ignitionProbability);
-    }
 
-    if (fillProbability >= 0 && fillProbability <= 1) {
-      this.fillProbability = fillProbability;
-      // System.out.println("Fill Probability: " + fillProbability);
-    } else {
-      throw new IllegalArgumentException("Illegal fill probability: " + fillProbability);
-    }
+    setParam("ignitionProbability", String.valueOf(ignitionProbability));
+
+    if (fillProbability < 0 && fillProbability > 1)
+      throw new IllegalArgumentException("Illegal fill probability: " + ignitionProbability);
+
+    setParam("fillProbability", String.valueOf(fillProbability));
   }
 
   public ForestFire(Grid grid, Map<String, String> params) {
-    super(grid);
-    double probCatch = XMLReader.parseDouble(params.get("ignitionProbability"), 0.0);
-    double probGrow = XMLReader.parseDouble(params.get("fillProbability"), 0.0);
-    if (probCatch >= 0 && probCatch <= 1) {
-      this.ignitionProbability = probCatch;
-      // System.out.println("Ignition Probability: " + ignitionProbability);
-    } else {
-      throw new IllegalArgumentException("Illegal ignition probability: " + probCatch);
-    }
-
-    if (probGrow >= 0 && probGrow <= 1) {
-      this.fillProbability = probGrow;
-      // System.out.println("Fill Probability: " + fillProbability);
-    } else {
-      throw new IllegalArgumentException("Illegal fill probability: " + probGrow);
+    super(grid, params);
+    double probability = -1;
+    for (String vari : newVariables) {
+      try {
+        probability = Double.parseDouble(getParam(vari));
+      } catch (Exception e) {
+        throw new IllegalArgumentException("Illegal " + vari + ": " + getParam(vari));
+      }
+      if (probability < 0 && probability > 1)
+        throw new IllegalArgumentException("Illegal " + vari + ": " + getParam(vari));
     }
   }
 
@@ -105,7 +93,7 @@ public class ForestFire extends Game {
         }
       }
       if (cell.getNextState() == 1) {
-        if (Math.random() < ignitionProbability) {
+        if (Math.random() < Double.parseDouble(getParam("ignitionProbability"))) {
           // System.out.println("ignition");
           cell.setNextState(2);
         }
@@ -113,7 +101,7 @@ public class ForestFire extends Game {
     }
 
     if (cell.getState() == 0) {
-      if (Math.random() < fillProbability) {
+      if (Math.random() < Double.parseDouble(getParam("fillProbability"))) {
         // System.out.println("fill");
         cell.setNextState(1);
       }

@@ -47,6 +47,14 @@ public abstract class GridView {
         return mainPane;
     }
 
+    public HashMap<Integer, Color> retAllColor() {
+        return gridColors;
+    }
+
+    public void setAllColors(HashMap<Integer, Color> newValue) {
+        gridColors.putAll(newValue);
+    }
+
     public int getNumRows() {
         return gridRowNum;
     }

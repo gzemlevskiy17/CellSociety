@@ -5,19 +5,31 @@ import cellsociety.model.Game;
 import cellsociety.model.Grid;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of a Percolation-style simulation extending the generic Game.
  *
- * <p>Purpose: Implements rules for percolation where empty cells (state 0) become
- * percolated (state 2) when they have a neighbor in the percolated state.</p>
+ * <p>
+ * Purpose: Implements rules for percolation where empty cells (state 0) become
+ * percolated (state 2) when they have a neighbor in the percolated state.
+ * </p>
  *
- * <p>Assumptions: Grid and Cell state encodings are consistent with the rule (0 = empty, 2 =
- * percolated). The Game superclass handles state transitions and save/restore behavior.</p>
+ * <p>
+ * Assumptions: Grid and Cell state encodings are consistent with the rule (0 =
+ * empty, 2 =
+ * percolated). The Game superclass handles state transitions and save/restore
+ * behavior.
+ * </p>
  *
- * <p>Dependencies: Grid, Game, Cell.</p>
+ * <p>
+ * Dependencies: Grid, Game, Cell.
+ * </p>
  *
- * <p>Example usage:</p>
+ * <p>
+ * Example usage:
+ * </p>
+ * 
  * <pre>{@code
  * Grid grid = new Grid(rows, cols);
  * Percolation p = new Percolation(grid);
@@ -28,7 +40,8 @@ import java.util.List;
  */
 public class Percolation extends Game {
 
-  //TODO: paper uses a linkedlist with all open cells. for this we would need either a Point class, or for the Cell to have coordinates. discuss
+  // TODO: paper uses a linkedlist with all open cells. for this we would need
+  // either a Point class, or for the Cell to have coordinates. discuss
 
   /**
    * Constructs a Percolation simulation using the provided grid.
@@ -37,6 +50,10 @@ public class Percolation extends Game {
    */
   public Percolation(Grid grid) {
     super(grid);
+  }
+
+  public Percolation(Grid grid, Map<String, String> params) {
+    super(grid, params);
   }
 
   @Override

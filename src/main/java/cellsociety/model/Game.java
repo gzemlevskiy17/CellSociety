@@ -1,20 +1,38 @@
 package cellsociety.model;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * Abstract base class for all cellular automata simulations.
  *
- * <p>Defines the core simulation loop: each {@link #step()} call first computes the next state
- * for every cell via {@link #updateGame()}, then commits all changes simultaneously via
- * {@link #commitChanges()}. This two-phase approach ensures synchronous updates so that the order
- * cells are processed does not affect the result.</p>
+ * <p>
+ * Defines the core simulation loop: each {@link #step()} call first computes
+ * the next state
+ * for every cell via {@link #updateGame()}, then commits all changes
+ * simultaneously via
+ * {@link #commitChanges()}. This two-phase approach ensures synchronous updates
+ * so that the order
+ * cells are processed does not affect the result.
+ * </p>
  *
- * <p><b>Assumptions:</b> The provided {@link Grid} is non-null and fully initialized with
- * valid {@link Cell} objects. Subclasses must implement {@link #updateGame()} to set each cell's
- * next state without modifying the current state directly.</p>
+ * <p>
+ * <b>Assumptions:</b> The provided {@link Grid} is non-null and fully
+ * initialized with
+ * valid {@link Cell} objects. Subclasses must implement {@link #updateGame()}
+ * to set each cell's
+ * next state without modifying the current state directly.
+ * </p>
  *
- * <p><b>Dependencies:</b> {@link Grid}, {@link Cell}</p>
+ * <p>
+ * <b>Dependencies:</b> {@link Grid}, {@link Cell}
+ * </p>
  *
- * <p><b>Example usage:</b></p>
+ * <p>
+ * <b>Example usage:</b>
+ * </p>
+ * 
  * <pre>{@code
  * Grid grid = new Grid(10, 10);
  * Game game = new GameOfLife(grid);
@@ -27,6 +45,7 @@ package cellsociety.model;
 public abstract class Game {
 
   protected Grid grid;
+  protected Map<String, String> gameParams;
 
   /**
    * Constructs a Game with the given grid.
@@ -35,10 +54,24 @@ public abstract class Game {
    */
   public Game(Grid grid) {
     this.grid = grid;
+    this.gameParams = new LinkedHashMap<>();
   }
 
   /**
-   * Advances the simulation by one step. Computes next states for all cells, then commits the
+   * Constructs a Game with the given grid and known name of parameters.
+   *
+   * @param grid      the grid of cells for this simulation; must not be null
+   * @param paramName array of parameter names that will be used to access
+   *                  gameParams
+   */
+  public Game(Grid grid, Map<String, String> gameParams) {
+    this.grid = grid;
+    this.gameParams = gameParams;
+  }
+
+  /**
+   * Advances the simulation by one step. Computes next states for all cells, then
+   * commits the
    * changes simultaneously.
    */
   public void step() {
@@ -48,28 +81,33 @@ public abstract class Game {
   }
 
   /**
-   * Reverts the grid to the previously saved state. Sets the grid state to the last state stored in
+   * Reverts the grid to the previously saved state. Sets the grid state to the
+   * last state stored in
    * the grid's history.
    */
   public void stepBack() {
-    grid.revertState(); //TODO: verify logic
+    grid.revertState(); // TODO: verify logic
   }
 
   /**
-   * Sets the grid state to the initial configuration captured when the grid was created.
+   * Sets the grid state to the initial configuration captured when the grid was
+   * created.
    */
   public void reset() {
     grid.resetToInitialState();
-  } //TODO: test
+  } // TODO: test
 
   /**
-   * Computes the next state for every cell based on the simulation's rules. Implementations should
-   * call {@link Cell#setNextState(int)} and must not call {@link Cell#updateState()} directly.
+   * Computes the next state for every cell based on the simulation's rules.
+   * Implementations should
+   * call {@link Cell#setNextState(int)} and must not call
+   * {@link Cell#updateState()} directly.
    */
   protected abstract void updateGame();
 
   /**
-   * Commits all pending next-state values to the current state for every cell in the grid. Called
+   * Commits all pending next-state values to the current state for every cell in
+   * the grid. Called
    * after {@link #updateGame()} to ensure synchronous updates.
    */
   protected void commitChanges() {
@@ -100,8 +138,28 @@ public abstract class Game {
     return grid.getCell(row, col);
   }
 
-  //TODO: does this work for all types of games?
+  // TODO: does this work for all types of games?
   public void clearGrid() {
     grid.defaultInitializeCells();
+  }
+
+  public ArrayList<String> returnParamNames() {
+    if (gameParams == null)
+      throw new NullPointerException("Parameter Names does not exist");
+    return new ArrayList<String>(gameParams.keySet());
+  }
+
+  public String getParam(String name) {
+    if (gameParams == null)
+      throw new NullPointerException("Parameter Storage does not exist");
+    try {
+      return gameParams.get(name);
+    } catch (Exception e) {
+      return "";
+    }
+  }
+
+  public void setParam(String name, String newValue) {
+    gameParams.put(name, newValue);
   }
 }

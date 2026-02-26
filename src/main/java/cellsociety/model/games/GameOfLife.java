@@ -36,6 +36,7 @@ public class GameOfLife extends Game {
 
     private final Set<Integer> birthCounts;
     private final Set<Integer> survivalCounts;
+    private final String[] newVariables = new String[] { "rulestring" };
 
     public GameOfLife(Grid grid) {
         this(grid, "");
@@ -64,7 +65,7 @@ public class GameOfLife extends Game {
 
     public GameOfLife(Grid grid, Map<String, String> params) {
         super(grid);
-        String rulestring = params.get("ruleString");
+        String rulestring = getParam(newVariables[0]);
         if (rulestring == null || rulestring.isEmpty()) {
             // Default: classic Conway B3/S23
             birthCounts = digitsToSet("3");

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -78,13 +79,19 @@ public class XMLReader {
       }
     }
 
-    Map<String, String> params = null;
+    LinkedHashMap<String, String> params = new LinkedHashMap<>();
+    params.put("gameType", gameType);
+    params.put("title", title);
+    params.put("author", author);
+    params.put("description", description);
+    params.put("rows", String.valueOf(dims[0]));
+    params.put("cols", String.valueOf(dims[1]));
     if (paramEl != null) {
-      params = parseParameters(paramEl);
+      parseParameters(paramEl, params);
     } else {
-      params = new HashMap<String, String>();
       params.put("speed", "1");
     }
+
     Element colorEl = getFirstElement(paramEl, "states");
     Map<Integer, String> colorMap = parseColors(colorEl);
 
@@ -92,12 +99,7 @@ public class XMLReader {
       validateCellStates(cells, colorMap.keySet());
     }
 
-    String rulestring = "";
-    if (paramEl != null) {
-      rulestring = getTextValue(paramEl, "rulestring");
-    }
-
-    return new ParseResult(dims[0], dims[1], gameType, title, author, description, cells, params, colorMap);
+    return new ParseResult(cells, params, colorMap);
   }
 
   private static int[] parseDimensions(Element container) {
@@ -199,8 +201,7 @@ public class XMLReader {
     }
   }
 
-  private static Map<String, String> parseParameters(Element paramEl) {
-    Map<String, String> holding = new HashMap<String, String>();
+  private static void parseParameters(Element paramEl, LinkedHashMap<String, String> holding) {
     NodeList nodes = paramEl.getChildNodes();
     for (int i = 0; i < nodes.getLength(); i++) {
       if (!nodes.item(i).getNodeName().equals("states") && !nodes.item(i).getNodeName().equals("#text")) {
@@ -208,10 +209,16 @@ public class XMLReader {
         holding.put(nodes.item(i).getNodeName(), value);
       }
     }
-    if (!holding.containsKey("speed") || parseDouble(holding.get("speed"), 0.0) <= 0.0) {
+    if (!holding.containsKey("speed")) {
       holding.put("speed", "1");
+      try {
+        double checkSpeed = Double.parseDouble(holding.get("speed"));
+        if (checkSpeed > 0 && checkSpeed < 10) {
+          holding.put("speed", holding.get("speed"));
+        }
+      } catch (Exception e) {
+      }
     }
-    return holding;
   }
 
   private static Map<Integer, String> parseColors(Element container) {
@@ -229,17 +236,6 @@ public class XMLReader {
       }
     }
     return colorMap;
-  }
-
-  public static double parseDouble(String value, double defaultValue) {
-    if (value.isEmpty()) {
-      return defaultValue;
-    }
-    try {
-      return Double.parseDouble(value.trim());
-    } catch (NumberFormatException e) {
-      return defaultValue;
-    }
   }
 
   private static void validateRequiredField(String value, String fieldName) {

@@ -2,25 +2,19 @@ package cellsociety.view;
 
 import cellsociety.controller.PropertiesLoader;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-
+import java.util.LinkedHashMap;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 
 public class ButtonCreator {
-    private int size;
-    private ArrayList<Button> buttonHolder;
-    private HashMap<String, Integer> buttonIndex;
+    private LinkedHashMap<String, Button> buttonHolder;
     private ResourceBundle myResources;
 
     public ButtonCreator(String language) {
-        size = 0;
-        buttonHolder = new ArrayList<>();
-        buttonIndex = new HashMap<>();
+        buttonHolder = new LinkedHashMap<>();
         try {
             myResources = PropertiesLoader.loadProperties("Buttons/" + language);
         } catch (Exception e) {
@@ -30,10 +24,9 @@ public class ButtonCreator {
 
     // TODO: fix confusing method name. why is the button empty?
     public void addEmptyButton(String name) {
-        Button newButton = new Button(myResources.getString(name));
-        buttonHolder.add(size, newButton);
-        buttonIndex.put(name, size);
-        size++;
+        Button newButton = new Button();
+        buttonHolder.put(name, newButton);
+        setButtonText(name, name);
     }
 
     public void addActionToButton(String name, EventHandler<ActionEvent> e) {
@@ -41,15 +34,15 @@ public class ButtonCreator {
     }
 
     public Button getButton(String name) {
-        return buttonHolder.get(buttonIndex.get(name));
+        return buttonHolder.get(name);
     }
 
     public void setButtonText(String name, String text) {
-        getButton(name).setText(myResources.getString(text));
-    }
-
-    public Iterator<Button> returnAll() {
-        return buttonHolder.iterator();
+        try {
+            getButton(name).setText(myResources.getString(text));
+        } catch (MissingResourceException e) {
+            getButton(name).setText(text);
+        }
     }
 
     public void changeLanguage(String language) { // resource bundle does not work, rewrite
@@ -58,8 +51,8 @@ public class ButtonCreator {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        for (String name : buttonIndex.keySet()) {
-            setButtonText(name, myResources.getString(name));
+        for (String name : buttonHolder.keySet()) {
+            setButtonText(name, name);
         }
     }
 }

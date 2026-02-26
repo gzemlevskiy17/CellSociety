@@ -1,20 +1,24 @@
 package cellsociety.model.games;
 
-import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.model.Grid;
 
+import java.util.Map;
 import java.util.Random;
 
 /**
  * Falling Sand simulation. Particles fall and interact under simulated gravity.
  *
- * <p>States: EMPTY (0), METAL (1), SAND (2), WATER (3).</p>
+ * <p>
+ * States: EMPTY (0), METAL (1), SAND (2), WATER (3).
+ * </p>
  *
- * <p>Uses sequential random updates inside updateGame(). Each step picks
+ * <p>
+ * Uses sequential random updates inside updateGame(). Each step picks
  * rows*cols random cells and immediately moves them using setState(), so
  * subsequent picks see the updated grid. commitChanges() is harmless since
- * setState() keeps state and nextState in sync.</p>
+ * setState() keeps state and nextState in sync.
+ * </p>
  */
 public class FallingSand extends Game {
 
@@ -27,6 +31,10 @@ public class FallingSand extends Game {
 
   public FallingSand(Grid grid) {
     super(grid);
+  }
+
+  public FallingSand(Grid grid, Map<String, String> params) {
+    super(grid, params);
   }
 
   @Override

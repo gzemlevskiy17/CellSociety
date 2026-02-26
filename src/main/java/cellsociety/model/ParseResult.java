@@ -85,6 +85,19 @@ public class ParseResult {
         this.colorMap = colorMap;
     }
 
+    public ParseResult(int[][] cells, Map<String, String> params,
+            Map<Integer, String> colorMap) {
+        this.rows = Integer.valueOf(params.get("rows"));
+        this.cols = Integer.valueOf(params.get("cols"));
+        this.gameType = params.get("gameType");
+        this.title = params.get("title");
+        this.author = params.get("author");
+        this.description = params.get("description");
+        this.cells = cells;
+        this.params = params;
+        this.colorMap = colorMap;
+    }
+
     /** @return mapping of state IDs to hex color strings (e.g., 0 -> "#FFFFFF") */
     public Map<Integer, String> getColorMap() {
         return colorMap;
@@ -141,49 +154,4 @@ public class ParseResult {
         }
         return 0.0;
     }
-
-    public String getAStringParam(String param) {
-        if (params.containsKey(param)) {
-            return params.get(param);
-        }
-        return "";
-    }
-
-    /** @return fire ignition probability for ForestFire simulations */
-    /*
-     * public double getProbCatch() {
-     * return getADoubleParam("ignitionProbability");
-     * }
-     */
-
-    /** @return tree growth probability for ForestFire simulations */
-    /*
-     * public double getProbGrow() {
-     * return getADoubleParam("fillProbability");
-     * }
-     */
-
-    /** @return simulation speed multiplier */
-    /*
-     * public double getSpeed() {
-     * return getADoubleParam("speed");
-     * }
-     */
-
-    /** @return satisfaction threshold for Segregation simulations */
-    /*
-     * public double getThreshold() {
-     * return getADoubleParam("threshold");
-     * }
-     */
-
-    /**
-     * @return rulestring for Game of Life variations (e.g., "B3/S23"), or empty
-     *         string if not set
-     */
-    /*
-     * public String getRulestring() {
-     * return getAStringParam("rulestring");
-     * }
-     */
 }

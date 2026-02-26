@@ -3,7 +3,6 @@ package cellsociety.model.games;
 import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.model.Grid;
-import cellsociety.model.XMLReader;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +38,7 @@ import java.util.Map;
  */
 public class Segregation extends Game {
 
-  private double satisfactionThreshold;
+  private final String[] newVariables = new String[] { "threshold" };
 
   /**
    * Constructs a Segregation simulation with the given satisfaction threshold.
@@ -51,19 +50,19 @@ public class Segregation extends Game {
    */
   public Segregation(Grid grid, double satisfactionThreshold) {
     super(grid);
-    this.satisfactionThreshold = satisfactionThreshold;
+    setParam("threshold", String.valueOf(satisfactionThreshold));
   }
 
   public Segregation(Grid grid, Map<String, String> params) {
-    super(grid);
-    double satisfy = XMLReader.parseDouble(params.get("threshold"), 0.0);
-    if (satisfy >= 0 && satisfy <= 1) {
-      this.satisfactionThreshold = satisfy;
-      // System.out.println("Ignition Probability: " + ignitionProbability);
-    } else {
-      throw new IllegalArgumentException("Illegal ignition probability: " + satisfy);
+    super(grid, params);
+    double satisfy = -1;
+    try {
+      satisfy = Double.parseDouble(getParam(newVariables[0]));
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Illegal threshold" + getParam("threshold"));
     }
-
+    if (satisfy < 0 && satisfy > 1)
+      throw new IllegalArgumentException("Illegal ignition probability: " + satisfy);
   }
 
   @Override
@@ -113,7 +112,7 @@ public class Segregation extends Game {
     if (totalCount == 0) {
       return true;
     }
-    return (double) sameCount / totalCount >= satisfactionThreshold;
+    return (double) sameCount / totalCount >= Double.parseDouble(getParam("threshold"));
   }
 
 }
