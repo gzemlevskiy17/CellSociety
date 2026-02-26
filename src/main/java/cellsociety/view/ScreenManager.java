@@ -2,6 +2,7 @@ package cellsociety.view;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.Optional;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,6 +21,7 @@ public class ScreenManager {
 
   private Stage stageLive;
   private GridView gridView;
+  private InfoView infoView;
   private ButtonCreator buttons;
   private String language;
   private boolean onPlay;

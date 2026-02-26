@@ -3,6 +3,7 @@ package cellsociety.controller;
 import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.view.GridView;
+import cellsociety.view.InfoView;
 import cellsociety.view.ScreenManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -118,6 +119,10 @@ public class Controller {
   }
 
   public void updateParams() {
+
+  }
+
+  public void findParams() {
 
   }
 
