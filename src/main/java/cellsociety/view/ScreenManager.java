@@ -143,8 +143,8 @@ public class ScreenManager {
     buttons.addActionToButton("Reset", e -> reset.run());
     buttons.addActionToButton("Save", e -> onSave.run());
     buttons.addActionToButton("Load", e -> onLoad.run());
-    buttons.addActionToButton("+", e -> stepForward.run());
-    buttons.addActionToButton("--", e -> stepBack.run());
+    buttons.addActionToButton("Forward", e -> stepForward.run());
+    buttons.addActionToButton("Back", e -> stepBack.run());
     buttons.addActionToButton("Play", e -> playButtonFunction(play, pause));
     buttons.addActionToButton("NewGame", e -> createNewGameAction.run());
 
