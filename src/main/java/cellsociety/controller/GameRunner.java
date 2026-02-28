@@ -12,8 +12,11 @@ import cellsociety.view.MainLauncher;
 import cellsociety.view.ScreenManager;
 import cellsociety.view.ViewFactory;
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Optional;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -148,8 +151,21 @@ public class GameRunner {
         currentCells,
         currentParseResult.getParams(),
         currentParseResult.getColorMap());
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Save Simulation As");
+    File dataDir = new File(
+        Paths.get(".").toAbsolutePath().normalize().resolve("cellsociety_team01/data").toString());
+    if (dataDir.exists()) {
+      fileChooser.setInitialDirectory(dataDir);
+    }
+    fileChooser.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
+    fileChooser.setInitialFileName("simulation.xml");
+    File outputFile = fileChooser.showSaveDialog(myStage);
+    if (outputFile == null) {
+      return;
+    }
     try {
-      XMLWriter.save(snapshot, myStage);
+      XMLWriter.save(snapshot, outputFile);
     } catch (ParserConfigurationException e) {
       new ErrorView("Save Error", "Failed to configure XML writer: " + e.getMessage());
     } catch (TransformerException e) {
