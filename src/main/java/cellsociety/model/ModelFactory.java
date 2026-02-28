@@ -69,8 +69,7 @@ public class ModelFactory {
         Constructor<?> gameCalled = gameClazz.getDeclaredConstructor(paramTypes);
         return (Game) gameCalled.newInstance(new Object[] { grid, result.getParams() });
       } catch (Exception e) {
-        e.printStackTrace();
-        throw new IllegalArgumentException(gameType + " takes no such arguments");
+        throw new IllegalArgumentException(gameType + " constructor could not be invoked", e);
       }
     } catch (ClassNotFoundException e) {
       throw new IllegalArgumentException("Unknown game type: " + gameType);
