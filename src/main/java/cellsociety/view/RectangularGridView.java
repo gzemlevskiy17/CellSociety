@@ -14,37 +14,35 @@ public class RectangularGridView extends GridView {
 
     @Override
     public void initializeGridPane() {
-        RectArray = new Rectangle[gridRowNum][gridColNum];
+        RectArray = new Rectangle[getNumRows()][getNumCols()];
 
         double y = 0;
-        for (int i = 0; i < gridRowNum; i++) {
+        for (int i = 0; i < getNumRows(); i++) {
             double x = 0;
-            for (int j = 0; j < gridColNum; j++) {
+            for (int j = 0; j < getNumCols(); j++) {
                 initializeGridRectangles(i, j, x, y);
-                x += width;
+                x += getWidth();
             }
-            y += height;
+            y += getHeight();
         }
     }
 
     private void initializeGridRectangles(int row, int col, double x, double y) {
-        // All cells will initially be dead, build a Rectangle for each.
         int state = 0;
 
-        Rectangle cellRect = new Rectangle(width, height);
+        Rectangle cellRect = new Rectangle(getWidth(), getHeight());
         cellRect.setLayoutX(x);
         cellRect.setLayoutY(y);
-        cellRect.setFill(gridColors.get(state));
+        cellRect.setFill(getGridColors().get(state));
         cellRect.setStroke(Color.BLACK);
         cellRect.setStrokeWidth(2);
 
-        // Add the Rectangle to the grid at the col/row.
         RectArray[row][col] = cellRect;
-        mainPane.add(cellRect, col, row);
+        ((javafx.scene.layout.GridPane) getGridPane()).add(cellRect, col, row);
     }
 
     @Override
     public void updateCell(int row, int col, int state) {
-        RectArray[row][col].setFill(gridColors.get(state));
+        RectArray[row][col].setFill(getGridColors().get(state));
     }
 }

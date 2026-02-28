@@ -87,10 +87,10 @@ public class GameOfLife extends Game {
 
     @Override
     protected void updateGame() {
-        for (int i = 0; i < grid.getRows(); i++) {
-            for (int j = 0; j < grid.getColumns(); j++) {
-                Cell cell = grid.getCell(i, j);
-                int aliveNeighbors = getAliveNeighbors(grid.getNeighbors(i, j));
+        for (int i = 0; i < getGrid().getRows(); i++) {
+            for (int j = 0; j < getGrid().getColumns(); j++) {
+                Cell cell = getGrid().getCell(i, j);
+                int aliveNeighbors = getAliveNeighbors(getGrid().getNeighbors(i, j));
 
                 if (cell.getState() == 1) {
                     if (survivalCounts.contains(aliveNeighbors)) {

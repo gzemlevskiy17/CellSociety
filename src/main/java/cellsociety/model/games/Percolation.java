@@ -44,7 +44,7 @@ public class Percolation extends Game {
   // either a Point class, or for the Cell to have coordinates. discuss
 
   /**
-   * Constructs a Percolation simulation using the provided grid.
+   * Constructs a Percolation simulation using the provided getGrid().
    *
    * @param grid the grid backing this Percolation game
    */
@@ -58,10 +58,10 @@ public class Percolation extends Game {
 
   @Override
   protected void updateGame() {
-    for (int i = 0; i < grid.getRows(); i++) {
-      for (int j = 0; j < grid.getColumns(); j++) {
-        Cell cell = grid.getCell(i, j);
-        if (cell.getState() == 0 && hasPercolatedNeighbor(grid.getNeighbors(i, j))) {
+    for (int i = 0; i < getGrid().getRows(); i++) {
+      for (int j = 0; j < getGrid().getColumns(); j++) {
+        Cell cell = getGrid().getCell(i, j);
+        if (cell.getState() == 0 && hasPercolatedNeighbor(getGrid().getNeighbors(i, j))) {
           cell.setNextState(2);
         }
       }

@@ -2,33 +2,32 @@ package cellsociety.view;
 
 import java.util.HashMap;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public abstract class GridView {
 
-    protected HashMap<Integer, Color> gridColors = new HashMap<Integer, Color>();
-    protected String gameName;
+    private HashMap<Integer, Color> gridColors;
+    private String gameName;
 
-    protected Scene mainScene;
-    protected GridPane mainPane;
-    protected BorderPane bottomPane;
-    protected int gridRowNum;
-    protected int gridColNum;
-    protected double MAX_GRID_WIDTH = 800.0;
-    protected double MAX_GRID_HEIGHT = 500.0;
-    protected double width;
-    protected double height;
+    private static final double MAX_GRID_WIDTH = 800.0;
+    private static final double MAX_GRID_HEIGHT = 500.0;
 
-    // going to assume the Game will include the colors
+    private int gridRowNum;
+    private int gridColNum;
+    private double width;
+    private double height;
+
+    private Pane mainPane;
+
     public GridView(String gameName, HashMap<Integer, Color> colors, int x, int y) {
         this.gameName = gameName.replaceAll("([a-z])([A-Z])", "$1 $2");
-        mainPane = new GridPane();
-        mainPane.setAlignment(Pos.CENTER);
-        mainPane.setHgap(2);
-        mainPane.setVgap(2);
+        GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setHgap(2);
+        gridPane.setVgap(2);
+        mainPane = gridPane;
 
         gridRowNum = y;
         gridColNum = x;
@@ -43,8 +42,16 @@ public abstract class GridView {
 
     public abstract void updateCell(int row, int col, int state);
 
-    public GridPane getGridPane() {
+    public Pane getGridPane() {
         return mainPane;
+    }
+
+    protected void setMainPane(Pane pane) {
+        mainPane = pane;
+    }
+
+    public String getGameName() {
+        return gameName;
     }
 
     public HashMap<Integer, Color> retAllColor() {
@@ -61,5 +68,17 @@ public abstract class GridView {
 
     public int getNumCols() {
         return gridColNum;
+    }
+
+    protected HashMap<Integer, Color> getGridColors() {
+        return gridColors;
+    }
+
+    protected double getWidth() {
+        return width;
+    }
+
+    protected double getHeight() {
+        return height;
     }
 }
