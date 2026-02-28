@@ -1,6 +1,7 @@
 package cellsociety.controller;
 
 import cellsociety.model.Game;
+import cellsociety.model.GridReader;
 import cellsociety.model.ModelFactory;
 import cellsociety.model.ParseResult;
 import cellsociety.model.XMLReader;
@@ -128,7 +129,13 @@ public class GameRunner {
 
   private void handleSave() {
     controller.pause();
-    int[][] currentCells = game.getGrid().getCellStates();
+    GridReader reader = game.getGridReader();
+    int[][] currentCells = new int[reader.getRows()][reader.getCols()];
+    for (int r = 0; r < reader.getRows(); r++) {
+      for (int c = 0; c < reader.getCols(); c++) {
+        currentCells[r][c] = reader.getCellState(r, c);
+      }
+    }
     updateParams("speed", controller.getGameSpeed() + "");
     ParseResult snapshot = new ParseResult(
         currentParseResult.getRows(),
