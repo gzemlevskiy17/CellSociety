@@ -18,7 +18,7 @@ public class ButtonCreator {
         try {
             myResources = PropertiesLoader.loadProperties("Buttons/" + language);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Failed to load button properties for language: " + language, e);
         }
     }
 
@@ -49,7 +49,7 @@ public class ButtonCreator {
         try {
             myResources = PropertiesLoader.loadProperties("Buttons/" + language);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Failed to load button properties for language: " + language, e);
         }
         for (String name : buttonHolder.keySet()) {
             setButtonText(name, name);

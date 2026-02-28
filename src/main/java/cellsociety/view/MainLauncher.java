@@ -1,7 +1,5 @@
 package cellsociety.view;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -57,14 +55,6 @@ public class MainLauncher {
         }
         root.setTop(hBox);
         root.setCenter(buttonHBox);
-
-        File cssFile = new File(Paths.get(".").toAbsolutePath().normalize()
-                .resolve("src/main/resources/cellsociety/view/Screen/MainScreen.css").toString());
-        // try {
-        // scene.getStylesheets().add(cssFile.toURI().toURL().toExternalForm());
-        // } catch (MalformedURLException e1) {
-        // e1.printStackTrace();
-        // }
 
         stage.setTitle("Launcher");
         stage.setScene(scene);

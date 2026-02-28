@@ -25,8 +25,7 @@ public class LanguageView {
         try {
             myResources = PropertiesLoader.loadProperties("Languages/CellSocietyLanguages");
         } catch (Exception e) {
-            e.printStackTrace();
-            return;
+            throw new IllegalStateException("Failed to load language list", e);
         }
         String errorCodesStr = myResources.getString("languages");
         String[] errorCodesArray = errorCodesStr.split(",");

@@ -50,12 +50,6 @@ public class ScreenManager {
       Runnable reset, Runnable setGameSpeed,
       Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack, int genNum,
       double startSpeed) {
-    try {
-      checkAllNotNull(onSave, onLoad, pause, play, reset, setGameSpeed, createNewGameAction,
-          clear); // TODO: remove null checks
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
     generations = genNum;
     onPlay = true;
     buttons = new ButtonCreator(language);
