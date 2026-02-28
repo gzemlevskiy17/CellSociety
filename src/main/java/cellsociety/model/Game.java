@@ -128,6 +128,17 @@ public abstract class Game {
   }
 
   /**
+   * Returns a read-only {@link GridReader} for the grid backing this simulation.
+   * Controller-layer code should use this instead of {@link #getGrid()} to avoid
+   * exposing the model's internal data structure.
+   *
+   * @return a {@link GridReader} wrapping this simulation's grid
+   */
+  public GridReader getGridReader() {
+    return new GridReader(grid);
+  }
+
+  /**
    * Returns the cell at the specified row and column.
    *
    * @param row the row index (0-based)
