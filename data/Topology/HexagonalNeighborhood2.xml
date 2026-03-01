@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>ForestFire</type>
+    <title>Hexagonal Neighborhood - Forest Fire 6-Way Spread</title>
+    <author>Michael Li</author>
+    <description>ForestFire with hexagonal neighborhood. Fire spreads in 6 directions (hex grid pattern), creating a different spread shape than Moore.</description>
+    <grid>
+        <rows>12</rows>
+        <columns>12</columns>
+        <neighborhood>Hexagonal</neighborhood>
+        <stateDistribution type="count">
+            <state id="0" count="10"/>
+            <state id="1" count="130"/>
+            <state id="2" count="4"/>
+        </stateDistribution>
+    </grid>
+    <parameters>
+        <speed>2</speed>
+        <probCatch>0.5</probCatch>
+        <probGrow>0.03</probGrow>
+        <states>
+            <state id="0" name="EMPTY" color="#D2B48C"/>
+            <state id="1" name="TREE" color="#228B22"/>
+            <state id="2" name="FIRE" color="#FF4500"/>
+        </states>
+    </parameters>
+</simulation>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>Segregation</type>
+    <title>Triangular Neighborhood - Segregation 3-Way</title>
+    <author>Michael Li</author>
+    <description>Segregation with triangular neighborhood. Agents only check 3 neighbors when deciding to move, producing slower convergence.</description>
+    <grid>
+        <rows>10</rows>
+        <columns>10</columns>
+        <neighborhood>Triangular</neighborhood>
+        <stateDistribution type="proportion">
+            <state id="0" proportion="0.2"/>
+            <state id="1" proportion="0.4"/>
+            <state id="2" proportion="0.4"/>
+        </stateDistribution>
+    </grid>
+    <parameters>
+        <speed>2</speed>
+        <threshold>0.3</threshold>
+        <states>
+            <state id="0" name="EMPTY" color="#FFFFFF"/>
+            <state id="1" name="GROUP_A" color="#3498DB"/>
+            <state id="2" name="GROUP_B" color="#E74C3C"/>
+        </states>
+    </parameters>
+</simulation>
