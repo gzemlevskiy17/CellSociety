@@ -1,7 +1,6 @@
 package cellsociety.view;
 
 import cellsociety.controller.PropertiesLoader;
-
 import java.util.LinkedHashMap;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -16,7 +15,7 @@ public class ButtonCreator {
     public ButtonCreator(String language) {
         buttonHolder = new LinkedHashMap<>();
         try {
-            myResources = PropertiesLoader.loadProperties("Buttons/" + language);
+            myResources = PropertiesLoader.loadProperties("Text/Buttons/" + language);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,7 +40,7 @@ public class ButtonCreator {
         try {
             getButton(name).setText(myResources.getString(text));
         } catch (MissingResourceException e) {
-            getButton(name).setText(text);
+            getButton(name).setText(text); //TODO: rethrow/handle?
         }
     }
 
@@ -49,7 +48,7 @@ public class ButtonCreator {
         try {
             myResources = PropertiesLoader.loadProperties("Buttons/" + language);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO: catch exeption
         }
         for (String name : buttonHolder.keySet()) {
             setButtonText(name, name);

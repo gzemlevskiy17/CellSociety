@@ -7,8 +7,8 @@ import cellsociety.model.XMLReader;
 import cellsociety.model.XMLWriter;
 import cellsociety.view.ErrorView;
 import cellsociety.view.GridView;
-import cellsociety.view.MainLauncher;
 import cellsociety.view.ScreenManager;
+import cellsociety.view.StartScreen;
 import cellsociety.view.ViewFactory;
 import java.io.File;
 import java.util.Map;
@@ -61,7 +61,7 @@ public class GameRunner {
   private Controller controller;
   private GridView gridView;
   private ParseResult currentParseResult;
-  private MainLauncher startChoice;
+  private StartScreen startChoice;
 
   private Runnable createNewGameAction;
 
@@ -79,7 +79,7 @@ public class GameRunner {
     this.createNewGameAction = createNewGameAction;
     modelFactory = new ModelFactory();
     viewFactory = new ViewFactory();
-    startChoice = new MainLauncher(myStage, this::firstStart);
+    startChoice = new StartScreen(myStage, this::firstStart);
   }
 
   private void firstStart() {

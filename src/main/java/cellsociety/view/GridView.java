@@ -27,7 +27,7 @@ public abstract class GridView {
         this.gameName = gameName.replaceAll("([a-z])([A-Z])", "$1 $2");
         mainPane = new GridPane();
         mainPane.setAlignment(Pos.CENTER);
-        mainPane.setHgap(2);
+        mainPane.setHgap(2); //TODO: properties
         mainPane.setVgap(2);
 
         gridRowNum = y;

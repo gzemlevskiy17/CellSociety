@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 
 public class PropertiesLoader {
     public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety/view/";
-    public static final String DEFAULT_RESOURCE_FOLDER = "resources/" + DEFAULT_RESOURCE_PACKAGE;
+    public static final String DEFAULT_RESOURCE_FOLDER = "/" + DEFAULT_RESOURCE_PACKAGE;
 
     public static ResourceBundle loadProperties(String fileName) throws Exception {
         try {

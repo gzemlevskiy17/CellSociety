@@ -1,18 +1,16 @@
 package cellsociety.view;
 
+import static cellsociety.controller.PropertiesLoader.DEFAULT_RESOURCE_FOLDER;
+
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.Map;
 import java.util.Optional;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -29,12 +27,16 @@ public class ScreenManager {
   private Slider speedSlider;
   private int generations;
 
+  //TODO: remove hardcoding
+  public static final String STYLESHEET = "light.css";
+  private static final String LAYOUT_STYLESHEET = "GameScreen.css";
+
   public ScreenManager(Stage stage, String langResult) {
     stageLive = stage;
     language = langResult;
   }
 
-  public void checkAllNotNull(Object... params) throws Exception {
+  public void checkAllNotNull(Object... params) throws Exception { //TODO: do we need this
     for (Object param : params) {
       if (param == null) {
         throw new NullPointerException("A parameter is null.");
@@ -48,7 +50,8 @@ public class ScreenManager {
 
   public void gameScreen(Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
       Runnable reset, Runnable setGameSpeed,
-      Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack, int genNum,
+      Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack,
+      int startingGenerations,
       double startSpeed) {
     try {
       checkAllNotNull(onSave, onLoad, pause, play, reset, setGameSpeed, createNewGameAction,
@@ -56,11 +59,11 @@ public class ScreenManager {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    generations = genNum;
-    onPlay = true;
+    generations = startingGenerations;
+    onPlay = true; //TODO: make more elegant
     buttons = new ButtonCreator(language);
-    String[] names = { "Play", "Reset", "+", "--", "Clear", "Save", "Load", "Edit", "NewGame" };
-    String[] info = { "Info", "EditInfo" };
+    String[] names = {"Play", "Reset", "+", "--", "Clear", "Save", "Load", "Edit", "NewGame"};
+    String[] info = {"Info", "EditInfo"};
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
@@ -71,16 +74,23 @@ public class ScreenManager {
         reset, setGameSpeed, createNewGameAction, clear, stepForward, stepBack, startSpeed);
     mainScreen.setBottom(simulationControl);
 
-    Scene scene = new Scene(mainScreen, 1000, 800);
-    String titleOfWindow = "Cell Society: Running " + gridView.gameName; // TODO: language
+    Scene scene = new Scene(mainScreen, 1000, 800); //TODO: properties
+    scene.getStylesheets()
+        .addAll(
+            getClass().getResource(DEFAULT_RESOURCE_FOLDER + "Style/" + STYLESHEET)
+                .toExternalForm(),
+            getClass().getResource(DEFAULT_RESOURCE_FOLDER + "Style/" + LAYOUT_STYLESHEET)
+                .toExternalForm()
+        );
+    //TODO: figure out default_resource_folder
+    String titleOfWindow = "Cell Society: Running " + gridView.gameName; // TODO: language & getter
     stageLive.setTitle(titleOfWindow);
     stageLive.setScene(scene);
   }
 
   private BorderPane createTopBox(String[] names) {
-    Label topLabel = new Label(gridView.gameName);
-    topLabel.setFont(new Font("Comic Sans", 50)); // TODO: put in style
-    topLabel.setAlignment(Pos.CENTER);
+    Label topLabel = new Label(gridView.gameName); //TODO: replace with getter
+    topLabel.setId("top-label");
     BorderPane titleBox = new BorderPane(topLabel);
 
     for (String name : names) {
@@ -89,8 +99,8 @@ public class ScreenManager {
 
     // buttons.addActionToButton("Info", e -> );
     // buttons.addActionToButton("EditInfo", e -> );
-    VBox infoControl = new VBox(10);
-    infoControl.setPadding(new Insets(10, 10, 0, 0));
+    VBox infoControl = new VBox();
+    infoControl.setId("info-control-box");
     for (String name : names) {
       infoControl.getChildren().add(buttons.getButton(name));
     }
@@ -108,39 +118,41 @@ public class ScreenManager {
     HBox buttonArea = createButtonBoxArea(names, onSave, onLoad, pause, play,
         reset, createNewGameAction, clear, stepForward, stepBack);
 
-    VBox simulationControl = new VBox(15);
+    VBox simulationControl = new VBox();
+    simulationControl.setId("simulation-control-box");
     simulationControl.getChildren().addAll(timeArea, buttonArea);
-    simulationControl.setAlignment(Pos.CENTER);
     return simulationControl;
   }
 
   private HBox createTimeAreaBox(Runnable setGameSpeed, double startSpeed) {
-    HBox hbox = new HBox(20);
+    HBox timeAreaBox = new HBox();
+    timeAreaBox.setId("time-area-box");
 
-    speedSlider = new Slider(0, 10, startSpeed);
+    speedSlider = new Slider(0, 10, startSpeed); //TODO: properties
     speedSlider.setPrefWidth(400);
     speedSlider.setMaxWidth(400);
     speedSlider.setShowTickMarks(true);
-    speedSlider.setMajorTickUnit(1);
+    speedSlider.setMajorTickUnit(1); //TODO: properties
     speedSlider.setSnapToTicks(true);
 
     speedSlider.valueProperty().addListener((observable) -> setGameSpeed.run());
 
     dynamicGenerations = new Label();
-    dynamicGenerations.setText("Gen: " + generations); // TODO: add language
+    dynamicGenerations.setText("Gen: " + generations); // TODO: properties
 
-    hbox.setAlignment(Pos.TOP_CENTER);
-    hbox.getChildren().addAll(speedSlider, dynamicGenerations);
-    return hbox;
+    timeAreaBox.getChildren().addAll(speedSlider, dynamicGenerations);
+    return timeAreaBox;
   }
 
   private HBox createButtonBoxArea(String[] names, Runnable onSave, Runnable onLoad, Runnable pause,
-      Runnable play, Runnable reset, Runnable createNewGameAction, Runnable clear, Runnable stepForward,
+      Runnable play, Runnable reset, Runnable createNewGameAction, Runnable clear,
+      Runnable stepForward,
       Runnable stepBack) {
     for (String name : names) {
       buttons.addEmptyButton(name);
     }
 
+    //TODO: remove dependence on names twice
     buttons.addActionToButton("Clear", e -> clear.run());
     buttons.addActionToButton("Reset", e -> reset.run());
     buttons.addActionToButton("Save", e -> onSave.run());
@@ -150,15 +162,14 @@ public class ScreenManager {
     buttons.addActionToButton("Play", e -> playButtonFunction(play, pause));
     buttons.addActionToButton("NewGame", e -> createNewGameAction.run());
 
-    HBox hbox = new HBox(30);
-    hbox.setAlignment(Pos.BOTTOM_CENTER);
-    hbox.setPadding(new Insets(0, 0, 30, 0));
+    HBox buttonBoxArea = new HBox();
+    buttonBoxArea.setId("button-box-area");
 
     for (String name : names) {
-      hbox.getChildren().add(buttons.getButton(name));
+      buttonBoxArea.getChildren().add(buttons.getButton(name));
     }
 
-    return hbox;
+    return buttonBoxArea;
   }
 
   private void playButtonFunction(Runnable play, Runnable pause) {
@@ -186,18 +197,21 @@ public class ScreenManager {
 
   public void setGenerations(int generations) {
     this.generations = generations;
-    dynamicGenerations.setText("Gen: " + this.generations); // TODO: fix "Gen" getting overwritten here
+    dynamicGenerations.setText(
+        "Gen: " + this.generations);
   }
 
   public Optional<File> startScreen(Stage stage) {
     FileChooser fileChooser = new FileChooser();
     File initialDir = new File(
-        Paths.get(".").toAbsolutePath().normalize().resolve("cellsociety_team01/data").toString());
+        Paths.get(".").toAbsolutePath().normalize().resolve("cellsociety_team01/data")
+            .toString()); //FIXME: make restriction work, probably due to absolute path
     ExtensionFilter onlyXML = new ExtensionFilter("*.xml", "*.xml");
 
     fileChooser.getExtensionFilters().add(onlyXML);
     // fileChooser.setTitle("Open My File"); //TODO: need title?
-    if (initialDir.exists() && initialDir.isDirectory()) {
+    if (initialDir.exists()
+        && initialDir.isDirectory()) { //FIXME: maybe doesn't work because initial dir doesn't exist, see fixme above
       fileChooser.setInitialDirectory(initialDir);
     } else {
       File userHome = new File(System.getProperty("user.home"));

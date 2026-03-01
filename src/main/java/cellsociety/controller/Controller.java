@@ -4,7 +4,6 @@ import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.model.ParseResult;
 import cellsociety.view.GridView;
-import cellsociety.view.InfoView;
 import cellsociety.view.ScreenManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -74,7 +73,7 @@ public class Controller {
    * @param game                the game model to control
    * @param screenManager       the screen manager used to display UI elements
    * @param gridView            the view responsible for rendering the grid
-   * @param gameSpeed           the initial playback rate for the game loop
+   * @param InfoResult
    * @param createNewGameAction action invoked to create a new game
    */
   public Controller(Game game, ScreenManager screenManager, GridView gridView, ParseResult InfoResult,
@@ -84,7 +83,7 @@ public class Controller {
     this.gridView = gridView;
     screenManager.setGridView(gridView);
     try {
-      this.gameSpeed = Double.valueOf(InfoResult.getParams().get("speed"));
+      this.gameSpeed = Double.parseDouble(InfoResult.getParams().get("speed"));
     } catch (Exception e) {
       this.gameSpeed = 1.0;
     }
@@ -163,7 +162,6 @@ public class Controller {
 
   /**
    * Pauses the game, resets the generation counter to zero, and updates the view.
-   * .
    */
   public void reset() {
     pause();
@@ -180,7 +178,7 @@ public class Controller {
    * counter, and notifies the
    * screen manager.
    */
-  public void stepBack() { // TODO: link to screenmanager
+  public void stepBack() {
     if (generations > 0) {
       pause();
       screenManager.simPausedButtonChange();
@@ -191,7 +189,7 @@ public class Controller {
     }
   }
 
-  public void stepForward() { // TODO: link to screenmanager
+  public void stepForward() {
     pause();
     screenManager.simPausedButtonChange();
     loop();
@@ -254,7 +252,7 @@ public class Controller {
       Runnable loadForResults) {
     screenManager.gameScreen(onSave, onLoad, this::pause, this::play, loadForResults,
         this::findGameSpeed, createNewGameAction, this::clear, this::stepForward, this::stepBack, generations,
-        gameSpeed);
+        gameSpeed); //FIXME: don't pass parameters straight on
     setGameSpeed(gameSpeed);
     screenManager.simPausedButtonChange();
   }

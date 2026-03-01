@@ -1,11 +1,10 @@
 package cellsociety.view;
 
+import cellsociety.controller.PropertiesLoader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
-import cellsociety.controller.PropertiesLoader;
 import javafx.scene.control.ChoiceDialog;
 
 public class LanguageView {
@@ -28,8 +27,8 @@ public class LanguageView {
             e.printStackTrace();
             return;
         }
-        String errorCodesStr = myResources.getString("languages");
-        String[] errorCodesArray = errorCodesStr.split(",");
+        String errorCodes = myResources.getString("languages");
+        String[] errorCodesArray = errorCodes.split(",");
         langChoices = Arrays.asList(errorCodesArray);
     }
 
