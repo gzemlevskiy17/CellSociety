@@ -2,6 +2,11 @@ package cellsociety.model.topology;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import cellsociety.model.topology.neighborhood.ExtendedMooreNeighborhood;
+import cellsociety.model.topology.neighborhood.HexagonalNeighborhood;
+import cellsociety.model.topology.neighborhood.MooreNeighborhood;
+import cellsociety.model.topology.neighborhood.TriangularNeighborhood;
+import cellsociety.model.topology.neighborhood.VonNeumannNeighborhood;
 import org.junit.jupiter.api.Test;
 
 /**

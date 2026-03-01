@@ -1,5 +1,6 @@
-package cellsociety.view;
+package cellsociety.view.grids;
 
+import cellsociety.view.GridView;
 import java.util.HashMap;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;

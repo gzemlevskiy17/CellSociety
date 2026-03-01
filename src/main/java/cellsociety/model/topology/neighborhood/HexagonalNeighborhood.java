@@ -1,4 +1,4 @@
-package cellsociety.model.topology;
+package cellsociety.model.topology.neighborhood;
 
 /**
  * Hexagonal neighborhood: 6 neighbors using offset coordinates.

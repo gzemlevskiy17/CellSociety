@@ -1,4 +1,4 @@
-package cellsociety.model.topology;
+package cellsociety.model.topology.edgebehavior;
 
 /**
  * Strategy interface for resolving out-of-bounds neighbor positions.

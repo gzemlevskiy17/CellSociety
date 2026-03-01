@@ -1,7 +1,9 @@
 package cellsociety.view;
 
 import cellsociety.model.ParseResult;
+import cellsociety.view.grids.HexagonalGridView;
 import cellsociety.view.grids.RectangularGridView;
+import cellsociety.view.grids.TriangularGridView;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;

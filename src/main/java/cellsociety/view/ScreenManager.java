@@ -7,12 +7,10 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Font;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -95,8 +93,7 @@ public class ScreenManager {
 
   private BorderPane createTopBox(String[] names) {
     Label topLabel = new Label(gridView.getGameName());
-    topLabel.setFont(new Font("Comic Sans", 50)); // TODO: put in style
-    topLabel.setAlignment(Pos.CENTER);
+    topLabel.setId("top-label");
     BorderPane titleBox = new BorderPane(topLabel);
 
     for (String name : names) {

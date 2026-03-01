@@ -1,4 +1,4 @@
-package cellsociety.model.topology;
+package cellsociety.model.topology.neighborhood;
 
 /**
  * Extended Moore neighborhood: all cells within 2 steps (a 5x5 area minus the center cell).

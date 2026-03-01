@@ -1,4 +1,4 @@
-package cellsociety.model.topology;
+package cellsociety.model.topology.edgebehavior;
 
 /**
  * Bounded edge policy: neighbors outside the grid boundary are skipped.
