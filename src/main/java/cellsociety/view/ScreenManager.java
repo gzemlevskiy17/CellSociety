@@ -2,9 +2,11 @@ package cellsociety.view;
 
 import static cellsociety.controller.PropertiesLoader.DEFAULT_RESOURCE_FOLDER;
 
+import cellsociety.controller.PropertiesLoader;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -27,6 +29,8 @@ public class ScreenManager {
   private Slider speedSlider;
   private int generations;
 
+  private ResourceBundle layoutResources;
+
   //TODO: remove hardcoding
   public static final String STYLESHEET = "light.css";
   private static final String LAYOUT_STYLESHEET = "GameScreen.css";
@@ -34,6 +38,11 @@ public class ScreenManager {
   public ScreenManager(Stage stage, String langResult) {
     stageLive = stage;
     language = langResult;
+    try {
+      layoutResources = PropertiesLoader.loadProperties("Config/" + language);
+    } catch (Exception e) {
+      e.printStackTrace(); //TODO: handle
+    }
   }
 
   public void checkAllNotNull(Object... params) throws Exception { //TODO: do we need this
@@ -57,7 +66,7 @@ public class ScreenManager {
       checkAllNotNull(onSave, onLoad, pause, play, reset, setGameSpeed, createNewGameAction,
           clear); // TODO: remove null checks
     } catch (Exception e) {
-      e.printStackTrace();
+      e.printStackTrace(); //TODO: handle
     }
     generations = startingGenerations;
     onPlay = true; //TODO: make more elegant
@@ -80,7 +89,7 @@ public class ScreenManager {
             getClass().getResource(DEFAULT_RESOURCE_FOLDER + "Style/" + STYLESHEET)
                 .toExternalForm(),
             getClass().getResource(DEFAULT_RESOURCE_FOLDER + "Style/" + LAYOUT_STYLESHEET)
-                .toExternalForm()
+                .toExternalForm() //TODO: wrap with try-catch
         );
     //TODO: figure out default_resource_folder
     String titleOfWindow = "Cell Society: Running " + gridView.gameName; // TODO: language & getter
