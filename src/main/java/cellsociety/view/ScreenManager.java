@@ -7,10 +7,12 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -31,7 +33,6 @@ public class ScreenManager {
 
   private ResourceBundle layoutResources;
 
-  //TODO: remove hardcoding
   public static final String STYLESHEET = "light.css";
   private static final String LAYOUT_STYLESHEET = "GameScreen.css";
 
@@ -77,8 +78,17 @@ public class ScreenManager {
         reset, setGameSpeed, createNewGameAction, clear, stepForward, stepBack, startSpeed);
     mainScreen.setBottom(simulationControl);
 
-    Scene scene = new Scene(mainScreen, 1000, 800);
+    Scene scene = new Scene(mainScreen, 1000, 800); // TODO: properties
+    scene.getStylesheets()
+        .addAll(
+            getClass().getResource(DEFAULT_RESOURCE_FOLDER + "Style/" + STYLESHEET)
+                .toExternalForm(),
+            getClass().getResource(DEFAULT_RESOURCE_FOLDER + "Style/" + LAYOUT_STYLESHEET)
+                .toExternalForm() // TODO: wrap with try-catch
+        );
     String titleOfWindow = "Cell Society: Running " + gridView.getGameName(); // TODO: language
+
+    // TODO: figure out default_resource_folder
     stageLive.setTitle(titleOfWindow);
     stageLive.setScene(scene);
   }

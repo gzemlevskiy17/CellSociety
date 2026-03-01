@@ -3,6 +3,8 @@ package cellsociety.view;
 import cellsociety.model.ParseResult;
 import cellsociety.view.grids.RectangularGridView;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
 import javafx.scene.paint.Color;
 
 /**
@@ -59,6 +61,11 @@ public class ViewFactory {
       colorMap.put(1, Color.BLACK);
       colorMap.put(2, Color.RED);
     }
-    return new RectangularGridView(gameType, colorMap, cols, rows);
+    String shape = result.getShape();
+    Map<String, Supplier<GridView>> shapes = Map.of(
+        "Hexagonal", () -> new HexagonalGridView(gameType, colorMap, cols, rows),
+        "Triangular", () -> new TriangularGridView(gameType, colorMap, cols, rows)
+    );
+    return shapes.getOrDefault(shape, () -> new RectangularGridView(gameType, colorMap, cols, rows)).get();
   }
 }
