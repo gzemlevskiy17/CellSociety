@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>GameOfLife</type>
+    <title>Hexagonal Shape - Honeycomb Display</title>
+    <author>Michael Li</author>
+    <description>GameOfLife rendered as a hexagonal grid. Uses hexagonal cell shapes in the view while keeping the default Moore neighborhood.</description>
+    <grid>
+        <rows>10</rows>
+        <columns>10</columns>
+        <shape>Hexagonal</shape>
+        <neighborhood>Hexagonal</neighborhood>
+        <cells>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 1 0 0 0 0 0</row>
+            <row>0 0 0 1 0 1 0 0 0 0</row>
+            <row>0 0 1 0 0 0 1 0 0 0</row>
+            <row>0 0 0 1 0 1 0 0 0 0</row>
+            <row>0 0 0 0 1 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+        </cells>
+    </grid>
+    <parameters>
+        <speed>2</speed>
+        <states>
+            <state id="0" name="DEAD" color="#F0F0F0"/>
+            <state id="1" name="ALIVE" color="#1ABC9C"/>
+        </states>
+    </parameters>
+</simulation>
