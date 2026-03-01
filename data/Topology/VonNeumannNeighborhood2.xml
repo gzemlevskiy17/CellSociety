@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>Percolation</type>
+    <title>Von Neumann Neighborhood - Percolation Orthogonal</title>
+    <author>Michael Li</author>
+    <description>Percolation with Von Neumann neighborhood. Water only flows up, down, left, right — not diagonally.</description>
+    <grid>
+        <rows>10</rows>
+        <columns>10</columns>
+        <neighborhood>VonNeumann</neighborhood>
+        <cells>
+            <row>2 1 1 1 0 1 1 1 1 1</row>
+            <row>1 1 0 1 1 1 0 1 1 1</row>
+            <row>1 0 1 1 1 0 1 1 1 1</row>
+            <row>1 1 1 0 1 1 1 0 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 0 1 1 1 0 1 1 1</row>
+            <row>1 1 1 1 0 1 1 1 1 1</row>
+            <row>1 0 1 1 1 1 1 0 1 1</row>
+            <row>1 1 1 0 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 0 1 1 1</row>
+        </cells>
+    </grid>
+    <parameters>
+        <speed>3</speed>
+        <states>
+            <state id="0" name="BLOCKED" color="#333333"/>
+            <state id="1" name="OPEN" color="#FFFFFF"/>
+            <state id="2" name="WATER" color="#3498DB"/>
+        </states>
+    </parameters>
+</simulation>
