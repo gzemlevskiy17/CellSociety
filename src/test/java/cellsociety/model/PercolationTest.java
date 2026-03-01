@@ -17,6 +17,16 @@ class PercolationTest {
   private Percolation percolation;
 
 
+  private int[][] snapshotGrid(GridReader reader) {
+    int[][] snapshot = new int[reader.getRows()][reader.getCols()];
+    for (int r = 0; r < reader.getRows(); r++) {
+      for (int c = 0; c < reader.getCols(); c++) {
+        snapshot[r][c] = reader.getCellState(r, c);
+      }
+    }
+    return snapshot;
+  }
+
   //TODO: add this to 'helper' class so that it can be used by other test classes?
   private void setupGrid(int[][] states) {
     int rows = states.length;
@@ -84,9 +94,10 @@ class PercolationTest {
     };
     setupGrid(initial);
 
-    int[][] beforeStep = grid.getCellStates();
+    GridReader reader = new GridReader(grid);
+    int[][] beforeStep = snapshotGrid(reader);
     percolation.step();
-    int[][] afterStep = grid.getCellStates();
+    int[][] afterStep = snapshotGrid(reader);
 
     assertArrayEquals(beforeStep, afterStep);
   }

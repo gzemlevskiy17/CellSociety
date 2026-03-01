@@ -1,6 +1,7 @@
 package cellsociety.view;
 
 import cellsociety.controller.PropertiesLoader;
+
 import java.util.LinkedHashMap;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -17,7 +18,7 @@ public class ButtonCreator {
         try {
             myResources = PropertiesLoader.loadProperties("Text/Buttons/" + language);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Failed to load button properties for language: " + language, e);
         }
     }
 
@@ -40,7 +41,7 @@ public class ButtonCreator {
         try {
             getButton(name).setText(myResources.getString(text));
         } catch (MissingResourceException e) {
-            getButton(name).setText(text); //TODO: rethrow/handle?
+            getButton(name).setText(text);
         }
     }
 
@@ -48,7 +49,7 @@ public class ButtonCreator {
         try {
             myResources = PropertiesLoader.loadProperties("Buttons/" + language);
         } catch (Exception e) {
-            e.printStackTrace(); //TODO: catch exeption
+            throw new IllegalStateException("Failed to load button properties for language: " + language, e);
         }
         for (String name : buttonHolder.keySet()) {
             setButtonText(name, name);

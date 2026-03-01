@@ -189,24 +189,6 @@ public class Grid {
   }
 
   /**
-   * Returns a snapshot of all current cell states as a 2D int array. Useful for
-   * saving the
-   * simulation state to XML.
-   *
-   * @return a new 2D array where each entry is the state of the corresponding
-   *         cell
-   */
-  public int[][] getCellStates() {
-    int[][] states = new int[getRows()][getColumns()];
-    for (int i = 0; i < getRows(); i++) {
-      for (int j = 0; j < getColumns(); j++) {
-        states[i][j] = cells[i][j].getState();
-      }
-    }
-    return states;
-  }
-
-  /**
    * Resets all cells in the grid to state 0. Called during construction.
    */
   public void defaultInitializeCells() {

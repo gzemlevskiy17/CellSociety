@@ -1,6 +1,7 @@
 package cellsociety.controller;
 
 import cellsociety.model.Game;
+import cellsociety.model.GridReader;
 import cellsociety.model.ModelFactory;
 import cellsociety.model.ParseResult;
 import cellsociety.model.XMLReader;
@@ -93,27 +94,28 @@ public class GameRunner {
     optionalFile.ifPresent(file -> {
       try {
         handleRealLoad(file);
-        return;
+      } catch (IllegalArgumentException e) {
+        new ErrorView("Configuration Error", e.getMessage());
       } catch (Exception e) {
-        e.printStackTrace();
+        new ErrorView("Unexpected Error", "Failed to load simulation: " + e.getMessage());
       }
     });
   }
 
-  private void handleRealLoad(File file) throws Exception {
+  private void handleRealLoad(File file) throws IllegalArgumentException {
     ParseResult parseResult;
     try {
       parseResult = XMLReader.parse(file);
       currentParseResult = parseResult;
     } catch (Exception e) {
       new ErrorView("Configuration Error", e.getMessage());
-      throw new Exception();
+      throw new IllegalArgumentException("Failed to parse XML file: " + file.getName(), e);
     }
     try {
       loadForResults();
     } catch (IllegalArgumentException e) {
       new ErrorView("Wrong Arguments", e.getMessage());
-      throw new Exception();
+      throw new IllegalArgumentException("Failed to create game from configuration", e);
     }
   }
 
@@ -128,7 +130,13 @@ public class GameRunner {
 
   private void handleSave() {
     controller.pause();
-    int[][] currentCells = game.getGrid().getCellStates();
+    GridReader reader = game.getGridReader();
+    int[][] currentCells = new int[reader.getRows()][reader.getCols()];
+    for (int r = 0; r < reader.getRows(); r++) {
+      for (int c = 0; c < reader.getCols(); c++) {
+        currentCells[r][c] = reader.getCellState(r, c);
+      }
+    }
     updateParams("speed", controller.getGameSpeed() + "");
     ParseResult snapshot = new ParseResult(
         currentParseResult.getRows(),
@@ -142,8 +150,10 @@ public class GameRunner {
         currentParseResult.getColorMap());
     try {
       XMLWriter.save(snapshot, myStage);
-    } catch (ParserConfigurationException | TransformerException e) {
-      throw new RuntimeException(e);
+    } catch (ParserConfigurationException e) {
+      new ErrorView("Save Error", "Failed to configure XML writer: " + e.getMessage());
+    } catch (TransformerException e) {
+      new ErrorView("Save Error", "Failed to write XML file: " + e.getMessage());
     }
   }
 
