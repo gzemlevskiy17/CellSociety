@@ -20,7 +20,8 @@ public interface EdgePolicy {
    * @param col  the candidate column (may be out of bounds)
    * @param rows total number of rows in the grid
    * @param cols total number of columns in the grid
-   * @return a two-element array {resolvedRow, resolvedCol}, or {@code null} to skip this neighbor
+   * @return a two-element array {resolvedRow, resolvedCol}, or {@code null} to
+   *         skip this neighbor
    */
   int[] resolve(int row, int col, int rows, int cols);
 }

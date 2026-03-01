@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>Segregation</type>
+    <title>Triangular Shape - Segregation on Triangular Grid</title>
+    <author>Michael Li</author>
+    <description>Segregation displayed with triangular cell shapes and triangular neighborhood. Visual representation uses alternating triangles.</description>
+    <grid>
+        <rows>12</rows>
+        <columns>12</columns>
+        <shape>Triangular</shape>
+        <neighborhood>Triangular</neighborhood>
+        <stateDistribution type="proportion">
+            <state id="0" proportion="0.15"/>
+            <state id="1" proportion="0.42"/>
+            <state id="2" proportion="0.43"/>
+        </stateDistribution>
+    </grid>
+    <parameters>
+        <speed>2</speed>
+        <threshold>0.33</threshold>
+        <states>
+            <state id="0" name="EMPTY" color="#FFFFFF"/>
+            <state id="1" name="GROUP_A" color="#2980B9"/>
+            <state id="2" name="GROUP_B" color="#C0392B"/>
+        </states>
+    </parameters>
+</simulation>

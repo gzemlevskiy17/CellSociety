@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>GameOfLife</type>
+    <title>Triangular Shape - Alternating Triangles Display</title>
+    <author>Michael Li</author>
+    <description>GameOfLife rendered with triangular cell shapes. Alternating up and down triangles tile the display area seamlessly.</description>
+    <grid>
+        <rows>10</rows>
+        <columns>10</columns>
+        <shape>Triangular</shape>
+        <neighborhood>Triangular</neighborhood>
+        <cells>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 1 1 0 0 0 0</row>
+            <row>0 0 0 1 1 0 0 0 0 0</row>
+            <row>0 0 0 0 1 1 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+        </cells>
+    </grid>
+    <parameters>
+        <speed>2</speed>
+        <states>
+            <state id="0" name="DEAD" color="#F5F5F5"/>
+            <state id="1" name="ALIVE" color="#E67E22"/>
+        </states>
+    </parameters>
+</simulation>

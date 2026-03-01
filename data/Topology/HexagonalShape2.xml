@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>ForestFire</type>
+    <title>Hexagonal Shape - Forest Fire Honeycomb</title>
+    <author>Michael Li</author>
+    <description>ForestFire displayed with hexagonal cell shapes and hexagonal neighborhood. Fire spread and cell rendering are both hexagonal.</description>
+    <grid>
+        <rows>14</rows>
+        <columns>14</columns>
+        <shape>Hexagonal</shape>
+        <neighborhood>Hexagonal</neighborhood>
+        <stateDistribution type="proportion">
+            <state id="0" proportion="0.1"/>
+            <state id="1" proportion="0.85"/>
+            <state id="2" proportion="0.05"/>
+        </stateDistribution>
+    </grid>
+    <parameters>
+        <speed>2</speed>
+        <probCatch>0.55</probCatch>
+        <probGrow>0.04</probGrow>
+        <states>
+            <state id="0" name="EMPTY" color="#C8A97C"/>
+            <state id="1" name="TREE" color="#2ECC71"/>
+            <state id="2" name="FIRE" color="#E74C3C"/>
+        </states>
+    </parameters>
+</simulation>

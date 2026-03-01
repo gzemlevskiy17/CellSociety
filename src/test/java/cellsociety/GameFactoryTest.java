@@ -76,6 +76,6 @@ class GameFactoryTest {
 
         cellsociety.view.GridView view = factory.createView(result);
         assertNotNull(view);
-        assertEquals(3, view.getGridPane().getRowCount());
+        assertEquals(3, view.getNumRows());
     }
 }
