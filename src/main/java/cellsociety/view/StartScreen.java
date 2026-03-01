@@ -1,8 +1,8 @@
 package cellsociety.view;
-
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,26 +15,25 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
-public class MainLauncher {
+public class StartScreen {
     private LanguageView languageView;
-    private ButtonCreator firstButt;
-
-    private static final String DEFAULT_THEME = "Light";
-    private String[] themeChoices = { "Light", "Dark" };
+    private static final String DEFAULT_THEME = "Light"; //TODO: set defaults
+    private ButtonCreator firstButton;
+    private String[] themeChoices = {"Light", "Dark"}; //TOOD: load dynamically
     private String chosenTheme = DEFAULT_THEME;
 
-    public MainLauncher(Stage stage, Runnable start) {
+    public StartScreen(Stage stage, Runnable start) {
         languageView = new LanguageView();
-        firstButt = new ButtonCreator(languageView.getLanguage());
+        firstButton = new ButtonCreator(languageView.getLanguage());
 
         String[] names = { "Language", "Theme", "Choice" };
 
         for (String name : names) {
-            firstButt.addEmptyButton(name);
+            firstButton.addEmptyButton(name);
         }
-        firstButt.addActionToButton("Language", e -> findLanguage());
-        firstButt.addActionToButton("Theme", e -> findTheme());
-        firstButt.addActionToButton("Choice", e -> start.run());
+        firstButton.addActionToButton("Language", e -> findLanguage());
+        firstButton.addActionToButton("Theme", e -> findTheme());
+        firstButton.addActionToButton("Choice", e -> start.run());
 
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root);
@@ -51,10 +50,18 @@ public class MainLauncher {
         buttonHBox.setPadding(new Insets(0, 30, 30, 30));
 
         for (String name : names) {
-            buttonHBox.getChildren().add(firstButt.getButton(name));
+            buttonHBox.getChildren().add(firstButton.getButton(name));
         }
         root.setTop(hBox);
         root.setCenter(buttonHBox);
+
+        File cssFile = new File(Paths.get(".").toAbsolutePath().normalize()
+            .resolve("src/main/resources/cellsociety/view/Style/StartScreen.css").toString());
+        // try {
+        // scene.getStylesheets().add(cssFile.toURI().toURL().toExternalForm());
+        // } catch (MalformedURLException e1) {
+        // e1.printStackTrace();
+        // }
 
         stage.setTitle("Launcher");
         stage.setScene(scene);
@@ -77,7 +84,7 @@ public class MainLauncher {
 
     private void findLanguage() {
         languageView.setup();
-        firstButt.changeLanguage(getLanguage());
+        firstButton.changeLanguage(getLanguage());
     }
 
     public String getLanguage() {

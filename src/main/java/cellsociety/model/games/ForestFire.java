@@ -44,12 +44,12 @@ public class ForestFire extends Game {
    */
   public ForestFire(Grid grid, double ignitionProbability, double fillProbability) {
     super(grid);
-    if (ignitionProbability < 0 && ignitionProbability > 1)
+    if (ignitionProbability < 0 || ignitionProbability > 1)
       throw new IllegalArgumentException("Illegal ignition probability: " + ignitionProbability);
 
     setParam("ignitionProbability", String.valueOf(ignitionProbability));
 
-    if (fillProbability < 0 && fillProbability > 1)
+    if (fillProbability < 0 || fillProbability > 1)
       throw new IllegalArgumentException("Illegal fill probability: " + ignitionProbability);
 
     setParam("fillProbability", String.valueOf(fillProbability));
@@ -64,7 +64,7 @@ public class ForestFire extends Game {
       } catch (Exception e) {
         throw new IllegalArgumentException("Illegal " + vari + ": " + getParam(vari));
       }
-      if (probability < 0 && probability > 1)
+      if (probability < 0 || probability > 1)
         throw new IllegalArgumentException("Illegal " + vari + ": " + getParam(vari));
     }
   }

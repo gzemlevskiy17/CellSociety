@@ -1,8 +1,8 @@
 package cellsociety.view;
 
-import java.util.HashMap;
-
 import cellsociety.model.ParseResult;
+import cellsociety.view.grids.RectangularGridView;
+import java.util.HashMap;
 import javafx.scene.paint.Color;
 
 /**

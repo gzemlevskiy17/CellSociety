@@ -16,7 +16,7 @@ public class ButtonCreator {
     public ButtonCreator(String language) {
         buttonHolder = new LinkedHashMap<>();
         try {
-            myResources = PropertiesLoader.loadProperties("Buttons/" + language);
+            myResources = PropertiesLoader.loadProperties("Text/Buttons/" + language);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to load button properties for language: " + language, e);
         }

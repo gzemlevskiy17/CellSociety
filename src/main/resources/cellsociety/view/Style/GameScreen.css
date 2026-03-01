@@ -1,0 +1,24 @@
+#info-control-box {
+  -fx-spacing: 10;
+  -fx-padding: 10 10 0 0;
+}
+
+#simulation-control-box {
+  -fx-spacing: 15;
+  -fx-alignment: center;
+}
+
+#time-area-box {
+  -fx-spacing: 20;
+  -fx-alignment: top-center;
+}
+
+#top-label {
+  -fx-alignment: center;
+}
+
+#button-box-area {
+  -fx-spacing: 30;
+  -fx-alignment: bottom-center;
+  -fx-padding: 0 0 30 0;
+}
