@@ -53,7 +53,7 @@ public class ScreenManager {
     generations = genNum;
     onPlay = true;
     buttons = new ButtonCreator(language);
-    String[] names = { "Play", "Reset", "+", "--", "Clear", "Save", "Load", "Edit", "NewGame" };
+    String[] names = { "Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit", "NewGame" };
     String[] info = { "Info", "EditInfo" };
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
