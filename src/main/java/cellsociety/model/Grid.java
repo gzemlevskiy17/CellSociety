@@ -1,5 +1,9 @@
 package cellsociety.model;
 
+import cellsociety.model.topology.BoundedEdge;
+import cellsociety.model.topology.EdgePolicy;
+import cellsociety.model.topology.MooreNeighborhood;
+import cellsociety.model.topology.NeighborhoodStrategy;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -10,79 +14,70 @@ import java.util.List;
  * all simulations.
  *
  * <p>
- * Provides access to individual cells, their 8-directional (Moore) neighbors,
- * and
- * bulk operations like extracting all cell states as a 2D array. All cells are
- * initialized to state
- * 0 by default.
+ * Neighbor lookup is fully configurable via a {@link NeighborhoodStrategy}
+ * (which directions to check) and an {@link EdgePolicy} (what to do at the
+ * boundary). Both default to Moore + Bounded if not specified, preserving
+ * existing behavior.
  * </p>
  *
  * <p>
- * <b>Assumptions:</b> Row and column counts must be positive. Out-of-bounds
- * access to
- * {@link #getCell(int, int)} will throw an
- * {@code ArrayIndexOutOfBoundsException}.
+ * <b>Dependencies:</b> {@link Cell}, {@link NeighborhoodStrategy}, {@link EdgePolicy}
  * </p>
- *
- * <p>
- * <b>Dependencies:</b> {@link Cell}
- * </p>
- *
- * <p>
- * <b>Example usage:</b>
- * </p>
- * 
- * <pre>{@code
- * Grid grid = new Grid(10, 10);
- * grid.getCell(0, 0).setState(1);
- * List<Cell> neighbors = grid.getNeighbors(0, 0); // returns up to 3 in-bounds neighbors
- * }</pre>
  *
  * @author Georgiy Zemlevskiy
  * @author Michael Li
  */
 public class Grid {
 
+  private static final int MAX_HISTORY = 20;
+
   private Cell[][] cells;
   private Deque<Cell[][]> history;
   private Cell[][] initialState;
 
-  private int[][] directions = {
-      { -1, -1 }, { -1, 0 }, { -1, 1 },
-      { 0, -1 }, { 0, 1 },
-      { 1, -1 }, { 1, 0 }, { 1, 1 }
-  };
+  private final NeighborhoodStrategy neighborhoodStrategy;
+  private final EdgePolicy edgePolicy;
 
   /**
-   * Constructs a grid with the given dimensions, initializing all cells to state
-   * 0.
+   * Constructs a grid with default Moore neighborhood and bounded edges.
    *
    * @param numRows the number of rows
    * @param numCols the number of columns
    */
   public Grid(int numRows, int numCols) {
-    emptyConstruction(numRows, numCols);
-    createFirstState(numRows, numCols, null);
-  }
-
-  public Grid(int numRows, int numCols, int[][] cellStates) {
-    emptyConstruction(numRows, numCols);
-    createFirstState(numRows, numCols, cellStates);
-  }
-
-  private void emptyConstruction(int numRows, int numCols) {
-    cells = new Cell[numRows][numCols];
-    defaultInitializeCells();
-    history = new ArrayDeque<>();
+    this(numRows, numCols, null, new MooreNeighborhood(), new BoundedEdge());
   }
 
   /**
-   * Set the Deque's first state to the grid coppied from ParseResults
-   * 
-   * @param rows       number of rows of initialized grid
-   * @param cols       number of columns of initialized grid
-   * @param cellStates cell States to pass into initialized grid
+   * Constructs a grid with initial cell states, default Moore neighborhood and bounded edges.
+   *
+   * @param numRows    the number of rows
+   * @param numCols    the number of columns
+   * @param cellStates initial cell states, or null for all-zero
    */
+  public Grid(int numRows, int numCols, int[][] cellStates) {
+    this(numRows, numCols, cellStates, new MooreNeighborhood(), new BoundedEdge());
+  }
+
+  /**
+   * Constructs a grid with explicit neighborhood and edge strategies.
+   *
+   * @param numRows      the number of rows
+   * @param numCols      the number of columns
+   * @param cellStates   initial cell states, or null for all-zero
+   * @param neighborhood the strategy defining which offsets count as neighbors
+   * @param edgePolicy   the policy defining how out-of-bounds positions are resolved
+   */
+  public Grid(int numRows, int numCols, int[][] cellStates,
+      NeighborhoodStrategy neighborhood, EdgePolicy edgePolicy) {
+    this.neighborhoodStrategy = neighborhood;
+    this.edgePolicy = edgePolicy;
+    cells = new Cell[numRows][numCols];
+    defaultInitializeCells();
+    history = new ArrayDeque<>();
+    createFirstState(numRows, numCols, cellStates);
+  }
+
   private void createFirstState(int rows, int cols, int[][] cellStates) {
     if (cellStates != null) {
       for (int i = 0; i < rows; i++) {
@@ -95,11 +90,30 @@ public class Grid {
     history.add(copyGrid(cells));
   }
 
-  // TODO: test
+  /**
+   * Returns all neighbors of the cell at (row, col) as determined by the
+   * current {@link NeighborhoodStrategy} and {@link EdgePolicy}.
+   *
+   * @param row the row index of the target cell
+   * @param col the column index of the target cell
+   * @return a list of neighboring {@link Cell} objects
+   */
+  public List<Cell> getNeighbors(int row, int col) {
+    List<Cell> neighbors = new ArrayList<>();
+    for (int[] offset : neighborhoodStrategy.getOffsets(row, col)) {
+      int[] resolved = edgePolicy.resolve(
+          row + offset[0], col + offset[1], getRows(), getColumns());
+      if (resolved != null) {
+        neighbors.add(cells[resolved[0]][resolved[1]]);
+      }
+    }
+    return neighbors;
+  }
+
   public void revertState() {
-    if (history.size() > 1) { // Keep at least the initial state
-      history.removeFirst(); // Remove current state
-      Cell[][] previousState = history.peekFirst(); // Get previous state
+    if (history.size() > 1) {
+      history.removeFirst();
+      Cell[][] previousState = history.peekFirst();
       for (int i = 0; i < cells.length; i++) {
         for (int j = 0; j < cells[i].length; j++) {
           cells[i][j].setState(previousState[i][j].getState());
@@ -108,18 +122,17 @@ public class Grid {
     }
   }
 
-  // TODO: test this and possibly other methods
   public void saveState() {
-    if (history.size() >= 20) { // TODO: extract magic number into config file
+    if (history.size() >= MAX_HISTORY) {
       history.removeLast();
     }
     history.addFirst(copyGrid(cells));
   }
 
-  private Cell[][] copyGrid(Cell[][] cells) {
-    Cell[][] copy = new Cell[cells.length][cells[0].length];
-    for (int i = 0; i < cells.length; i++) {
-      for (int j = 0; j < cells[i].length; j++) {
+  private Cell[][] copyGrid(Cell[][] source) {
+    Cell[][] copy = new Cell[source.length][source[0].length];
+    for (int i = 0; i < source.length; i++) {
+      for (int j = 0; j < source[i].length; j++) {
         copy[i][j] = getCell(i, j).copy();
       }
     }
@@ -135,28 +148,6 @@ public class Grid {
    */
   public Cell getCell(int row, int col) {
     return cells[row][col];
-  }
-
-  /**
-   * Returns all in-bounds Moore neighbors (up to 8) of the cell at the given
-   * position. Corner cells
-   * return 3 neighbors, edge cells return 5, and interior cells return 8.
-   *
-   * @param row the row index of the target cell
-   * @param col the column index of the target cell
-   * @return a list of neighboring {@link Cell} objects
-   */
-  public List<Cell> getNeighbors(int row, int col) {
-    List<Cell> neighbors = new ArrayList<>();
-    for (int[] direction : directions) {
-      int nr = row + direction[0];
-      int nc = col + direction[1];
-
-      if (isInBounds(nr, nc)) {
-        neighbors.add(cells[nr][nc]);
-      }
-    }
-    return neighbors;
   }
 
   /**
@@ -189,7 +180,7 @@ public class Grid {
   }
 
   /**
-   * Resets all cells in the grid to state 0. Called during construction.
+   * Resets all cells in the grid to state 0.
    */
   public void defaultInitializeCells() {
     for (int i = 0; i < cells.length; i++) {
@@ -199,10 +190,8 @@ public class Grid {
     }
   }
 
-  /*
-   * Resets the grid to its initial state. Clears the history and sets all cells
-   * back to their
-   * original states as captured at construction.
+  /**
+   * Resets the grid to its initial state and clears the history.
    */
   public void resetToInitialState() {
     cells = initialState;

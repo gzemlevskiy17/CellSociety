@@ -16,7 +16,7 @@ import java.util.Random;
  * <p>
  * Uses sequential random updates inside updateGame(). Each step picks
  * rows*cols random cells and immediately moves them using setState(), so
- * subsequent picks see the updated grid. commitChanges() is harmless since
+ * subsequent picks see the updated getGrid(). commitChanges() is harmless since
  * setState() keeps state and nextState in sync.
  * </p>
  */
@@ -39,13 +39,13 @@ public class FallingSand extends Game {
 
   @Override
   protected void updateGame() {
-    int rows = grid.getRows();
-    int cols = grid.getColumns();
+    int rows = getGrid().getRows();
+    int cols = getGrid().getColumns();
     int iterations = rows * cols;
     for (int i = 0; i < iterations; i++) {
       int r = random.nextInt(rows);
       int c = random.nextInt(cols);
-      int state = grid.getCell(r, c).getState();
+      int state = getGrid().getCell(r, c).getState();
       if (state == SAND) {
         moveSand(r, c);
       } else if (state == WATER) {
@@ -56,10 +56,10 @@ public class FallingSand extends Game {
 
   private void moveSand(int row, int col) {
     int belowRow = row + 1;
-    if (!grid.isInBounds(belowRow, col)) {
+    if (!getGrid().isInBounds(belowRow, col)) {
       return;
     }
-    int belowState = grid.getCell(belowRow, col).getState();
+    int belowState = getGrid().getCell(belowRow, col).getState();
     if (belowState == EMPTY || belowState == WATER) {
       swap(row, col, belowRow, col);
     }
@@ -76,17 +76,17 @@ public class FallingSand extends Game {
     } else {
       targetCol = col + 1;
     }
-    if (!grid.isInBounds(targetRow, targetCol)) {
+    if (!getGrid().isInBounds(targetRow, targetCol)) {
       return;
     }
-    if (grid.getCell(targetRow, targetCol).getState() == EMPTY) {
+    if (getGrid().getCell(targetRow, targetCol).getState() == EMPTY) {
       swap(row, col, targetRow, targetCol);
     }
   }
 
   private void swap(int r1, int c1, int r2, int c2) {
-    int temp = grid.getCell(r1, c1).getState();
-    grid.getCell(r1, c1).setState(grid.getCell(r2, c2).getState());
-    grid.getCell(r2, c2).setState(temp);
+    int temp = getGrid().getCell(r1, c1).getState();
+    getGrid().getCell(r1, c1).setState(getGrid().getCell(r2, c2).getState());
+    getGrid().getCell(r2, c2).setState(temp);
   }
 }

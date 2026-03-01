@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>ForestFire</type>
+    <title>Toroidal Edge - Forest Fire Wrap</title>
+    <author>Michael Li</author>
+    <description>ForestFire with toroidal edges. Fire at the right edge can spread to the left edge and vice versa.</description>
+    <grid>
+        <rows>10</rows>
+        <columns>10</columns>
+        <edge>Toroidal</edge>
+        <cells>
+            <row>1 1 1 1 1 1 1 1 1 2</row>
+            <row>1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1</row>
+        </cells>
+    </grid>
+    <parameters>
+        <speed>2</speed>
+        <probCatch>0.6</probCatch>
+        <probGrow>0.05</probGrow>
+        <states>
+            <state id="0" name="EMPTY" color="#D2B48C"/>
+            <state id="1" name="TREE" color="#228B22"/>
+            <state id="2" name="FIRE" color="#FF4500"/>
+        </states>
+    </parameters>
+</simulation>

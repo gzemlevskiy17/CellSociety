@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>GameOfLife</type>
+    <title>Von Neumann Neighborhood - Orthogonal Only</title>
+    <author>Michael Li</author>
+    <description>GameOfLife with Von Neumann (4-neighbor) rules. Only up, down, left, right count as neighbors — no diagonals.</description>
+    <grid>
+        <rows>10</rows>
+        <columns>10</columns>
+        <neighborhood>VonNeumann</neighborhood>
+        <cells>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 1 0 0 0 0 0</row>
+            <row>0 0 0 1 1 1 0 0 0 0</row>
+            <row>0 0 0 0 1 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0</row>
+        </cells>
+    </grid>
+    <parameters>
+        <speed>2</speed>
+        <states>
+            <state id="0" name="DEAD" color="#FFFFFF"/>
+            <state id="1" name="ALIVE" color="#3498DB"/>
+        </states>
+    </parameters>
+</simulation>

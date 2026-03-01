@@ -1,5 +1,15 @@
 package cellsociety.model;
 
+import cellsociety.model.topology.BoundedEdge;
+import cellsociety.model.topology.EdgePolicy;
+import cellsociety.model.topology.ExtendedMooreNeighborhood;
+import cellsociety.model.topology.HexagonalNeighborhood;
+import cellsociety.model.topology.MirrorEdge;
+import cellsociety.model.topology.MooreNeighborhood;
+import cellsociety.model.topology.NeighborhoodStrategy;
+import cellsociety.model.topology.ToroidalEdge;
+import cellsociety.model.topology.TriangularNeighborhood;
+import cellsociety.model.topology.VonNeumannNeighborhood;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
@@ -56,7 +66,9 @@ public class ModelFactory {
     String gameType = result.getGameType();
     int[][] cells = result.getCells();
 
-    Grid grid = new Grid(rows, cols, cells);
+    NeighborhoodStrategy neighborhood = buildNeighborhood(result.getNeighborhood());
+    EdgePolicy edge = buildEdge(result.getEdge());
+    Grid grid = new Grid(rows, cols, cells, neighborhood, edge);
 
     Class<?> superClazzReq = Game.class;
     try {
@@ -74,5 +86,23 @@ public class ModelFactory {
     } catch (ClassNotFoundException e) {
       throw new IllegalArgumentException("Unknown game type: " + gameType);
     }
+  }
+
+  private NeighborhoodStrategy buildNeighborhood(String name) {
+    return switch (name) {
+      case "VonNeumann" -> new VonNeumannNeighborhood();
+      case "ExtendedMoore" -> new ExtendedMooreNeighborhood();
+      case "Hexagonal" -> new HexagonalNeighborhood();
+      case "Triangular" -> new TriangularNeighborhood();
+      default -> new MooreNeighborhood(); // "Moore" and any unrecognized
+    };
+  }
+
+  private EdgePolicy buildEdge(String name) {
+    return switch (name) {
+      case "Toroidal" -> new ToroidalEdge();
+      case "Mirror" -> new MirrorEdge();
+      default -> new BoundedEdge(); // "Bounded" and any unrecognized
+    };
   }
 }

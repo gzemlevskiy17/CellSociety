@@ -1,7 +1,6 @@
 package cellsociety.model;
 
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -11,41 +10,32 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Stage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
  * Writes simulation configuration data to XML files.
  *
+ * <p>
+ * This class is purely responsible for serializing a {@link ParseResult} to a
+ * given file. File selection (e.g., via a save dialog) must be handled by the
+ * caller in the controller layer.
+ * </p>
+ *
  * @author Michael Li
  */
 public class XMLWriter {
 
   /**
-   * Opens a save dialog and saves the ParseResult to the chosen XML file.
+   * Saves the given {@link ParseResult} to the specified output file as XML.
    *
-   * @param result the ParseResult to save
-   * @param stage  the owner stage for the FileChooser dialog
+   * @param result     the simulation configuration to save
+   * @param outputFile the file to write to; must not be null
+   * @throws ParserConfigurationException if the XML document builder cannot be created
+   * @throws TransformerException         if the XML transformation fails
    */
-  public static void save(ParseResult result, Stage stage)
+  public static void save(ParseResult result, File outputFile)
       throws ParserConfigurationException, TransformerException {
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Save Simulation As");
-    File dataDir = new File(
-        Paths.get(".").toAbsolutePath().normalize().resolve("cellsociety_team01/data").toString());
-    if (dataDir.exists()) {
-      fileChooser.setInitialDirectory(dataDir);
-    }
-    fileChooser.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
-    fileChooser.setInitialFileName("simulation.xml");
-    File outputFile = fileChooser.showSaveDialog(stage);
-    if (outputFile == null) {
-      return;
-    }
-
     Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 
     Element root = doc.createElement("simulation");
@@ -78,21 +68,10 @@ public class XMLWriter {
 
     Element paramEl = doc.createElement("parameters");
     root.appendChild(paramEl);
-    /*
-     * if (result.getProbCatch() != 0.0) {
-     * appendTextElement(doc, paramEl, "probCatch",
-     * String.valueOf(result.getProbCatch()));
-     * }
-     * if (result.getProbGrow() != 0.0) {
-     * appendTextElement(doc, paramEl, "probGrow",
-     * String.valueOf(result.getProbGrow()));
-     * }
-     */
 
     if (result.getParams() != null && !result.getParams().isEmpty()) {
       for (Map.Entry<String, String> entry : result.getParams().entrySet()) {
-        String keytoPut = entry.getKey();
-        appendTextElement(doc, paramEl, keytoPut, entry.getValue());
+        appendTextElement(doc, paramEl, entry.getKey(), entry.getValue());
       }
     }
 

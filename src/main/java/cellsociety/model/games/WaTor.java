@@ -118,9 +118,9 @@ public class WaTor extends Game {
     }
 
     private void sharkMove() {
-        for (int i = 0; i < grid.getRows(); i++) {
-            for (int j = 0; j < grid.getColumns(); j++) {
-                Cell cell = grid.getCell(i, j);
+        for (int i = 0; i < getGrid().getRows(); i++) {
+            for (int j = 0; j < getGrid().getColumns(); j++) {
+                Cell cell = getGrid().getCell(i, j);
                 if (cell.getState() == 2 && cell.getNextState() == 2) {
                     moved = false;
                     Shark sharky;
@@ -153,9 +153,9 @@ public class WaTor extends Game {
     }
 
     public void fishMove() {
-        for (int i = 0; i < grid.getRows(); i++) {
-            for (int j = 0; j < grid.getColumns(); j++) {
-                Cell cell = grid.getCell(i, j);
+        for (int i = 0; i < getGrid().getRows(); i++) {
+            for (int j = 0; j < getGrid().getColumns(); j++) {
+                Cell cell = getGrid().getCell(i, j);
                 if (cell.getState() == 1 && cell.getNextState() == 1) {
                     moved = false;
                     Fish fishy;
@@ -183,7 +183,7 @@ public class WaTor extends Game {
     }
 
     private Cell sharkMoves(Shark sharky, int i, int j) {
-        List<Cell> fishFood = grid.getNeighbors(i, j);
+        List<Cell> fishFood = getGrid().getNeighbors(i, j);
         fishFood = findFood(fishFood);
         if (!fishFood.isEmpty()) {
             Collections.shuffle(fishFood);
@@ -192,7 +192,7 @@ public class WaTor extends Game {
             moved = true;
             return fishFood.get(0);
         } else {
-            List<Cell> empty = grid.getNeighbors(i, j);
+            List<Cell> empty = getGrid().getNeighbors(i, j);
             empty = findEmpty(empty);
             if (!empty.isEmpty()) {
                 Collections.shuffle(empty);
@@ -200,18 +200,18 @@ public class WaTor extends Game {
                 return empty.get(0);
             }
         }
-        return grid.getCell(i, j);
+        return getGrid().getCell(i, j);
     }
 
     private Cell fishMoves(int i, int j) {
-        List<Cell> empty = grid.getNeighbors(i, j);
+        List<Cell> empty = getGrid().getNeighbors(i, j);
         empty = findEmpty(empty);
         if (!empty.isEmpty()) {
             Collections.shuffle(empty);
             moved = true;
             return empty.get(0);
         }
-        return grid.getCell(i, j);
+        return getGrid().getCell(i, j);
 
     }
 

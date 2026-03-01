@@ -70,9 +70,9 @@ public class Segregation extends Game {
     List<int[]> dissatisfied = new ArrayList<>();
     List<int[]> emptyCells = new ArrayList<>();
 
-    for (int i = 0; i < grid.getRows(); i++) {
-      for (int j = 0; j < grid.getColumns(); j++) {
-        Cell cell = grid.getCell(i, j);
+    for (int i = 0; i < getGrid().getRows(); i++) {
+      for (int j = 0; j < getGrid().getColumns(); j++) {
+        Cell cell = getGrid().getCell(i, j);
         if (cell.getState() == 0) {
           emptyCells.add(new int[] { i, j });
         } else if (!isSatisfied(i, j)) {
@@ -88,15 +88,15 @@ public class Segregation extends Game {
     for (int m = 0; m < moves; m++) {
       int[] from = dissatisfied.get(m);
       int[] to = emptyCells.get(m);
-      grid.getCell(to[0], to[1]).setNextState(grid.getCell(from[0], from[1]).getState());
-      grid.getCell(from[0], from[1]).setNextState(0);
+      getGrid().getCell(to[0], to[1]).setNextState(getGrid().getCell(from[0], from[1]).getState());
+      getGrid().getCell(from[0], from[1]).setNextState(0);
     }
 
   }
 
   private boolean isSatisfied(int row, int col) {
-    int myState = grid.getCell(row, col).getState();
-    List<Cell> neighbors = grid.getNeighbors(row, col);
+    int myState = getGrid().getCell(row, col).getState();
+    List<Cell> neighbors = getGrid().getNeighbors(row, col);
 
     int sameCount = 0;
     int totalCount = 0;

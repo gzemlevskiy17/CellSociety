@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>GameOfLife</type>
+    <title>Error Test - Invalid Edge</title>
+    <author>Test</author>
+    <description>Tests that an invalid edge value throws an error.</description>
+    <grid>
+        <rows>3</rows>
+        <columns>3</columns>
+        <edge>FakeEdge</edge>
+        <cells>
+            <row>0 1 0</row>
+            <row>1 1 1</row>
+            <row>0 1 0</row>
+        </cells>
+    </grid>
+    <parameters>
+        <speed>1</speed>
+    </parameters>
+</simulation>

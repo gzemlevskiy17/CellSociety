@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>GameOfLife</type>
+    <title>Extended Moore Neighborhood - 24-Neighbor Radius</title>
+    <author>Michael Li</author>
+    <description>GameOfLife with Extended Moore (5x5 minus center, 24 neighbors) rules. Single cells survive much longer due to larger neighborhood counts.</description>
+    <grid>
+        <rows>12</rows>
+        <columns>12</columns>
+        <neighborhood>ExtendedMoore</neighborhood>
+        <cells>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 1 1 0 0 0 0 0</row>
+            <row>0 0 0 0 1 0 0 1 0 0 0 0</row>
+            <row>0 0 0 0 1 0 0 1 0 0 0 0</row>
+            <row>0 0 0 0 0 1 1 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+        </cells>
+    </grid>
+    <parameters>
+        <speed>2</speed>
+        <states>
+            <state id="0" name="DEAD" color="#FFFFFF"/>
+            <state id="1" name="ALIVE" color="#E74C3C"/>
+        </states>
+    </parameters>
+</simulation>

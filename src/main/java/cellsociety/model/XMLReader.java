@@ -25,7 +25,17 @@ import org.xml.sax.SAXException;
 public class XMLReader {
 
   private static final List<String> VALID_TYPES = Arrays.asList(
-      "GameOfLife", "ForestFire", "Segregation", "Percolation", "WaTor", "FallingSand");
+      "GameOfLife", "ForestFire", "Segregation", "Percolation", "WaTor", "FallingSand",
+      "ForagingAnts");
+
+  private static final List<String> VALID_NEIGHBORHOODS = Arrays.asList(
+      "Moore", "VonNeumann", "ExtendedMoore", "Hexagonal", "Triangular");
+
+  private static final List<String> VALID_EDGES = Arrays.asList(
+      "Bounded", "Toroidal", "Mirror");
+
+  private static final List<String> VALID_SHAPES = Arrays.asList(
+      "Rectangle", "Hexagonal", "Triangular");
 
   public static ParseResult parse(File file)
       throws ParserConfigurationException, IOException {
@@ -85,6 +95,26 @@ public class XMLReader {
     } else {
       params.put("speed", "1");
     }
+
+    // 5. Grid Topology (neighborhood, edge, shape) from <grid> element
+    //    Values already in params (from <parameters>) take precedence
+    if (gridEl != null) {
+      String neighborhood = getTextValue(gridEl, "neighborhood");
+      String edge = getTextValue(gridEl, "edge");
+      String shape = getTextValue(gridEl, "shape");
+      if (!neighborhood.isEmpty()) {
+        params.putIfAbsent("neighborhood", neighborhood);
+      }
+      if (!edge.isEmpty()) {
+        params.putIfAbsent("edge", edge);
+      }
+      if (!shape.isEmpty()) {
+        params.putIfAbsent("shape", shape);
+      }
+    }
+    validateOptionalTopologyField(params.get("neighborhood"), VALID_NEIGHBORHOODS, "neighborhood");
+    validateOptionalTopologyField(params.get("edge"), VALID_EDGES, "edge");
+    validateOptionalTopologyField(params.get("shape"), VALID_SHAPES, "shape");
 
     Element colorEl = getFirstElement(paramEl, "states");
     Map<Integer, String> colorMap = parseColors(colorEl);
@@ -270,5 +300,13 @@ public class XMLReader {
       return nodeList.item(0).getTextContent().trim();
     }
     return "";
+  }
+
+  private static void validateOptionalTopologyField(String value, List<String> validValues,
+      String fieldName) {
+    if (value != null && !value.isEmpty() && !validValues.contains(value)) {
+      throw new IllegalArgumentException(
+          "Invalid " + fieldName + ": " + value + ". Valid values: " + validValues);
+    }
   }
 }

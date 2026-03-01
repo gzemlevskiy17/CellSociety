@@ -65,8 +65,8 @@ public class ScreenManager {
     generations = startingGenerations;
     onPlay = true; //TODO: make more elegant
     buttons = new ButtonCreator(language);
-    String[] names = {"Play", "Reset", "+", "--", "Clear", "Save", "Load", "Edit", "NewGame"};
-    String[] info = {"Info", "EditInfo"};
+    String[] names = { "Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit", "NewGame" };
+    String[] info = { "Info", "EditInfo" };
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
@@ -77,23 +77,16 @@ public class ScreenManager {
         reset, setGameSpeed, createNewGameAction, clear, stepForward, stepBack, startSpeed);
     mainScreen.setBottom(simulationControl);
 
-    Scene scene = new Scene(mainScreen, 1000, 800); //TODO: properties
-    scene.getStylesheets()
-        .addAll(
-            getClass().getResource(DEFAULT_RESOURCE_FOLDER + "Style/" + STYLESHEET)
-                .toExternalForm(),
-            getClass().getResource(DEFAULT_RESOURCE_FOLDER + "Style/" + LAYOUT_STYLESHEET)
-                .toExternalForm() //TODO: wrap with try-catch
-        );
-    //TODO: figure out default_resource_folder
-    String titleOfWindow = "Cell Society: Running " + gridView.gameName; // TODO: language & getter
+    Scene scene = new Scene(mainScreen, 1000, 800);
+    String titleOfWindow = "Cell Society: Running " + gridView.getGameName(); // TODO: language
     stageLive.setTitle(titleOfWindow);
     stageLive.setScene(scene);
   }
 
   private BorderPane createTopBox(String[] names) {
-    Label topLabel = new Label(gridView.gameName); //TODO: replace with getter
-    topLabel.setId("top-label");
+    Label topLabel = new Label(gridView.getGameName());
+    topLabel.setFont(new Font("Comic Sans", 50)); // TODO: put in style
+    topLabel.setAlignment(Pos.CENTER);
     BorderPane titleBox = new BorderPane(topLabel);
 
     for (String name : names) {

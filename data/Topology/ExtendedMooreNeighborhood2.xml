@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>ForestFire</type>
+    <title>Extended Moore Neighborhood - Wide Fire Spread</title>
+    <author>Michael Li</author>
+    <description>ForestFire with Extended Moore neighborhood. Fire can spread up to 2 cells away, causing faster and wider burning.</description>
+    <grid>
+        <rows>12</rows>
+        <columns>12</columns>
+        <neighborhood>ExtendedMoore</neighborhood>
+        <cells>
+            <row>1 1 1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 2 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1 1 1</row>
+            <row>1 1 1 1 1 1 1 1 1 1 1 1</row>
+        </cells>
+    </grid>
+    <parameters>
+        <speed>2</speed>
+        <probCatch>0.7</probCatch>
+        <probGrow>0.01</probGrow>
+        <states>
+            <state id="0" name="EMPTY" color="#D2B48C"/>
+            <state id="1" name="TREE" color="#228B22"/>
+            <state id="2" name="FIRE" color="#FF4500"/>
+        </states>
+    </parameters>
+</simulation>
