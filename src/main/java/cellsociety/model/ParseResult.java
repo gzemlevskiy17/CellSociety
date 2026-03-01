@@ -130,4 +130,29 @@ public class ParseResult {
         return params;
     }
 
+    /** @return neighborhood type string, defaults to "Moore" if not specified */
+    public String getNeighborhood() {
+        return (params != null && params.containsKey("neighborhood"))
+            ? params.get("neighborhood") : "Moore";
+    }
+
+    /** @return edge policy type string, defaults to "Bounded" if not specified */
+    public String getEdge() {
+        return (params != null && params.containsKey("edge"))
+            ? params.get("edge") : "Bounded";
+    }
+
+    /** @return cell shape string, defaults to "Rectangle" if not specified */
+    public String getShape() {
+        return (params != null && params.containsKey("shape"))
+            ? params.get("shape") : "Rectangle";
+    }
+
+    /** @return parameter from Map of parameters */
+    public double getADoubleParam(String param) throws NumberFormatException {
+        if (params != null && params.containsKey(param)) {
+            return Double.parseDouble(params.get(param).trim());
+        }
+        return 0.0;
+    }
 }
