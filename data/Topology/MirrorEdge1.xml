@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>GameOfLife</type>
+    <title>Mirror Edge - Reflected Boundaries</title>
+    <author>Michael Li</author>
+    <description>GameOfLife with mirror (clamping) edges. Cells at the boundary treat the boundary cell itself as their out-of-bounds neighbor.</description>
+    <grid>
+        <rows>8</rows>
+        <columns>8</columns>
+        <edge>Mirror</edge>
+        <cells>
+            <row>0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 1 1 0 0 0</row>
+            <row>0 0 0 1 1 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 0 0 0 0 0</row>
+        </cells>
+    </grid>
+    <parameters>
+        <speed>2</speed>
+        <states>
+            <state id="0" name="DEAD" color="#FFFFFF"/>
+            <state id="1" name="ALIVE" color="#2ECC71"/>
+        </states>
+    </parameters>
+</simulation>
