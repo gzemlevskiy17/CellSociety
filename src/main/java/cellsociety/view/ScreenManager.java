@@ -40,9 +40,9 @@ public class ScreenManager {
     stageLive = stage;
     language = langResult;
     try {
-      layoutResources = PropertiesLoader.loadProperties("Config/" + language);
+      layoutResources = PropertiesLoader.loadProperties("Config/MainScreen");
     } catch (Exception e) {
-      e.printStackTrace(); //TODO: handle
+      new ErrorView("Resource Error", "Failed to load layout configuration: " + e.getMessage());
     }
   }
 
