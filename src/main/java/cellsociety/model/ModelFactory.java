@@ -4,7 +4,6 @@ import cellsociety.model.topology.edgebehavior.EdgePolicy;
 import cellsociety.model.topology.neighborhood.NeighborhoodStrategy;
 import java.lang.reflect.Constructor;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * Factory that creates {@link Game} instances from parsed XML configuration
@@ -43,20 +42,6 @@ import java.util.function.Supplier;
  * @author Michael Li
  */
 public class ModelFactory {
-
-  private static final Map<String, Supplier<NeighborhoodStrategy>> NEIGHBORHOODS = Map.of(
-      "Moore",         MooreNeighborhood::new,
-      "VonNeumann",    VonNeumannNeighborhood::new,
-      "ExtendedMoore", ExtendedMooreNeighborhood::new,
-      "Hexagonal",     HexagonalNeighborhood::new,
-      "Triangular",    TriangularNeighborhood::new
-  );
-
-  private static final Map<String, Supplier<EdgePolicy>> EDGES = Map.of(
-      "Bounded",   BoundedEdge::new,
-      "Toroidal",  ToroidalEdge::new,
-      "Mirror",    MirrorEdge::new
-  );
 
   /**
    * Creates a {@link Game} instance matching the simulation type in the given
