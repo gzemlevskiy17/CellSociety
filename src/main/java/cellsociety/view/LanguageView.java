@@ -29,8 +29,9 @@ public class LanguageView {
         try {
             myResources = PropertiesLoader.loadProperties("Languages/CellSocietyLanguages");
         } catch (Exception e) {
-            LOG.warn("Failed to load language list, defaulting to English", e);
-            throw new IllegalStateException("Failed to load language list, defaulting to English",
+            String message = "Failed to load language list, defaulting to English";
+            LOG.warn(message, e);
+            throw new IllegalStateException(message,
                 e);
         }
         String errorCodes = myResources.getString("languages");

@@ -16,9 +16,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class ScreenManager {
+public class GameScreen {
 
+  public static final String THEME_STYLESHEET = "light.css";
   private Stage stageLive;
   private GridView gridView;
   private InfoView infoView;
@@ -30,17 +33,23 @@ public class ScreenManager {
   private int generations;
 
   private ResourceBundle layoutResources;
-
-  public static final String STYLESHEET = "light.css";
+  private static final Logger LOG = LogManager.getLogger(GameScreen.class);
   private static final String LAYOUT_STYLESHEET = "GameScreen.css";
+  private static final String CONFIG_RESOURCE_FOLDER = "Config/";
+  private static final String GAME_SCREEN_CONFIG = "GameScreen"; //TODO: parameterize
+  // TODO: figure out default_resource_folder across multiple files
 
-  public ScreenManager(Stage stage, String langResult) {
+  public GameScreen(Stage stage, String langResult) {
     stageLive = stage;
     language = langResult;
+    String layoutConfigFilePath = CONFIG_RESOURCE_FOLDER + GAME_SCREEN_CONFIG;
     try {
-      layoutResources = PropertiesLoader.loadProperties("Config/" + language);
+      layoutResources = PropertiesLoader.loadProperties(layoutConfigFilePath);
     } catch (Exception e) {
-      e.printStackTrace(); //TODO: handle
+      String message = String.format("Failed to load layout properties from %s for Game Screen.",
+          layoutConfigFilePath);
+      LOG.warn(message, e);
+      throw new IllegalStateException(message, e);
     }
   }
 
@@ -64,8 +73,9 @@ public class ScreenManager {
     generations = startingGenerations;
     onPlay = true; //TODO: make more elegant
     buttons = new ButtonCreator(language);
-    String[] names = { "Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit", "NewGame" };
-    String[] info = { "Info", "EditInfo" };
+    String[] names = {"Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
+        "NewGame"}; //TODO: reflection
+    String[] info = {"Info", "EditInfo"};
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
@@ -77,18 +87,47 @@ public class ScreenManager {
     mainScreen.setBottom(simulationControl);
 
     Scene scene = new Scene(mainScreen, 1000, 800); // TODO: properties
-    scene.getStylesheets()
-        .addAll(
-            getClass().getResource(DEFAULT_RESOURCE_FOLDER + "Style/" + STYLESHEET)
-                .toExternalForm(),
-            getClass().getResource(DEFAULT_RESOURCE_FOLDER + "Style/" + LAYOUT_STYLESHEET)
-                .toExternalForm() // TODO: wrap with try-catch
-        );
-    String titleOfWindow = "Cell Society: Running " + gridView.getGameName(); // TODO: language
+    addStyleSheets(scene);
 
-    // TODO: figure out default_resource_folder
+    String titleOfWindow =
+        "Cell Society: Running " + gridView.getGameName(); // TODO: language & properties
+
     stageLive.setTitle(titleOfWindow);
     stageLive.setScene(scene);
+  }
+
+  private void addStyleSheets(Scene scene) {
+    String importedThemeStyleSheet = null;
+    String themeStyleSheetPath = DEFAULT_RESOURCE_FOLDER + "Style/" + THEME_STYLESHEET;
+    try {
+      importedThemeStyleSheet = getClass().getResource(
+              themeStyleSheetPath)
+          .toExternalForm();
+    } catch (NullPointerException e) {
+      String message = String.format("Failed to load theme stylesheet from %s.",
+          themeStyleSheetPath);
+      LOG.warn(message, e);
+      throw new RuntimeException(message, e);
+    }
+
+    String importedLayoutStyleSheet = null;
+    String layoutStyleSheetPath = DEFAULT_RESOURCE_FOLDER + "Style/" + LAYOUT_STYLESHEET;
+    try {
+      importedLayoutStyleSheet = getClass().getResource(
+              layoutStyleSheetPath)
+          .toExternalForm();
+    } catch (NullPointerException e) {
+      String message = String.format("Failed to load layout stylesheet from %s.",
+          layoutStyleSheetPath);
+      LOG.warn(message, e);
+      throw new RuntimeException(message, e);
+    }
+
+    scene.getStylesheets()
+        .addAll(
+            importedThemeStyleSheet,
+            importedLayoutStyleSheet
+        );
   }
 
   private BorderPane createTopBox(String[] names) {
