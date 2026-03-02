@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<Configuration
 >
 
   <Appenders>
@@ -9,8 +9,7 @@
         <Pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</Pattern>
       </PatternLayout>
     </Console>
-    <RollingFile append="true" filePattern="log/app-%i.log" immediateFlush="true" name="file"
-      policy="SizeBasedTriggeringPolicy">
+    <RollingFile append="true" filePattern="log/app-%i.log" immediateFlush="true" name="file">
       <PatternLayout>
         <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
       </PatternLayout>
