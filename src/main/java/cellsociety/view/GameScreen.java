@@ -36,7 +36,7 @@ public class GameScreen {
   private static final Logger LOG = LogManager.getLogger(GameScreen.class);
   private static final String LAYOUT_STYLESHEET = "GameScreen.css";
   private static final String CONFIG_RESOURCE_FOLDER = "Config/";
-  private static final String GAME_SCREEN_CONFIG = "GameScreen"; //TODO: parameterize
+  private static final String GAME_SCREEN_CONFIG = "GameScreen"; // TODO: parameterize
   // TODO: figure out default_resource_folder across multiple files
 
   public GameScreen(Stage stage, String langResult) {
@@ -53,7 +53,7 @@ public class GameScreen {
     }
   }
 
-  public void checkAllNotNull(Object... params) throws Exception { //TODO: do we need this
+  public void checkAllNotNull(Object... params) throws Exception { // TODO: do we need this
     for (Object param : params) {
       if (param == null) {
         throw new NullPointerException("A parameter is null.");
@@ -71,11 +71,11 @@ public class GameScreen {
       int startingGenerations,
       double startSpeed) {
     generations = startingGenerations;
-    onPlay = true; //TODO: make more elegant
+    onPlay = true; // TODO: make more elegant
     buttons = new ButtonCreator(language);
-    String[] names = {"Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
-        "NewGame"}; //TODO: reflection
-    String[] info = {"Info", "EditInfo"};
+    String[] names = { "Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
+        "NewGame" }; // TODO: reflection
+    String[] info = { "Info", "EditInfo" };
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
@@ -89,8 +89,7 @@ public class GameScreen {
     Scene scene = new Scene(mainScreen, 1000, 800); // TODO: properties
     addStyleSheets(scene);
 
-    String titleOfWindow =
-        "Cell Society: Running " + gridView.getGameName(); // TODO: language & properties
+    String titleOfWindow = "Cell Society: Running " + gridView.getGameName(); // TODO: language & properties
 
     stageLive.setTitle(titleOfWindow);
     stageLive.setScene(scene);
@@ -101,7 +100,7 @@ public class GameScreen {
     String themeStyleSheetPath = DEFAULT_RESOURCE_FOLDER + "Style/" + THEME_STYLESHEET;
     try {
       importedThemeStyleSheet = getClass().getResource(
-              themeStyleSheetPath)
+          themeStyleSheetPath)
           .toExternalForm();
     } catch (NullPointerException e) {
       String message = String.format("Failed to load theme stylesheet from %s.",
@@ -114,7 +113,7 @@ public class GameScreen {
     String layoutStyleSheetPath = DEFAULT_RESOURCE_FOLDER + "Style/" + LAYOUT_STYLESHEET;
     try {
       importedLayoutStyleSheet = getClass().getResource(
-              layoutStyleSheetPath)
+          layoutStyleSheetPath)
           .toExternalForm();
     } catch (NullPointerException e) {
       String message = String.format("Failed to load layout stylesheet from %s.",
@@ -126,8 +125,7 @@ public class GameScreen {
     scene.getStylesheets()
         .addAll(
             importedThemeStyleSheet,
-            importedLayoutStyleSheet
-        );
+            importedLayoutStyleSheet);
   }
 
   private BorderPane createTopBox(String[] names) {
@@ -170,11 +168,11 @@ public class GameScreen {
     HBox timeAreaBox = new HBox();
     timeAreaBox.setId("time-area-box");
 
-    speedSlider = new Slider(0, 10, startSpeed); //TODO: properties
+    speedSlider = new Slider(0, 10, startSpeed); // TODO: properties
     speedSlider.setPrefWidth(400);
     speedSlider.setMaxWidth(400);
     speedSlider.setShowTickMarks(true);
-    speedSlider.setMajorTickUnit(1); //TODO: properties
+    speedSlider.setMajorTickUnit(1); // TODO: properties
     speedSlider.setSnapToTicks(true);
 
     speedSlider.valueProperty().addListener((observable) -> setGameSpeed.run());
@@ -194,7 +192,7 @@ public class GameScreen {
       buttons.addEmptyButton(name);
     }
 
-    //TODO: remove dependence on names twice
+    // TODO: remove dependence on names twice
     buttons.addActionToButton("Clear", e -> clear.run());
     buttons.addActionToButton("Reset", e -> reset.run());
     buttons.addActionToButton("Save", e -> onSave.run());
@@ -247,13 +245,13 @@ public class GameScreen {
     FileChooser fileChooser = new FileChooser();
     File initialDir = new File(
         Paths.get(".").toAbsolutePath().normalize().resolve("cellsociety_team01/data")
-            .toString()); //FIXME: make restriction work, probably due to absolute path
+            .toString()); // FIXME: make restriction work, probably due to absolute path
     ExtensionFilter onlyXML = new ExtensionFilter("*.xml", "*.xml");
 
     fileChooser.getExtensionFilters().add(onlyXML);
     // fileChooser.setTitle("Open My File"); //TODO: need title?
     if (initialDir.exists()
-        && initialDir.isDirectory()) { //FIXME: maybe doesn't work because initial dir doesn't exist, see fixme above
+        && initialDir.isDirectory()) { // FIXME: maybe doesn't work because initial dir doesn't exist, see fixme above
       fileChooser.setInitialDirectory(initialDir);
     } else {
       File userHome = new File(System.getProperty("user.home"));
