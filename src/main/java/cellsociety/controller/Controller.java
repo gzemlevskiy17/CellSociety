@@ -3,15 +3,15 @@ package cellsociety.controller;
 import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.model.ParseResult;
+import cellsociety.view.GameScreen;
 import cellsociety.view.GridView;
-import cellsociety.view.ScreenManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
 /**
  * Coordinates the model (Game), view (GridView), and UI controls
- * (ScreenManager).
+ * (GameScreen).
  *
  * <p>
  * Purpose: Drives the simulation loop, provides controls for play/pause/step,
@@ -32,7 +32,7 @@ import javafx.util.Duration;
  *
  * <p>
  * Dependencies: cellsociety.model.Game, cellsociety.view.GridView,
- * cellsociety.view.ScreenManager, and JavaFX Timeline APIs.
+ * cellsociety.view.GameScreen, and JavaFX Timeline APIs.
  * </p>
  *
  * <p>
@@ -40,7 +40,7 @@ import javafx.util.Duration;
  * </p>
  * 
  * <pre>{@code
- * Controller ctrl = new Controller(game, screenManager, gridView, 1.0, () -> {
+ * Controller ctrl = new Controller(game, gameScreen, gridView, 1.0, () -> {
  * });
  * ctrl.play();
  * }</pre>
@@ -57,7 +57,7 @@ import javafx.util.Duration;
 public class Controller {
 
   private Game game;
-  private ScreenManager screenManager;
+  private GameScreen gameScreen;
   private GridView gridView;
   private Timeline gameLoop;
 
@@ -71,17 +71,17 @@ public class Controller {
    * Constructs a Controller that coordinates the model, view, and UI controls.
    *
    * @param game                the game model to control
-   * @param screenManager       the screen manager used to display UI elements
+   * @param gameScreen       the screen manager used to display UI elements
    * @param gridView            the view responsible for rendering the grid
    * @param InfoResult
    * @param createNewGameAction action invoked to create a new game
    */
-  public Controller(Game game, ScreenManager screenManager, GridView gridView, ParseResult InfoResult,
+  public Controller(Game game, GameScreen gameScreen, GridView gridView, ParseResult InfoResult,
       Runnable createNewGameAction) {
     this.game = game;
-    this.screenManager = screenManager;
+    this.gameScreen = gameScreen;
     this.gridView = gridView;
-    screenManager.setGridView(gridView);
+    gameScreen.setGridView(gridView);
     try {
       this.gameSpeed = Double.parseDouble(InfoResult.getParams().get("speed"));
     } catch (Exception e) {
@@ -103,7 +103,7 @@ public class Controller {
     game.step();
     updateGrid();
     generations++;
-    screenManager.setGenerations(generations);
+    gameScreen.setGenerations(generations);
   }
 
   /**
@@ -156,7 +156,7 @@ public class Controller {
     gameSpeed = 1.0;
     generations = 0;
     game.clearGrid();
-    screenManager.simPausedButtonChange();
+    gameScreen.simPausedButtonChange();
     updateGrid();
   }
 
@@ -167,7 +167,7 @@ public class Controller {
     pause();
     generations = 0;
     game.reset();
-    screenManager.simPausedButtonChange();
+    gameScreen.simPausedButtonChange();
     updateGrid();
   }
 
@@ -181,17 +181,17 @@ public class Controller {
   public void stepBack() {
     if (generations > 0) {
       pause();
-      screenManager.simPausedButtonChange();
+      gameScreen.simPausedButtonChange();
       game.stepBack();
       updateGrid();
       generations--;
-      screenManager.setGenerations(generations);
+      gameScreen.setGenerations(generations);
     }
   }
 
   public void stepForward() {
     pause();
-    screenManager.simPausedButtonChange();
+    gameScreen.simPausedButtonChange();
     loop();
   }
 
@@ -224,7 +224,7 @@ public class Controller {
    * starts playback.
    */
   public void findGameSpeed() {
-    setGameSpeed(screenManager.getSliderValue());
+    setGameSpeed(gameScreen.getSliderValue());
   }
 
   /**
@@ -250,10 +250,10 @@ public class Controller {
    */
   public void gameScreenShow(Runnable onSave, Runnable onLoad, Runnable createNewGameAction,
       Runnable loadForResults) {
-    screenManager.gameScreen(onSave, onLoad, this::pause, this::play, loadForResults,
+    gameScreen.gameScreen(onSave, onLoad, this::pause, this::play, loadForResults,
         this::findGameSpeed, createNewGameAction, this::clear, this::stepForward, this::stepBack, generations,
         gameSpeed); //FIXME: don't pass parameters straight on
     setGameSpeed(gameSpeed);
-    screenManager.simPausedButtonChange();
+    gameScreen.simPausedButtonChange();
   }
 }

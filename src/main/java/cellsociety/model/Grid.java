@@ -1,9 +1,9 @@
 package cellsociety.model;
 
-import cellsociety.model.topology.BoundedEdge;
-import cellsociety.model.topology.EdgePolicy;
-import cellsociety.model.topology.MooreNeighborhood;
-import cellsociety.model.topology.NeighborhoodStrategy;
+import cellsociety.model.topology.edgebehavior.BoundedEdge;
+import cellsociety.model.topology.edgebehavior.EdgePolicy;
+import cellsociety.model.topology.neighborhood.MooreNeighborhood;
+import cellsociety.model.topology.neighborhood.NeighborhoodStrategy;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;

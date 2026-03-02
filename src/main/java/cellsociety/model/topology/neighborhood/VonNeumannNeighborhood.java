@@ -1,4 +1,4 @@
-package cellsociety.model.topology;
+package cellsociety.model.topology.neighborhood;
 
 /**
  * Von Neumann neighborhood: only the 4 orthogonal neighbors (up, down, left, right).

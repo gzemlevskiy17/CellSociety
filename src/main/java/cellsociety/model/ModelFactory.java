@@ -1,15 +1,7 @@
 package cellsociety.model;
 
-import cellsociety.model.topology.BoundedEdge;
-import cellsociety.model.topology.EdgePolicy;
-import cellsociety.model.topology.ExtendedMooreNeighborhood;
-import cellsociety.model.topology.HexagonalNeighborhood;
-import cellsociety.model.topology.MirrorEdge;
-import cellsociety.model.topology.MooreNeighborhood;
-import cellsociety.model.topology.NeighborhoodStrategy;
-import cellsociety.model.topology.ToroidalEdge;
-import cellsociety.model.topology.TriangularNeighborhood;
-import cellsociety.model.topology.VonNeumannNeighborhood;
+import cellsociety.model.topology.edgebehavior.EdgePolicy;
+import cellsociety.model.topology.neighborhood.NeighborhoodStrategy;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -91,10 +83,10 @@ public class ModelFactory {
       if (!gameClazz.getSuperclass().equals(superClazzReq)) {
         throw new IllegalArgumentException("Unknown game type: " + gameType);
       }
-      Class<?>[] paramTypes = new Class<?>[] { Grid.class, Map.class };
+      Class<?>[] gameParamTypes = new Class<?>[]{Grid.class, Map.class};
       try {
-        Constructor<?> gameCalled = gameClazz.getDeclaredConstructor(paramTypes);
-        return (Game) gameCalled.newInstance(new Object[] { grid, result.getParams() });
+        Constructor<?> gameConstructor = gameClazz.getDeclaredConstructor(gameParamTypes);
+        return (Game) gameConstructor.newInstance(new Object[]{grid, result.getParams()});
       } catch (Exception e) {
         throw new IllegalArgumentException(gameType + " constructor could not be invoked", e);
       }
@@ -103,11 +95,25 @@ public class ModelFactory {
     }
   }
 
-  private NeighborhoodStrategy buildNeighborhood(String name) {
-    return NEIGHBORHOODS.getOrDefault(name, MooreNeighborhood::new).get();
+  private NeighborhoodStrategy buildNeighborhood(String neighborhood) {
+    //TODO: store neighborhood types in properties file and handle unrecognized neighborhood types
+    try {
+      return (NeighborhoodStrategy) Class.forName(
+              "cellsociety.model.topology.neighborhood." + neighborhood + "Neighborhood")
+          .getDeclaredConstructor().newInstance(); //split into multiple tries?
+    } catch (Exception e) {
+      throw new IllegalArgumentException(neighborhood + " constructor could not be invoked", e);
+    }
   }
 
-  private EdgePolicy buildEdge(String name) {
-    return EDGES.getOrDefault(name, BoundedEdge::new).get();
+  private EdgePolicy buildEdge(String edgeType) {
+    //TODO: store edge types in properties file and handle unrecognized edge types
+    try {
+      return (EdgePolicy) Class.forName(
+              "cellsociety.model.topology.edgebehavior." + edgeType + "Edge").getDeclaredConstructor()
+          .newInstance();
+    } catch (Exception e) {
+      throw new IllegalArgumentException(edgeType + " constructor could not be invoked", e);
+    }
   }
 }

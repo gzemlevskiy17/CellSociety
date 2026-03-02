@@ -7,8 +7,8 @@ import cellsociety.model.ParseResult;
 import cellsociety.model.XMLReader;
 import cellsociety.model.XMLWriter;
 import cellsociety.view.ErrorView;
+import cellsociety.view.GameScreen;
 import cellsociety.view.GridView;
-import cellsociety.view.ScreenManager;
 import cellsociety.view.StartScreen;
 import cellsociety.view.ViewFactory;
 import java.io.File;
@@ -40,7 +40,7 @@ import javax.xml.transform.TransformerException;
  * </p>
  *
  * <p>
- * Dependencies: ModelFactory, ViewFactory, XMLParser, ScreenManager,
+ * Dependencies: ModelFactory, ViewFactory, XMLParser, GameScreen,
  * Controller.
  * </p>
  *
@@ -58,7 +58,7 @@ import javax.xml.transform.TransformerException;
 public class GameRunner {
 
   private Stage myStage;
-  private ScreenManager screenManager;
+  private GameScreen gameScreen;
   private ModelFactory modelFactory;
   private ViewFactory viewFactory;
   private Game game;
@@ -87,13 +87,13 @@ public class GameRunner {
   }
 
   private void firstStart() {
-    screenManager = new ScreenManager(myStage, startChoice.getLanguage());
+    gameScreen = new GameScreen(myStage, startChoice.getLanguage());
     setup();
   }
 
   private void setup() {
     myStage.show();
-    Optional<File> optionalFile = screenManager.startScreen(myStage);
+    Optional<File> optionalFile = gameScreen.startScreen(myStage);
     optionalFile.ifPresent(file -> {
       try {
         handleRealLoad(file);
@@ -125,7 +125,7 @@ public class GameRunner {
   private void loadForResults() throws IllegalArgumentException {
     game = modelFactory.createGame(currentParseResult);
     gridView = viewFactory.createView(currentParseResult);
-    controller = new Controller(game, screenManager, gridView, currentParseResult,
+    controller = new Controller(game, gameScreen, gridView, currentParseResult,
         createNewGameAction);
     controller.gameScreenShow(this::handleSave, this::setup, createNewGameAction, this::loadForResults);
     controller.reset();

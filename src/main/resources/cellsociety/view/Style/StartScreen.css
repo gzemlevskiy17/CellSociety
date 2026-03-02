@@ -1,5 +1,17 @@
-#bigLabel {
-    -fx-font-size: 36px;
+#big-label {
+    -fx-font-size: 36;
     -fx-font-weight: bold;
     -fx-text-fill: #333333;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+#hbox {
+    -fx-alignment: top-center;
+
+}
+
+#button-hbox {
+    -fx-spacing: 30;
+    -fx-padding: 0 30 30 30;
 }

@@ -3,6 +3,9 @@ package cellsociety.model.topology;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import cellsociety.model.topology.edgebehavior.BoundedEdge;
+import cellsociety.model.topology.edgebehavior.MirrorEdge;
+import cellsociety.model.topology.edgebehavior.ToroidalEdge;
 import org.junit.jupiter.api.Test;
 
 /**

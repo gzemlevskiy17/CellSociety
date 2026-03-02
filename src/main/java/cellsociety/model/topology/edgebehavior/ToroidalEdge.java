@@ -1,4 +1,4 @@
-package cellsociety.model.topology;
+package cellsociety.model.topology.edgebehavior;
 
 /**
  * Toroidal edge policy: the grid wraps around in both directions.

@@ -1,4 +1,4 @@
-package cellsociety.model.topology;
+package cellsociety.model.topology.neighborhood;
 
 /**
  * Triangular neighborhood: 3 edge-sharing neighbors for alternating up/down triangles.

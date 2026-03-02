@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration
+>
+
+  <Appenders>
+    <Console name="console" target="SYSTEM_OUT">
+      <!-- for details about these options: https://logging.apache.org/log4j/2.x/manual/layouts.html#PatternLayout -->
+      <PatternLayout>
+        <Pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</Pattern>
+      </PatternLayout>
+    </Console>
+    <RollingFile append="true" filePattern="log/app-%i.log" immediateFlush="true" name="file">
+      <PatternLayout>
+        <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="10MB"/>
+      </Policies>
+    </RollingFile>
+  </Appenders>
+  <Loggers>
+    <Root level="all">
+      <!-- consider adding multiple logging levels to the console -->
+      <AppenderRef level="debug" ref="console"/>
+      <AppenderRef level="all" ref="file"/>
+    </Root>
+  </Loggers>
+</Configuration>

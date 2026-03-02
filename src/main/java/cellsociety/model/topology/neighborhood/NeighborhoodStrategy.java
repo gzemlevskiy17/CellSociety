@@ -1,4 +1,4 @@
-package cellsociety.model.topology;
+package cellsociety.model.topology.neighborhood;
 
 /**
  * Strategy interface for determining which cell offsets constitute a neighborhood.

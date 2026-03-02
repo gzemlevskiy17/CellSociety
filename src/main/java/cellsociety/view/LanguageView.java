@@ -6,12 +6,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.scene.control.ChoiceDialog;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class LanguageView {
 
-    private static final String DEFAULT_LANGUAGE = "English";
+    private static final String DEFAULT_LANGUAGE = "English"; //TODO: move to properties
+    private static final Logger LOG = LogManager.getLogger(LanguageView.class);
     private List<String> langChoices;
     private String chosenLanguage = DEFAULT_LANGUAGE;
+
 
     public void setup() {
         findingLanguages();
@@ -24,7 +29,10 @@ public class LanguageView {
         try {
             myResources = PropertiesLoader.loadProperties("Languages/CellSocietyLanguages");
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to load language list", e);
+            String message = "Failed to load language list, defaulting to English";
+            LOG.warn(message, e);
+            throw new IllegalStateException(message,
+                e);
         }
         String errorCodes = myResources.getString("languages");
         String[] errorCodesArray = errorCodes.split(",");

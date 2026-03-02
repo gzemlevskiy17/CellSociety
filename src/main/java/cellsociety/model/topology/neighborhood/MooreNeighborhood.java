@@ -1,4 +1,4 @@
-package cellsociety.model.topology;
+package cellsociety.model.topology.neighborhood;
 
 /**
  * Moore neighborhood: all 8 surrounding cells (including diagonals).

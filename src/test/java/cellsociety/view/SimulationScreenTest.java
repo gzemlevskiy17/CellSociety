@@ -16,7 +16,7 @@ public class SimulationScreenTest extends DukeApplicationTest {
 
   public static final String DATA_PATH = "data/GameOfLife/";
 
-  private ScreenManager screenManager;
+  private GameScreen gameScreen;
   private ModelFactory modelFactory;
   private ViewFactory viewFactory;
   private Game game;
@@ -35,8 +35,8 @@ public class SimulationScreenTest extends DukeApplicationTest {
     }
     game = modelFactory.createGame(parseResult);
     gridView = viewFactory.createView(parseResult);
-    screenManager = new ScreenManager(primaryStage, "English");
-    // controller = new Controller(game, screenManager, gridView, 0, null);
+    gameScreen = new GameScreen(primaryStage, "English");
+    // controller = new Controller(game, gameScreen, gridView, 0, null);
     // controller.play();
     // controller.loop();
   }

@@ -1,4 +1,4 @@
-package cellsociety.model.topology;
+package cellsociety.model.topology.edgebehavior;
 
 /**
  * Mirror edge policy: out-of-bounds positions are reflected back to the nearest edge cell.
