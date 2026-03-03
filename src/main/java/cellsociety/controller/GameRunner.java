@@ -8,9 +8,10 @@ import cellsociety.model.XMLReader;
 import cellsociety.model.XMLWriter;
 import cellsociety.view.ErrorView;
 import cellsociety.view.GameScreen;
-import cellsociety.view.GridView;
 import cellsociety.view.StartScreen;
 import cellsociety.view.ViewFactory;
+import cellsociety.view.grids.GridView;
+
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -127,7 +128,8 @@ public class GameRunner {
     gridView = viewFactory.createView(currentParseResult);
     controller = new Controller(game, gameScreen, gridView, currentParseResult,
         createNewGameAction);
-    controller.gameScreenShow(this::handleSave, this::setup, createNewGameAction, this::loadForResults);
+    controller.gameScreenShow(currentParseResult, this::handleSave, this::setup, createNewGameAction,
+        this::loadForResults);
     controller.reset();
   }
 

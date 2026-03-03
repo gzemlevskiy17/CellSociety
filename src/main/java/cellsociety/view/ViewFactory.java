@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import cellsociety.model.ParseResult;
+import cellsociety.view.grids.GridView;
 import cellsociety.view.grids.HexagonalGridView;
 import cellsociety.view.grids.RectangularGridView;
 import cellsociety.view.grids.TriangularGridView;

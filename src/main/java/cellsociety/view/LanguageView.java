@@ -9,14 +9,12 @@ import javafx.scene.control.ChoiceDialog;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 public class LanguageView {
 
-    private static final String DEFAULT_LANGUAGE = "English"; //TODO: move to properties
+    private static final String DEFAULT_LANGUAGE = "English"; // TODO: move to properties
     private static final Logger LOG = LogManager.getLogger(LanguageView.class);
     private List<String> langChoices;
     private String chosenLanguage = DEFAULT_LANGUAGE;
-
 
     public void setup() {
         findingLanguages();
@@ -27,12 +25,12 @@ public class LanguageView {
         ResourceBundle myResources = null;
         // change the way ResourceBundle loads to include Locale
         try {
-            myResources = PropertiesLoader.loadProperties("Languages/CellSocietyLanguages");
+            myResources = PropertiesLoader.loadProperties("Text/Languages/CellSocietyLanguages");
         } catch (Exception e) {
             String message = "Failed to load language list, defaulting to English";
             LOG.warn(message, e);
             throw new IllegalStateException(message,
-                e);
+                    e);
         }
         String errorCodes = myResources.getString("languages");
         String[] errorCodesArray = errorCodes.split(",");

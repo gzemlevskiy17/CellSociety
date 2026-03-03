@@ -5,6 +5,8 @@ import cellsociety.model.Game;
 import cellsociety.model.ModelFactory;
 import cellsociety.model.ParseResult;
 import cellsociety.model.XMLReader;
+import cellsociety.view.grids.GridView;
+
 import java.io.File;
 import java.io.IOException;
 import javafx.stage.Stage;

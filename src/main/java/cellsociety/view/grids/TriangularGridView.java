@@ -1,6 +1,5 @@
 package cellsociety.view.grids;
 
-import cellsociety.view.GridView;
 import java.util.HashMap;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -37,7 +36,7 @@ public class TriangularGridView extends GridView {
 
     int rows = getNumRows();
     int cols = getNumCols();
-    
+
     // Triangle width: each column is half a triangle base
     // So we need cols/2 full triangles across
     double triWidth = MAX_GRID_WIDTH / (cols / 2.0);
@@ -67,15 +66,15 @@ public class TriangularGridView extends GridView {
     if ((row + col) % 2 == 0) {
       // Points up ▲
       tri = new Polygon(
-          x, y + triHeight,           // bottom-left
+          x, y + triHeight, // bottom-left
           x + triWidth, y + triHeight, // bottom-right
-          x + halfWidth, y             // top
+          x + halfWidth, y // top
       );
     } else {
       // Points down ▽
       tri = new Polygon(
-          x, y,                        // top-left
-          x + triWidth, y,             // top-right
+          x, y, // top-left
+          x + triWidth, y, // top-right
           x + halfWidth, y + triHeight // bottom
       );
     }

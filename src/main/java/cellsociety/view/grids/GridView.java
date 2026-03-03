@@ -1,4 +1,4 @@
-package cellsociety.view;
+package cellsociety.view.grids;
 
 import java.util.HashMap;
 import javafx.geometry.Pos;
@@ -25,8 +25,6 @@ public abstract class GridView {
         this.gameName = gameName.replaceAll("([a-z])([A-Z])", "$1 $2");
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.setHgap(2);
-        gridPane.setVgap(2);
         mainPane = gridPane;
 
         gridRowNum = y;

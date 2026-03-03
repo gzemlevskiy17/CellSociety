@@ -74,7 +74,7 @@ class GameFactoryTest {
                 new HashMap<>(), colorMap);
         ViewFactory factory = new ViewFactory();
 
-        cellsociety.view.GridView view = factory.createView(result);
+        cellsociety.view.grids.GridView view = factory.createView(result);
         assertNotNull(view);
         assertEquals(3, view.getNumRows());
     }

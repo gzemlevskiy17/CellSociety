@@ -3,6 +3,9 @@ package cellsociety.view;
 import static cellsociety.controller.PropertiesLoader.DEFAULT_RESOURCE_FOLDER;
 
 import cellsociety.controller.PropertiesLoader;
+import cellsociety.model.ParseResult;
+import cellsociety.view.grids.GridView;
+
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -65,11 +68,13 @@ public class GameScreen {
     gridView = newGridView;
   }
 
-  public void gameScreen(Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
+  public void gameScreen(ParseResult parsingInfo, Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
       Runnable reset, Runnable setGameSpeed,
       Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack,
       int startingGenerations,
       double startSpeed) {
+
+    infoView = new InfoView(stageLive, parsingInfo, language);
     generations = startingGenerations;
     onPlay = true; // TODO: make more elegant
     buttons = new ButtonCreator(language);
@@ -93,6 +98,7 @@ public class GameScreen {
 
     stageLive.setTitle(titleOfWindow);
     stageLive.setScene(scene);
+    stageLive.centerOnScreen();
   }
 
   private void addStyleSheets(Scene scene) {
@@ -137,7 +143,7 @@ public class GameScreen {
       buttons.addEmptyButton(name);
     }
 
-    // buttons.addActionToButton("Info", e -> );
+    buttons.addActionToButton("Info", e -> infoView.showInfoView());
     // buttons.addActionToButton("EditInfo", e -> );
     VBox infoControl = new VBox();
     infoControl.setId("info-control-box");
