@@ -65,10 +65,7 @@ public class ParseResult {
      * @param description simulation description from the XML
      * @param cells       2D array of initial cell states, or null if
      *                    algorithmically generated
-     * @param probCatch   fire ignition probability (ForestFire)
-     * @param probGrow    tree growth probability (ForestFire)
      * @param speed       simulation speed multiplier
-     * @param threshold   satisfaction threshold (Segregation)
      * @param params      parameters for all games
      * @param colorMap    mapping of state IDs to hex color strings
      */

@@ -1,6 +1,6 @@
 package cellsociety.view.grids;
 
-import java.util.HashMap;
+import java.util.Map;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -8,10 +8,9 @@ import javafx.scene.paint.Color;
 
 public abstract class GridView {
 
-    private HashMap<Integer, Color> gridColors;
+    private static final double MAX_GRID_WIDTH = 800.0; //TODO: put in property files & handle duplicates, super?
     private String gameName;
-
-    private static final double MAX_GRID_WIDTH = 800.0;
+    private Map<Integer, Color> gridColors;
     private static final double MAX_GRID_HEIGHT = 500.0;
 
     private int gridRowNum;
@@ -21,7 +20,7 @@ public abstract class GridView {
 
     private Pane mainPane;
 
-    public GridView(String gameName, HashMap<Integer, Color> colors, int x, int y) {
+    public GridView(String gameName, Map<Integer, Color> colors, int x, int y) {
         this.gameName = gameName.replaceAll("([a-z])([A-Z])", "$1 $2");
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
@@ -52,11 +51,11 @@ public abstract class GridView {
         return gameName;
     }
 
-    public HashMap<Integer, Color> retAllColor() {
+    public Map<Integer, Color> retAllColor() {
         return gridColors;
     }
 
-    public void setAllColors(HashMap<Integer, Color> newValue) {
+    public void setAllColors(Map<Integer, Color> newValue) {
         gridColors.putAll(newValue);
     }
 
@@ -68,7 +67,7 @@ public abstract class GridView {
         return gridColNum;
     }
 
-    protected HashMap<Integer, Color> getGridColors() {
+    protected Map<Integer, Color> getGridColors() {
         return gridColors;
     }
 

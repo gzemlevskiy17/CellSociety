@@ -4,6 +4,8 @@ import cellsociety.model.topology.edgebehavior.EdgePolicy;
 import cellsociety.model.topology.neighborhood.NeighborhoodStrategy;
 import java.lang.reflect.Constructor;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Factory that creates {@link Game} instances from parsed XML configuration
@@ -42,6 +44,8 @@ import java.util.Map;
  * @author Michael Li
  */
 public class ModelFactory {
+
+  private static final Logger LOG = LogManager.getLogger(ModelFactory.class);
 
   /**
    * Creates a {@link Game} instance matching the simulation type in the given
@@ -85,20 +89,25 @@ public class ModelFactory {
     try {
       return (NeighborhoodStrategy) Class.forName(
               "cellsociety.model.topology.neighborhood." + neighborhood + "Neighborhood")
-          .getDeclaredConstructor().newInstance(); //split into multiple tries?
+          .getDeclaredConstructor().newInstance(); //TODO: split into multiple catches
     } catch (Exception e) {
-      throw new IllegalArgumentException(neighborhood + " constructor could not be invoked", e);
+      String message = neighborhood + " constructor could not be invoked";
+      LOG.warn(message, e);
+      throw new IllegalArgumentException(message, e);
     }
   }
 
   private EdgePolicy buildEdge(String edgeType) {
     //TODO: store edge types in properties file and handle unrecognized edge types
+    //TODO: how to make new ErrorView here?
     try {
       return (EdgePolicy) Class.forName(
               "cellsociety.model.topology.edgebehavior." + edgeType + "Edge").getDeclaredConstructor()
           .newInstance();
     } catch (Exception e) {
-      throw new IllegalArgumentException(edgeType + " constructor could not be invoked", e);
+      String message = edgeType + " constructor could not be invoked";
+      LOG.warn(message, e);
+      throw new IllegalArgumentException(message, e);
     }
   }
 }

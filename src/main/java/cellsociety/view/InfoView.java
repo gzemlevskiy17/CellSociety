@@ -1,12 +1,13 @@
 package cellsociety.view;
 
+import cellsociety.controller.PropertiesLoader;
+import cellsociety.model.ParseResult;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
-
-import cellsociety.model.ParseResult;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -15,55 +16,98 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class InfoView {
     private Stage newStage;
     private ParseResult currentResult;
+
+    private Class<?> clazz;
+    private Class<?>[] paramTypes = new Class<?>[] {};
     private String[] buttonNamesView = { "OK" };
     private String[] buttonNamesEdit = { "Save", "Cancel" };
-    private String[] infoSearch = { "GameType", "Title", "Author", "Description" };
-    private HashMap<String, Spinner<?>> valueChanges;
+    private String[] infoSolid = { "GameType", "Rows", "Cols" };
+    private String[] infoSearch = { "Title", "Author", "Description" };
+    private String[] paramVariables = {};
+    private HashMap<String, Spinner<Integer>> intChanges;
+    private HashMap<String, Spinner<Double>> doubleChanges;
     private HashMap<String, TextField> textChanges;
     private HashMap<Integer, ColorPicker> colorChanges;
     private ButtonCreator buttonHold;
-    private String currentLang;
+    private Locale locale;
 
-    public InfoView(Stage ownerStage, ParseResult givenInfo, String language) {
+    private ResourceBundle gameResources;
+    private static final String LAYOUT_STYLESHEET = "";
+    private static final String MODEL_RESOURCE_FOLDER = "model/";
+
+    public InfoView(Stage ownerStage, ParseResult givenInfo, Locale locale, Runnable save) {
         newStage = new Stage();
         newStage.initOwner(ownerStage);
         currentResult = givenInfo;
-        currentLang = language;
-        buttonHold = new ButtonCreator(currentLang);
+        clazz = currentResult.getClass();
+        this.locale = locale;
+        buttonHold = new ButtonCreator(this.locale);
+        try {
+            gameResources = PropertiesLoader.getResourceBundle(MODEL_RESOURCE_FOLDER + currentResult.getGameType());
+            paramVariables = gameResources.getString("variables").split("[,\s]+");
+        } catch (Exception e) {
+            new ErrorView("Missing Variables", "No Properties File for " + currentResult.getGameType());
+        }
         setUpChanges();
-        makeActionEvent();
+        makeActionEvent(save);
     }
 
     private void setUpChanges() {
-        valueChanges = new HashMap<String, Spinner<?>>();
+        intChanges = new HashMap<String, Spinner<Integer>>();
+        doubleChanges = new HashMap<String, Spinner<Double>>();
         textChanges = new HashMap<String, TextField>();
         colorChanges = new HashMap<Integer, ColorPicker>();
         for (String name : infoSearch) {
             textChanges.put(name, new TextField());
         }
-        Set<String> params = currentResult.getParamKeys();
-        for (String name : params) {
-            try {
-                Spinner<Double> spinner = new Spinner<>();
-                double init = Double.parseDouble(currentResult.getParam(name));
-                SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 1.0,
-                        init, 0.1);
-                spinner.setValueFactory(valueFactory);
+        for (String name : paramVariables) {
+            switch (gameResources.getString(name + ".type")) {
+                case "String":
+                    textChanges.put(name, new TextField());
+                    break;
+                case "int":
+                    try {
+                        Spinner<Integer> spinner = new Spinner<Integer>();
+                        int init = Integer.parseInt(currentResult.getParam(name));
+                        int minim = Integer.parseInt(gameResources.getString(name + ".min"));
+                        int maxim = Integer.parseInt(gameResources.getString(name + ".max"));
+                        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(
+                                minim, maxim, init, 1);
+                        spinner.setValueFactory(valueFactory);
 
-                valueChanges.put(name, spinner);
-            } catch (Exception e) {
-                textChanges.put(name, new TextField());
+                        intChanges.put(name, spinner);
+                    } catch (Exception e) {
+                        textChanges.put(name, new TextField());
+                    }
+                    break;
+                case "double":
+                    try {
+                        Spinner<Double> spinner = new Spinner<Double>();
+                        double init = Double.parseDouble(currentResult.getParam(name));
+                        double minim = Double.parseDouble(gameResources.getString(name + ".min"));
+                        double maxim = Double.parseDouble(gameResources.getString(name + ".max"));
+                        SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(
+                                minim, maxim,
+                                init);
+                        spinner.setValueFactory(valueFactory);
+
+                        doubleChanges.put(name, spinner);
+                    } catch (Exception e) {
+                        textChanges.put(name, new TextField());
+                    }
+                    break;
             }
         }
         Set<Integer> colors = currentResult.getColorKeys();
@@ -72,7 +116,7 @@ public class InfoView {
         }
     }
 
-    private void makeActionEvent() {
+    private void makeActionEvent(Runnable save) {
         for (String name : buttonNamesView) {
             buttonHold.addEmptyButton(name);
         }
@@ -82,9 +126,17 @@ public class InfoView {
         buttonHold.addActionToButton("OK", event -> {
             newStage.close();
         });
+        buttonHold.addActionToButton("Save", event -> {
+            save.run();
+        });
+        buttonHold.addActionToButton("Cancel", event -> {
+            newStage.close();
+        });
     }
 
-    public void showInfoView() {
+    public void showInfoView(ParseResult givenInfo) {
+        currentResult = givenInfo;
+        clazz = currentResult.getClass();
         VBox stackOfParam = createTextArea(false);
         stackOfParam.getChildren().addAll(createParamArea(false));
         stackOfParam.getChildren().addAll(createColorArea(false));
@@ -101,73 +153,106 @@ public class InfoView {
         newStage.show();
     }
 
-    public void showInfoEdit() {
-
+    public void showInfoEdit(ParseResult givenInfo) {
+        currentResult = givenInfo;
+        clazz = currentResult.getClass();
+        VBox stackOfParam = createTextArea(true);
+        stackOfParam.getChildren().addAll(createParamArea(true));
+        stackOfParam.getChildren().addAll(createColorArea(true));
+        HBox buttonArea = new HBox(10);
+        for (String name : buttonNamesEdit) {
+            buttonArea.getChildren().add(buttonHold.getButton(name));
+        }
+        stackOfParam.getChildren().add(buttonArea);
+        stackOfParam.setAlignment(Pos.CENTER);
+        stackOfParam.setPadding(new Insets(10));
+        Scene editScene = new Scene(stackOfParam);
+        newStage.setScene(editScene);
+        newStage.setTitle("Show Edit Screen");
+        newStage.show();
     }
 
     public VBox createTextArea(boolean allowEditing) {
         VBox stackOfParam = new VBox(5);
-        Class<?> clazz = currentResult.getClass();
-        Class<?>[] paramTypes = new Class<?>[] {};
+        for (String paramName : infoSolid) {
+            HBox values = returnText(paramName, false);
+            stackOfParam.getChildren().add(values);
+        }
         for (String paramName : infoSearch) {
-            HBox values = new HBox(5);
-            values.getChildren().add(new Label(paramName));
-
-            String result = "";
-            try {
-                result = (String) clazz.getMethod("get" + paramName, paramTypes).invoke(currentResult, paramTypes);
-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                allowEditing = false;
-            }
-            Node text = null;
-            if (allowEditing) {
-                text = textChanges.get(paramName);
-                ((TextField) text).setText(result);
-            } else {
-                text = new Label(result);
-                ((Labeled) text).setWrapText(true);
-                text.prefWidth(200);
-            }
-            ScrollPane scrolling = new ScrollPane((Node) text);
-            values.getChildren().add(scrolling);
+            HBox values = returnText(paramName, allowEditing);
             stackOfParam.getChildren().add(values);
         }
         return stackOfParam;
+    }
+
+    private HBox returnText(String paramName, boolean allowEditing) {
+        HBox values = new HBox(5);
+        values.getChildren().add(new Label(paramName));
+
+        String result = "";
+        try {
+            result = "" + clazz.getMethod("get" + paramName, paramTypes).invoke(currentResult, paramTypes);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            allowEditing = false;
+        }
+        Node text = null;
+        if (allowEditing) {
+            text = textChanges.get(paramName);
+            ((TextField) text).setText(result);
+        } else {
+            text = new Label(result);
+            ((Labeled) text).setWrapText(true);
+            text.prefWidth(200);
+        }
+        ScrollPane scrolling = new ScrollPane((Node) text);
+        values.getChildren().add(scrolling);
+        return values;
     }
 
     private VBox createParamArea(boolean allowEditing) {
         VBox stackOfParam = new VBox(5);
-        Set<String> paramKeys = currentResult.getParamKeys();
 
-        for (String param : paramKeys) {
+        for (String param : paramVariables) {
             HBox values = new HBox(5);
             values.getChildren().add(new Label(param));
 
-            Node text = null;
             if (allowEditing) {
-                if (valueChanges.containsKey(param)) {
-                    text = valueChanges.get(param);
-                    ((Spinner<Double>) text).getValueFactory()
-                            .setValue(Double.parseDouble(currentResult.getParam(param)));
-                } else {
-                    text = textChanges.get(param);
-                    ((TextField) text).setText(currentResult.getParam(param));
+                switch (gameResources.getString(param + ".type")) {
+                    case "String":
+                        TextField text = textChanges.get(param);
+                        text.setText(currentResult.getParam(param));
+                        ScrollPane scrolling = new ScrollPane(text);
+                        values.getChildren().add(scrolling);
+                        break;
+                    case "int":
+                        Spinner<Integer> numInt = intChanges.get(param);
+                        numInt.getValueFactory()
+                                .setValue(Integer.parseInt(currentResult.getParam(param)));
+
+                        values.getChildren().add(numInt);
+                        break;
+                    case "double":
+                        Spinner<Double> numDouble = doubleChanges.get(param);
+                        numDouble.getValueFactory()
+                                .setValue(Double.parseDouble(currentResult.getParam(param)));
+
+                        values.getChildren().add(numDouble);
+                        break;
                 }
             } else {
-                text = new Label(currentResult.getParam(param));
-                ((Labeled) text).setWrapText(true);
-                text.prefWidth(200);
+                Label textOnly = new Label(currentResult.getParam(param));
+                textOnly.setWrapText(true);
+                textOnly.prefWidth(200);
+
+                ScrollPane scrolling = new ScrollPane(textOnly);
+                values.getChildren().add(scrolling);
             }
-            ScrollPane scrolling = new ScrollPane((Node) text);
-            values.getChildren().add(scrolling);
             stackOfParam.getChildren().add(values);
         }
         return stackOfParam;
     }
 
-    private VBox createColorArea(boolean allowEditing) {
+    private VBox createColorArea(boolean allowEditing) { // TODO: value of parameter is always false
         VBox stackOfParam = new VBox(5);
         Set<Integer> colorKeys = currentResult.getColorKeys();
 
@@ -176,11 +261,14 @@ public class InfoView {
             values.getChildren().add(new Label("State" + state + ":"));
 
             Node text = null;
+            String currentColor = currentResult.getColor(state);
             if (allowEditing) {
                 text = colorChanges.get(state);
-                ((ColorPicker) text).setValue(Color.web(currentResult.getColor(state)));
+                ((ColorPicker) text).setValue(Color.web(currentColor));
             } else {
-                text = new Label(currentResult.getColor(state));
+                Rectangle colorPatch = new Rectangle(25, 25, Color.web(currentColor));
+                values.getChildren().add(colorPatch);
+                text = new Label(currentColor);
                 ((Labeled) text).setWrapText(true);
                 text.prefWidth(200);
             }
@@ -191,8 +279,57 @@ public class InfoView {
         return stackOfParam;
     }
 
-    public void changeLang(String language) {
-        currentLang = language;
-        buttonHold.changeLanguage(currentLang);
+    public ParseResult getEditResults() {
+        int rows = currentResult.getRows();
+        int cols = currentResult.getCols();
+        String gameType = currentResult.getGameType();
+        String title = currentResult.getTitle();
+        String author = currentResult.getAuthor();
+        String description = currentResult.getDescription();
+        int[][] cells = currentResult.getCells();
+        Map<String, String> params = currentResult.getParams();
+        Map<Integer, String> colorMap = currentResult.getColorMap();
+
+        try {
+            title = textChanges.get("Title").getText();
+        } catch (Exception e) {
+        }
+        try {
+            author = textChanges.get("Author").getText();
+        } catch (Exception e) {
+        }
+        try {
+            description = textChanges.get("Description").getText();
+        } catch (Exception e) {
+        }
+        for (String name : paramVariables) {
+            if (intChanges.containsKey(name)) {
+                try {
+                    params.put(name, Integer.toString(intChanges.get(name).getValue()));
+                } catch (Exception e) {
+                }
+            } else {
+                if (doubleChanges.containsKey(name)) {
+                    try {
+                        params.put(name, Double.toString(doubleChanges.get(name).getValue()));
+                    } catch (Exception e) {
+                    }
+                } else {
+                    if (textChanges.containsKey(name)) {
+                        try {
+                            params.put(name, textChanges.get(name).getText());
+                        } catch (Exception e) {
+                        }
+                    }
+                }
+            }
+        }
+
+        return new ParseResult(rows, cols, gameType, title, author, description, cells, params, colorMap);
+    }
+
+    public void changeLocale(Locale locale) {
+        this.locale = locale;
+        buttonHold.changeLocale(this.locale);
     }
 }

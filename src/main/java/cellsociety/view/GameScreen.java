@@ -5,9 +5,9 @@ import static cellsociety.controller.PropertiesLoader.DEFAULT_RESOURCE_FOLDER;
 import cellsociety.controller.PropertiesLoader;
 import cellsociety.model.ParseResult;
 import cellsociety.view.grids.GridView;
-
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.scene.Scene;
@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+//TODO: comment
 public class GameScreen {
 
   public static final String THEME_STYLESHEET = "light.css";
@@ -29,31 +30,25 @@ public class GameScreen {
   private GridView gridView;
   private InfoView infoView;
   private ButtonCreator buttons;
-  private String language;
+  private Locale locale;
   private boolean onPlay;
   private Label dynamicGenerations;
   private Slider speedSlider;
   private int generations;
+  private ParseResult parseHolder;
 
   private ResourceBundle layoutResources;
   private static final Logger LOG = LogManager.getLogger(GameScreen.class);
   private static final String LAYOUT_STYLESHEET = "GameScreen.css";
-  private static final String CONFIG_RESOURCE_FOLDER = "Config/";
+  private static final String CONFIG_RESOURCE_FOLDER = "view/Config/";
   private static final String GAME_SCREEN_CONFIG = "GameScreen"; // TODO: parameterize
   // TODO: figure out default_resource_folder across multiple files
 
-  public GameScreen(Stage stage, String langResult) {
+  public GameScreen(Stage stage, Locale locale) {
     stageLive = stage;
-    language = langResult;
-    String layoutConfigFilePath = CONFIG_RESOURCE_FOLDER + GAME_SCREEN_CONFIG;
-    try {
-      layoutResources = PropertiesLoader.loadProperties(layoutConfigFilePath);
-    } catch (Exception e) {
-      String message = String.format("Failed to load layout properties from %s for Game Screen.",
-          layoutConfigFilePath);
-      LOG.warn(message, e);
-      throw new IllegalStateException(message, e);
-    }
+    this.locale = locale;
+    layoutResources = PropertiesLoader.getResourceBundle(
+        CONFIG_RESOURCE_FOLDER + GAME_SCREEN_CONFIG);
   }
 
   public void checkAllNotNull(Object... params) throws Exception { // TODO: do we need this
@@ -68,16 +63,17 @@ public class GameScreen {
     gridView = newGridView;
   }
 
-  public void gameScreen(ParseResult parsingInfo, Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
+  public void gameScreen(ParseResult parsingInfo, Runnable onSave, Runnable onLoad, Runnable pause,
+      Runnable play,
       Runnable reset, Runnable setGameSpeed,
-      Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack,
+      Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack, Runnable pullChanges,
       int startingGenerations,
       double startSpeed) {
-
-    infoView = new InfoView(stageLive, parsingInfo, language);
+    parseHolder = parsingInfo;
     generations = startingGenerations;
     onPlay = true; // TODO: make more elegant
-    buttons = new ButtonCreator(language);
+    infoView = new InfoView(stageLive, parseHolder, locale, pullChanges);
+    buttons = new ButtonCreator(locale);
     String[] names = { "Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
         "NewGame" }; // TODO: reflection
     String[] info = { "Info", "EditInfo" };
@@ -91,7 +87,9 @@ public class GameScreen {
         reset, setGameSpeed, createNewGameAction, clear, stepForward, stepBack, startSpeed);
     mainScreen.setBottom(simulationControl);
 
-    Scene scene = new Scene(mainScreen, 1000, 800); // TODO: properties
+    double windowWidth = Double.parseDouble(layoutResources.getString("window.width"));
+    double windowHeight = Double.parseDouble(layoutResources.getString("window.height"));
+    Scene scene = new Scene(mainScreen, windowWidth, windowHeight);
     addStyleSheets(scene);
 
     String titleOfWindow = "Cell Society: Running " + gridView.getGameName(); // TODO: language & properties
@@ -143,8 +141,8 @@ public class GameScreen {
       buttons.addEmptyButton(name);
     }
 
-    buttons.addActionToButton("Info", e -> infoView.showInfoView());
-    // buttons.addActionToButton("EditInfo", e -> );
+    buttons.addActionToButton("Info", e -> infoView.showInfoView(parseHolder));
+    buttons.addActionToButton("EditInfo", e -> infoView.showInfoEdit(parseHolder));
     VBox infoControl = new VBox();
     infoControl.setId("info-control-box");
     for (String name : names) {
@@ -174,11 +172,18 @@ public class GameScreen {
     HBox timeAreaBox = new HBox();
     timeAreaBox.setId("time-area-box");
 
-    speedSlider = new Slider(0, 10, startSpeed); // TODO: properties
-    speedSlider.setPrefWidth(400);
-    speedSlider.setMaxWidth(400);
-    speedSlider.setShowTickMarks(true);
-    speedSlider.setMajorTickUnit(1); // TODO: properties
+    double sliderMin = Double.parseDouble(layoutResources.getString("slider.min"));
+    double sliderMax = Double.parseDouble(layoutResources.getString("slider.max"));
+    speedSlider = new Slider(sliderMin, sliderMax, startSpeed);
+
+    double sliderPrefWidth = Double.parseDouble(layoutResources.getString("slider.prefWidth"));
+    double sliderMaxWidth = Double.parseDouble(layoutResources.getString("slider.maxWidth"));
+    speedSlider.setPrefWidth(sliderPrefWidth);
+    speedSlider.setMaxWidth(sliderMaxWidth);
+    speedSlider.setShowTickMarks(true); // TODO: need properties?
+
+    double majorTickUnit = Double.parseDouble(layoutResources.getString("slider.majorTickUnit"));
+    speedSlider.setMajorTickUnit(majorTickUnit);
     speedSlider.setSnapToTicks(true);
 
     speedSlider.valueProperty().addListener((observable) -> setGameSpeed.run());
@@ -229,7 +234,7 @@ public class GameScreen {
     }
   }
 
-  public void simPausedButtonChange() {
+  public void simPausedButtonChange() { // FIXME: better method name; javadoc
     onPlay = false;
     buttons.setButtonText("Play", "Play");
   }
@@ -247,6 +252,12 @@ public class GameScreen {
         "Gen: " + this.generations);
   }
 
+  public ParseResult getResultChanges() {
+    ParseResult changedResult = infoView.getEditResults();
+    parseHolder = changedResult;
+    return changedResult;
+  }
+
   public Optional<File> startScreen(Stage stage) {
     FileChooser fileChooser = new FileChooser();
     File initialDir = new File(
@@ -260,7 +271,8 @@ public class GameScreen {
         && initialDir.isDirectory()) { // FIXME: maybe doesn't work because initial dir doesn't exist, see fixme above
       fileChooser.setInitialDirectory(initialDir);
     } else {
-      File userHome = new File(System.getProperty("user.home"));
+      File userHome = new File(
+          System.getProperty("user.home")); // FIXME: this is being called on my system
       fileChooser.setInitialDirectory(userHome);
     }
     File chosen = fileChooser.showOpenDialog(stage);

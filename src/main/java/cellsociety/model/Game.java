@@ -154,12 +154,6 @@ public abstract class Game {
     grid.defaultInitializeCells();
   }
 
-  public ArrayList<String> returnParamNames() {
-    if (gameParams == null)
-      throw new NullPointerException("Parameter Names does not exist");
-    return new ArrayList<String>(gameParams.keySet());
-  }
-
   public String getParam(String name) {
     if (gameParams == null)
       throw new NullPointerException("Parameter Storage does not exist");
@@ -172,5 +166,9 @@ public abstract class Game {
 
   public void setParam(String name, String newValue) {
     gameParams.put(name, newValue);
+  }
+
+  public void updateParams(Map<String, String> gameParams) {
+    this.gameParams.putAll(gameParams);
   }
 }

@@ -6,7 +6,6 @@ import cellsociety.model.Grid;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,12 +44,16 @@ import java.util.Map;
  * @author Joseph Wang
  * @see Game
  */
-
 public class WaTor extends Game {
-    private boolean moved = false;
-    private HashMap<Cell, WaTorShark> sharkLives = new HashMap<>();
-    private HashMap<Cell, WaTorFish> fishLives = new HashMap<>();
+
+    public static final int EMPTY = 0;
+    public static final int FISH = 1;
+    public static final int SHARK = 2;
+
     private final String[] newVariables = new String[] { "pyRepro", "pdrEner", "pdrRepro", "pdrEatsFor" };
+    private boolean moved = false;
+    private Map<Cell, WaTorShark> sharkLives = new java.util.HashMap<>();
+    private Map<Cell, WaTorFish> fishLives = new java.util.HashMap<>();
 
     public WaTor(Grid grid, Map<String, String> params) throws Exception {
         super(grid, params);
@@ -61,17 +64,15 @@ public class WaTor extends Game {
             } catch (Exception e) {
                 throw new IllegalArgumentException("Illegal " + vari + ": " + getParam(vari));
             }
-
-            if (val < 0)
+            if (val < 0) {
                 throw new IllegalArgumentException("Illegal " + vari + ": " + getParam(vari));
+            }
         }
     }
 
     @Override
     protected void updateGame() {
-        // first run the sharks
         sharkMove();
-        // finally run the fish
         fishMove();
     }
 
@@ -79,7 +80,7 @@ public class WaTor extends Game {
         for (int i = 0; i < getGrid().getRows(); i++) {
             for (int j = 0; j < getGrid().getColumns(); j++) {
                 Cell cell = getGrid().getCell(i, j);
-                if (cell.getState() == 2 && cell.getNextState() == 2) {
+                if (cell.getState() == SHARK && cell.getNextState() == SHARK) {
                     moved = false;
                     WaTorShark sharky;
                     if (!sharkLives.containsKey(cell)) {
@@ -90,17 +91,17 @@ public class WaTor extends Game {
                     }
                     if (sharky.isDead()) {
                         sharkLives.remove(cell);
-                        cell.setNextState(0);
+                        cell.setNextState(EMPTY);
                     } else {
                         Cell moves = sharkMoves(sharky, i, j);
                         sharky.moved(-1);
-                        cell.setNextState(0);
-                        moves.setNextState(2);
+                        cell.setNextState(EMPTY);
+                        moves.setNextState(SHARK);
                         sharkLives.remove(cell);
                         sharkLives.put(moves, sharky);
                         if (moved && sharky.reProd() >= (int) Double.parseDouble(getParam(newVariables[2]))) {
                             sharky.reset();
-                            cell.setNextState(2);
+                            cell.setNextState(SHARK);
                             WaTorShark child = new WaTorShark((int) Double.parseDouble(getParam(newVariables[1])));
                             sharkLives.put(cell, child);
                         }
@@ -114,7 +115,7 @@ public class WaTor extends Game {
         for (int i = 0; i < getGrid().getRows(); i++) {
             for (int j = 0; j < getGrid().getColumns(); j++) {
                 Cell cell = getGrid().getCell(i, j);
-                if (cell.getState() == 1 && cell.getNextState() == 1) {
+                if (cell.getState() == FISH && cell.getNextState() == FISH) {
                     moved = false;
                     WaTorFish fishy;
                     if (!fishLives.containsKey(cell)) {
@@ -124,14 +125,14 @@ public class WaTor extends Game {
                         fishy = fishLives.get(cell);
                     }
                     Cell moves = fishMoves(i, j);
-                    cell.setNextState(0);
-                    moves.setNextState(1);
+                    cell.setNextState(EMPTY);
+                    moves.setNextState(FISH);
                     fishLives.remove(cell);
                     fishLives.put(moves, fishy);
                     fishy.moved();
                     if (moved && fishy.reProd() >= (int) Double.parseDouble(getParam(newVariables[0]))) {
                         fishy.reset();
-                        cell.setNextState(1);
+                        cell.setNextState(FISH);
                         WaTorFish child = new WaTorFish();
                         fishLives.put(cell, child);
                     }
@@ -141,33 +142,31 @@ public class WaTor extends Game {
     }
 
     private Cell sharkMoves(WaTorShark sharky, int i, int j) {
-        List<Cell> fishFood = filterByState(getGrid().getNeighbors(i, j), 1);
+        List<Cell> fishFood = filterByState(getGrid().getNeighbors(i, j), FISH);
         if (!fishFood.isEmpty()) {
             Collections.shuffle(fishFood);
             sharky.moved((int) Double.parseDouble(getParam(newVariables[3])));
             fishLives.remove(fishFood.get(0));
             moved = true;
             return fishFood.get(0);
-        } else {
-            List<Cell> empty = filterByState(getGrid().getNeighbors(i, j), 0);
-            if (!empty.isEmpty()) {
-                Collections.shuffle(empty);
-                moved = true;
-                return empty.get(0);
-            }
         }
-        return getGrid().getCell(i, j);
-    }
-
-    private Cell fishMoves(int i, int j) {
-        List<Cell> empty = filterByState(getGrid().getNeighbors(i, j), 0);
+        List<Cell> empty = filterByState(getGrid().getNeighbors(i, j), EMPTY);
         if (!empty.isEmpty()) {
             Collections.shuffle(empty);
             moved = true;
             return empty.get(0);
         }
         return getGrid().getCell(i, j);
+    }
 
+    private Cell fishMoves(int i, int j) {
+        List<Cell> empty = filterByState(getGrid().getNeighbors(i, j), EMPTY);
+        if (!empty.isEmpty()) {
+            Collections.shuffle(empty);
+            moved = true;
+            return empty.get(0);
+        }
+        return getGrid().getCell(i, j);
     }
 
     private List<Cell> filterByState(List<Cell> cells, int targetState) {
@@ -179,5 +178,4 @@ public class WaTor extends Game {
         }
         return ret;
     }
-
 }

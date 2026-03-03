@@ -1,5 +1,8 @@
 package cellsociety.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.model.ParseResult;
@@ -7,38 +10,39 @@ import cellsociety.view.GameScreen;
 import cellsociety.view.grids.GridView;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 /**
- * Coordinates the model (Game), view (GridView), and UI controls
- * (GameScreen).
+ * Coordinates the model (Game), view (GridView), and UI controls (GameScreen).
  *
  * <p>
  * Purpose: Drives the simulation loop, provides controls for play/pause/step,
- * synchronizes model state with the grid view, and exposes simple save/load
- * hooks used by the UI.
- * This class encapsulates playback state (speed, generations) and directly
- * manipulates the model
- * and view.
+ * synchronizes model
+ * state with the grid view, and exposes simple save/load hooks used by the UI.
+ * This class
+ * encapsulates playback state (speed, generations) and directly manipulates the
+ * model and view.
  * </p>
  *
  * <p>
  * Assumptions: The provided Game and GridView are non-null and consistent in
- * dimensions.
- * UI calls are expected to come from the JavaFX application thread.
- * Out-of-bounds calls to grid
- * methods are not performed by this class.
+ * dimensions. UI calls
+ * are expected to come from the JavaFX application thread. Out-of-bounds calls
+ * to grid methods are
+ * not performed by this class.
  * </p>
  *
  * <p>
  * Dependencies: cellsociety.model.Game, cellsociety.view.GridView,
- * cellsociety.view.GameScreen, and JavaFX Timeline APIs.
+ * cellsociety.view.GameScreen, and
+ * JavaFX Timeline APIs.
  * </p>
  *
  * <p>
  * Example usage:
  * </p>
- * 
+ *
  * <pre>{@code
  * Controller ctrl = new Controller(game, gameScreen, gridView, 1.0, () -> {
  * });
@@ -73,17 +77,19 @@ public class Controller {
    * @param game                the game model to control
    * @param gameScreen          the screen manager used to display UI elements
    * @param gridView            the view responsible for rendering the grid
-   * @param InfoResult
+   * @param infoResult          contains game information parsed from XML; things
+   *                            that need to be
+   *                            displayed in the view are extracted from it
    * @param createNewGameAction action invoked to create a new game
    */
-  public Controller(Game game, GameScreen gameScreen, GridView gridView, ParseResult InfoResult,
+  public Controller(Game game, GameScreen gameScreen, GridView gridView, ParseResult infoResult,
       Runnable createNewGameAction) {
     this.game = game;
     this.gameScreen = gameScreen;
     this.gridView = gridView;
     gameScreen.setGridView(gridView);
     try {
-      this.gameSpeed = Double.parseDouble(InfoResult.getParams().get("speed"));
+      this.gameSpeed = Double.parseDouble(infoResult.getParams().get("speed"));
     } catch (Exception e) {
       this.gameSpeed = 1.0;
     }
@@ -120,14 +126,6 @@ public class Controller {
         gridView.updateCell(r, c, cell.getState());
       }
     }
-  }
-
-  public void updateParams() {
-
-  }
-
-  public void findParams() {
-
   }
 
   /**
@@ -248,12 +246,25 @@ public class Controller {
    * @param loadForResults      action used to reload the current configuration
    *                            for results view
    */
-  public void gameScreenShow(ParseResult parsingInfo, Runnable onSave, Runnable onLoad, Runnable createNewGameAction,
-      Runnable loadForResults) {
+  public void gameScreenShow(ParseResult parsingInfo, Runnable onSave, Runnable onLoad,
+      Runnable createNewGameAction,
+      Runnable loadForResults, Runnable pullChanges) {
     gameScreen.gameScreen(parsingInfo, onSave, onLoad, this::pause, this::play, loadForResults,
-        this::findGameSpeed, createNewGameAction, this::clear, this::stepForward, this::stepBack, generations,
+        this::findGameSpeed, createNewGameAction, this::clear, this::stepForward, this::stepBack,
+        pullChanges, generations,
         gameSpeed); // FIXME: don't pass parameters straight on
     setGameSpeed(gameSpeed);
     gameScreen.simPausedButtonChange();
+  }
+
+  public void toBeUpdates(ParseResult changes) {
+    game.updateParams(changes.getParams());
+
+    Map<Integer, Color> colorMap = new HashMap<>();
+    Map<Integer, String> parsedColors = changes.getColorMap();
+    for (Integer id : parsedColors.keySet()) {
+      colorMap.put(id, Color.web(parsedColors.get(id)));
+    }
+    gridView.setAllColors(colorMap);
   }
 }

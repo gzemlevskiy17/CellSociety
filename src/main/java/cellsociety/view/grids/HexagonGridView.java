@@ -1,6 +1,6 @@
 package cellsociety.view.grids;
 
-import java.util.HashMap;
+import java.util.Map;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -17,7 +17,7 @@ import javafx.scene.shape.Polygon;
  *
  * @author Michael Li
  */
-public class HexagonalGridView extends GridView {
+public class HexagonGridView extends GridView {
 
   private static final double MAX_GRID_WIDTH = 800.0;
   private static final double MAX_GRID_HEIGHT = 500.0;
@@ -25,7 +25,7 @@ public class HexagonalGridView extends GridView {
   private Polygon[][] hexArray;
   private double circumRadius;
 
-  public HexagonalGridView(String gameName, HashMap<Integer, Color> colors, int cols, int rows) {
+  public HexagonGridView(String gameName, Map<Integer, Color> colors, int cols, int rows) {
     super(gameName, colors, cols, rows);
   }
 
