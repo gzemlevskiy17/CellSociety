@@ -128,7 +128,8 @@ public class InfoView {
         });
     }
 
-    public void showInfoView() {
+    public void showInfoView(ParseResult givenInfo) {
+        currentResult = givenInfo;
         clazz = currentResult.getClass();
         VBox stackOfParam = createTextArea(false);
         stackOfParam.getChildren().addAll(createParamArea(false));
@@ -146,7 +147,8 @@ public class InfoView {
         newStage.show();
     }
 
-    public void showInfoEdit() {
+    public void showInfoEdit(ParseResult givenInfo) {
+        currentResult = givenInfo;
         clazz = currentResult.getClass();
         VBox stackOfParam = createTextArea(true);
         stackOfParam.getChildren().addAll(createParamArea(true));
@@ -283,14 +285,19 @@ public class InfoView {
         Map<Integer, String> colorMap = currentResult.getColorMap();
 
         try {
-
+            title = textChanges.get("Title").getText();
         } catch (Exception e) {
-
+        }
+        try {
+            author = textChanges.get("Author").getText();
+        } catch (Exception e) {
+        }
+        try {
+            description = textChanges.get("Description").getText();
+        } catch (Exception e) {
         }
 
-        return new ParseResult(0, 0, null,
-                null, null, null, null,
-                null, null);
+        return new ParseResult(rows, cols, gameType, title, author, description, cells, params, colorMap);
     }
 
     public void changeLocale(Locale locale) {

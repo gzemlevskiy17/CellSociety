@@ -35,6 +35,7 @@ public class GameScreen {
   private Label dynamicGenerations;
   private Slider speedSlider;
   private int generations;
+  private ParseResult parseHolder;
 
   private ResourceBundle layoutResources;
   private static final Logger LOG = LogManager.getLogger(GameScreen.class);
@@ -68,10 +69,10 @@ public class GameScreen {
       Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack,
       int startingGenerations,
       double startSpeed) {
-
-    infoView = new InfoView(stageLive, parsingInfo, locale);
+    parseHolder = parsingInfo;
     generations = startingGenerations;
     onPlay = true; // TODO: make more elegant
+    infoView = new InfoView(stageLive, parseHolder, locale);
     buttons = new ButtonCreator(locale);
     String[] names = { "Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
         "NewGame" }; // TODO: reflection
@@ -140,8 +141,8 @@ public class GameScreen {
       buttons.addEmptyButton(name);
     }
 
-    buttons.addActionToButton("Info", e -> infoView.showInfoView());
-    buttons.addActionToButton("EditInfo", e -> infoView.showInfoEdit());
+    buttons.addActionToButton("Info", e -> infoView.showInfoView(parseHolder));
+    buttons.addActionToButton("EditInfo", e -> infoView.showInfoEdit(parseHolder));
     VBox infoControl = new VBox();
     infoControl.setId("info-control-box");
     for (String name : names) {
