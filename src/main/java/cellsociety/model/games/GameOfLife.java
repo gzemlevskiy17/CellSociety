@@ -4,7 +4,6 @@ import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.model.Grid;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -83,7 +82,7 @@ public class GameOfLife extends Game {
     for (int i = 0; i < getGrid().getRows(); i++) {
       for (int j = 0; j < getGrid().getColumns(); j++) {
         Cell cell = getGrid().getCell(i, j);
-        int aliveNeighbors = getAliveNeighbors(getGrid().getNeighbors(i, j));
+        int aliveNeighbors = countNeighborsWithState(getGrid().getNeighbors(i, j), ALIVE);
 
         if (cell.getState() == ALIVE) {
           cell.setNextState(survivalCounts.contains(aliveNeighbors) ? ALIVE : DEAD);
@@ -92,16 +91,6 @@ public class GameOfLife extends Game {
         }
       }
     }
-  }
-
-  private int getAliveNeighbors(List<Cell> neighbors) {
-    int count = 0;
-    for (Cell neighbor : neighbors) {
-      if (neighbor.getState() == ALIVE) {
-        count++;
-      }
-    }
-    return count;
   }
 
   private static Set<Integer> digitsToSet(String digits) {

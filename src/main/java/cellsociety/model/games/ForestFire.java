@@ -100,16 +100,9 @@ public class ForestFire extends Game {
     }
 
     if (cell.getState() == TREE) {
-      for (Cell neighbor : neighbors) {
-        if (neighbor.getState() == BURNING) {
-          cell.setNextState(BURNING);
-          break;
-        }
-      }
-      if (cell.getNextState() == TREE) {
-        if (Math.random() < Double.parseDouble(getParam("ignitionProbability"))) {
-          cell.setNextState(BURNING);
-        }
+      if (countNeighborsWithState(neighbors, BURNING) > 0
+          || Math.random() < Double.parseDouble(getParam("ignitionProbability"))) {
+        cell.setNextState(BURNING);
       }
     }
 
