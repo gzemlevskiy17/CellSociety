@@ -1,6 +1,7 @@
 package cellsociety.model;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Immutable data container holding all values parsed from a simulation XML
@@ -90,6 +91,14 @@ public class ParseResult {
         return colorMap;
     }
 
+    public Set<Integer> getColorKeys() {
+        return colorMap.keySet();
+    }
+
+    public String getColor(Integer key) {
+        return colorMap.get(key);
+    }
+
     /** @return number of grid rows */
     public int getRows() {
         return rows;
@@ -130,29 +139,32 @@ public class ParseResult {
         return params;
     }
 
+    public Set<String> getParamKeys() {
+        return params.keySet();
+    }
+
+    public String getParam(String key) {
+        return params.get(key);
+    }
+
     /** @return neighborhood type string, defaults to "Moore" if not specified */
     public String getNeighborhood() {
         return (params != null && params.containsKey("neighborhood"))
-            ? params.get("neighborhood") : "Moore";
+                ? params.get("neighborhood")
+                : "Moore";
     }
 
     /** @return edge policy type string, defaults to "Bounded" if not specified */
     public String getEdge() {
         return (params != null && params.containsKey("edge"))
-            ? params.get("edge") : "Bounded";
+                ? params.get("edge")
+                : "Bounded";
     }
 
     /** @return cell shape string, defaults to "Rectangle" if not specified */
     public String getShape() {
         return (params != null && params.containsKey("shape"))
-            ? params.get("shape") : "Rectangle";
-    }
-
-    /** @return parameter from Map of parameters */
-    public double getADoubleParam(String param) throws NumberFormatException {
-        if (params != null && params.containsKey(param)) {
-            return Double.parseDouble(params.get(param).trim());
-        }
-        return 0.0;
+                ? params.get("shape")
+                : "Rectangle";
     }
 }

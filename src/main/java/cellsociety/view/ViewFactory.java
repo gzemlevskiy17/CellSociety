@@ -1,6 +1,7 @@
 package cellsociety.view;
 
 import cellsociety.model.ParseResult;
+import cellsociety.view.grids.GridView;
 import cellsociety.view.grids.HexagonalGridView;
 import cellsociety.view.grids.RectangularGridView;
 import cellsociety.view.grids.TriangularGridView;
@@ -66,8 +67,7 @@ public class ViewFactory {
     String shape = result.getShape();
     Map<String, Supplier<GridView>> shapes = Map.of(
         "Hexagonal", () -> new HexagonalGridView(gameType, colorMap, cols, rows),
-        "Triangular", () -> new TriangularGridView(gameType, colorMap, cols, rows)
-    );
+        "Triangular", () -> new TriangularGridView(gameType, colorMap, cols, rows));
     return shapes.getOrDefault(shape, () -> new RectangularGridView(gameType, colorMap, cols, rows)).get();
   }
 }

@@ -1,6 +1,5 @@
 package cellsociety.view.grids;
 
-import cellsociety.view.GridView;
 import java.util.HashMap;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -48,14 +47,14 @@ public class HexagonalGridView extends GridView {
     circumRadius = Math.min(rFromHeight, rFromWidth);
 
     hexArray = new Polygon[rows][cols];
-    
+
     // Calculate total grid dimensions for centering
     double hexW = Math.sqrt(3) * circumRadius;
     double totalWidth = hexW * cols + hexW / 2.0;
     double totalHeight = circumRadius * (1.5 * rows + 0.5);
     double offsetX = (MAX_GRID_WIDTH - totalWidth) / 2.0;
     double offsetY = (MAX_GRID_HEIGHT - totalHeight) / 2.0;
-    
+
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
         createHex(row, col, pane, offsetX, offsetY);

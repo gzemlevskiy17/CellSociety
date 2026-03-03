@@ -4,7 +4,7 @@ import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.model.ParseResult;
 import cellsociety.view.GameScreen;
-import cellsociety.view.GridView;
+import cellsociety.view.grids.GridView;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -71,7 +71,7 @@ public class Controller {
    * Constructs a Controller that coordinates the model, view, and UI controls.
    *
    * @param game                the game model to control
-   * @param gameScreen       the screen manager used to display UI elements
+   * @param gameScreen          the screen manager used to display UI elements
    * @param gridView            the view responsible for rendering the grid
    * @param InfoResult
    * @param createNewGameAction action invoked to create a new game
@@ -248,11 +248,11 @@ public class Controller {
    * @param loadForResults      action used to reload the current configuration
    *                            for results view
    */
-  public void gameScreenShow(Runnable onSave, Runnable onLoad, Runnable createNewGameAction,
+  public void gameScreenShow(ParseResult parsingInfo, Runnable onSave, Runnable onLoad, Runnable createNewGameAction,
       Runnable loadForResults) {
-    gameScreen.gameScreen(onSave, onLoad, this::pause, this::play, loadForResults,
+    gameScreen.gameScreen(parsingInfo, onSave, onLoad, this::pause, this::play, loadForResults,
         this::findGameSpeed, createNewGameAction, this::clear, this::stepForward, this::stepBack, generations,
-        gameSpeed); //FIXME: don't pass parameters straight on
+        gameSpeed); // FIXME: don't pass parameters straight on
     setGameSpeed(gameSpeed);
     gameScreen.simPausedButtonChange();
   }

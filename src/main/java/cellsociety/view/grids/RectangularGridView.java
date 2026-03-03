@@ -1,6 +1,5 @@
 package cellsociety.view.grids;
 
-import cellsociety.view.GridView;
 import java.util.HashMap;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;

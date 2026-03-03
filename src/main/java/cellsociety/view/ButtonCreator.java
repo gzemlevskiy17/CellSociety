@@ -47,7 +47,7 @@ public class ButtonCreator {
 
     public void changeLanguage(String language) { // resource bundle does not work, rewrite
         try {
-            myResources = PropertiesLoader.loadProperties("Buttons/" + language);
+            myResources = PropertiesLoader.loadProperties("Text/Buttons/" + language);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to load button properties for language: " + language, e);
         }
