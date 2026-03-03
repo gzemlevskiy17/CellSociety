@@ -44,44 +44,30 @@ public class GameOfLife extends Game {
 
     public GameOfLife(Grid grid, String rulestring) {
         super(grid);
-        if (rulestring == null || rulestring.isEmpty()) {
-            // Default: classic Conway B3/S23
-            birthCounts = digitsToSet("3");
-            survivalCounts = digitsToSet("23");
-        } else {
-            Matcher bsMatcher = BS_PATTERN.matcher(rulestring);
-            Matcher sbMatcher = SB_PATTERN.matcher(rulestring);
-            if (bsMatcher.matches()) {
-                birthCounts = digitsToSet(bsMatcher.group(1));
-                survivalCounts = digitsToSet(bsMatcher.group(2));
-            } else if (sbMatcher.matches()) {
-                survivalCounts = digitsToSet(sbMatcher.group(1));
-                birthCounts = digitsToSet(sbMatcher.group(2));
-            } else {
-                throw new IllegalArgumentException("Invalid rulestring: " + rulestring);
-            }
-        }
+        RuleCounts counts = parseRulestring(rulestring);
+        birthCounts = counts.birth();
+        survivalCounts = counts.survival();
     }
 
     public GameOfLife(Grid grid, Map<String, String> params) {
         super(grid, params);
-        String rulestring = getParam(newVariables[0]);
+        RuleCounts counts = parseRulestring(getParam(newVariables[0]));
+        birthCounts = counts.birth();
+        survivalCounts = counts.survival();
+    }
+
+    private static RuleCounts parseRulestring(String rulestring) {
         if (rulestring == null || rulestring.isEmpty()) {
-            // Default: classic Conway B3/S23
-            birthCounts = digitsToSet("3");
-            survivalCounts = digitsToSet("23");
+            return new RuleCounts(digitsToSet("3"), digitsToSet("23"));
+        }
+        Matcher bsMatcher = BS_PATTERN.matcher(rulestring);
+        Matcher sbMatcher = SB_PATTERN.matcher(rulestring);
+        if (bsMatcher.matches()) {
+            return new RuleCounts(digitsToSet(bsMatcher.group(1)), digitsToSet(bsMatcher.group(2)));
+        } else if (sbMatcher.matches()) {
+            return new RuleCounts(digitsToSet(sbMatcher.group(2)), digitsToSet(sbMatcher.group(1)));
         } else {
-            Matcher bsMatcher = BS_PATTERN.matcher(rulestring);
-            Matcher sbMatcher = SB_PATTERN.matcher(rulestring);
-            if (bsMatcher.matches()) {
-                birthCounts = digitsToSet(bsMatcher.group(1));
-                survivalCounts = digitsToSet(bsMatcher.group(2));
-            } else if (sbMatcher.matches()) {
-                survivalCounts = digitsToSet(sbMatcher.group(1));
-                birthCounts = digitsToSet(sbMatcher.group(2));
-            } else {
-                throw new IllegalArgumentException("Invalid rulestring: " + rulestring);
-            }
+            throw new IllegalArgumentException("Invalid rulestring: " + rulestring);
         }
     }
 
@@ -126,4 +112,6 @@ public class GameOfLife extends Game {
         }
         return set;
     }
+
+    private record RuleCounts(Set<Integer> birth, Set<Integer> survival) {}
 }
