@@ -11,7 +11,6 @@ import cellsociety.view.GameScreen;
 import cellsociety.view.StartScreen;
 import cellsociety.view.ViewFactory;
 import cellsociety.view.grids.GridView;
-
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -66,7 +65,7 @@ public class GameRunner {
   private Controller controller;
   private GridView gridView;
   private ParseResult currentParseResult;
-  private StartScreen startChoice;
+  private StartScreen startScreen;
 
   private Runnable createNewGameAction;
 
@@ -84,11 +83,11 @@ public class GameRunner {
     this.createNewGameAction = createNewGameAction;
     modelFactory = new ModelFactory();
     viewFactory = new ViewFactory();
-    startChoice = new StartScreen(myStage, this::firstStart);
+    startScreen = new StartScreen(myStage, this::firstStart);
   }
 
   private void firstStart() {
-    gameScreen = new GameScreen(myStage, startChoice.getLanguage());
+    gameScreen = new GameScreen(myStage, startScreen.getLocale());
     setup();
   }
 

@@ -3,6 +3,7 @@ package cellsociety.view;
 import static cellsociety.controller.PropertiesLoader.DEFAULT_RESOURCE_FOLDER;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Optional;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceDialog;
@@ -30,14 +31,14 @@ public class StartScreen {
 
     public StartScreen(Stage stage, Runnable start) {
         languageView = new LanguageView();
-        firstButton = new ButtonCreator(languageView.getLanguage());
+        firstButton = new ButtonCreator(languageView.getLocale());
 
-        String[] names = { "Language", "Theme", "Choice" };
+        String[] names = {"Language", "Theme", "Choice"}; //TODO: properties
 
         for (String name : names) {
             firstButton.addEmptyButton(name);
         }
-        firstButton.addActionToButton("Language", e -> findLanguage());
+        firstButton.addActionToButton("Language", e -> setLanguage());
         firstButton.addActionToButton("Theme", e -> findTheme());
         firstButton.addActionToButton("Choice", e -> start.run());
 
@@ -118,12 +119,12 @@ public class StartScreen {
         chosenTheme = theme;
     }
 
-    private void findLanguage() {
+    private void setLanguage() {
         languageView.setup();
-        firstButton.changeLanguage(getLanguage());
+        firstButton.changeLocale(getLocale());
     }
 
-    public String getLanguage() {
-        return languageView.getLanguage();
+    public Locale getLocale() {
+        return languageView.getLocale();
     }
 }

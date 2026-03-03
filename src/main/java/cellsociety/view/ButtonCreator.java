@@ -1,24 +1,30 @@
 package cellsociety.view;
 
 import cellsociety.controller.PropertiesLoader;
-
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ButtonCreator {
+
+    private static final Logger LOG = LogManager.getLogger(ButtonCreator.class);
     private LinkedHashMap<String, Button> buttonHolder;
     private ResourceBundle myResources;
 
-    public ButtonCreator(String language) {
+    public ButtonCreator(Locale locale) {
         buttonHolder = new LinkedHashMap<>();
         try {
-            myResources = PropertiesLoader.loadProperties("Text/Buttons/" + language);
+            myResources = PropertiesLoader.getResourceBundleWithLocale("Text/Buttons/Buttons",
+                locale);
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to load button properties for language: " + language, e);
+            throw new IllegalStateException(
+                "Failed to load button properties for language: " + locale, e);
         }
     }
 
@@ -41,15 +47,18 @@ public class ButtonCreator {
         try {
             getButton(name).setText(myResources.getString(text));
         } catch (MissingResourceException e) {
+            LOG.warn("Failed to find button text for key: {}. Defaulting to key as text.", text, e);
             getButton(name).setText(text);
         }
     }
 
-    public void changeLanguage(String language) { // resource bundle does not work, rewrite
+    public void changeLocale(Locale locale) { // resource bundle does not work, rewrite
         try {
-            myResources = PropertiesLoader.loadProperties("Text/Buttons/" + language);
+            myResources = PropertiesLoader.getResourceBundleWithLocale("Text/Buttons/Buttons",
+                locale);
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to load button properties for language: " + language, e);
+            throw new IllegalStateException(
+                "Failed to load button properties for language: " + locale.getDisplayLanguage(), e);
         }
         for (String name : buttonHolder.keySet()) {
             setButtonText(name, name);

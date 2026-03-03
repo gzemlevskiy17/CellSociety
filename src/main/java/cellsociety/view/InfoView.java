@@ -1,12 +1,10 @@
 package cellsociety.view;
 
+import cellsociety.model.ParseResult;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 import java.util.Set;
-
-import cellsociety.model.ParseResult;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -15,9 +13,9 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -33,14 +31,14 @@ public class InfoView {
     private HashMap<String, TextField> textChanges;
     private HashMap<Integer, ColorPicker> colorChanges;
     private ButtonCreator buttonHold;
-    private String currentLang;
+  private Locale locale;
 
-    public InfoView(Stage ownerStage, ParseResult givenInfo, String language) {
+  public InfoView(Stage ownerStage, ParseResult givenInfo, Locale locale) {
         newStage = new Stage();
         newStage.initOwner(ownerStage);
         currentResult = givenInfo;
-        currentLang = language;
-        buttonHold = new ButtonCreator(currentLang);
+    this.locale = locale;
+    buttonHold = new ButtonCreator(this.locale);
         setUpChanges();
         makeActionEvent();
     }
@@ -117,7 +115,7 @@ public class InfoView {
             try {
                 result = (String) clazz.getMethod("get" + paramName, paramTypes).invoke(currentResult, paramTypes);
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                // TODO Auto-generated catch block
+              // TODO: Auto-generated catch block
                 e.printStackTrace();
                 allowEditing = false;
             }
@@ -167,7 +165,7 @@ public class InfoView {
         return stackOfParam;
     }
 
-    private VBox createColorArea(boolean allowEditing) {
+  private VBox createColorArea(boolean allowEditing) { //TODO: value of parameter is always false
         VBox stackOfParam = new VBox(5);
         Set<Integer> colorKeys = currentResult.getColorKeys();
 
@@ -191,8 +189,8 @@ public class InfoView {
         return stackOfParam;
     }
 
-    public void changeLang(String language) {
-        currentLang = language;
-        buttonHold.changeLanguage(currentLang);
+  public void changeLocale(Locale locale) {
+    this.locale = locale;
+    buttonHold.changeLocale(this.locale);
     }
 }

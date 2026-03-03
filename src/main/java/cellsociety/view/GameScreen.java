@@ -5,9 +5,9 @@ import static cellsociety.controller.PropertiesLoader.DEFAULT_RESOURCE_FOLDER;
 import cellsociety.controller.PropertiesLoader;
 import cellsociety.model.ParseResult;
 import cellsociety.view.grids.GridView;
-
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.scene.Scene;
@@ -29,7 +29,7 @@ public class GameScreen {
   private GridView gridView;
   private InfoView infoView;
   private ButtonCreator buttons;
-  private String language;
+  private Locale locale;
   private boolean onPlay;
   private Label dynamicGenerations;
   private Slider speedSlider;
@@ -42,18 +42,11 @@ public class GameScreen {
   private static final String GAME_SCREEN_CONFIG = "GameScreen"; // TODO: parameterize
   // TODO: figure out default_resource_folder across multiple files
 
-  public GameScreen(Stage stage, String langResult) {
+  public GameScreen(Stage stage, Locale locale) {
     stageLive = stage;
-    language = langResult;
-    String layoutConfigFilePath = CONFIG_RESOURCE_FOLDER + GAME_SCREEN_CONFIG;
-    try {
-      layoutResources = PropertiesLoader.loadProperties(layoutConfigFilePath);
-    } catch (Exception e) {
-      String message = String.format("Failed to load layout properties from %s for Game Screen.",
-          layoutConfigFilePath);
-      LOG.warn(message, e);
-      throw new IllegalStateException(message, e);
-    }
+    this.locale = locale;
+    layoutResources = PropertiesLoader.getResourceBundle(
+        CONFIG_RESOURCE_FOLDER + GAME_SCREEN_CONFIG);
   }
 
   public void checkAllNotNull(Object... params) throws Exception { // TODO: do we need this
@@ -74,10 +67,10 @@ public class GameScreen {
       int startingGenerations,
       double startSpeed) {
 
-    infoView = new InfoView(stageLive, parsingInfo, language);
+    infoView = new InfoView(stageLive, parsingInfo, locale);
     generations = startingGenerations;
     onPlay = true; // TODO: make more elegant
-    buttons = new ButtonCreator(language);
+    buttons = new ButtonCreator(locale);
     String[] names = { "Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
         "NewGame" }; // TODO: reflection
     String[] info = { "Info", "EditInfo" };
@@ -229,7 +222,7 @@ public class GameScreen {
     }
   }
 
-  public void simPausedButtonChange() {
+  public void simPausedButtonChange() { //FIXME: better method name; javadoc
     onPlay = false;
     buttons.setButtonText("Play", "Play");
   }
