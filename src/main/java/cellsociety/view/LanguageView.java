@@ -20,22 +20,18 @@ public class LanguageView {
   private List<String> languageChoices;
   private Map<String, String> languageToLocaleString;
   private Locale locale;
+  private ResourceBundle screenText;
 
   public LanguageView() {
     languageToLocaleString = new HashMap<>();
     loadLanguages();
   }
 
-  public void setup() { //TODO: comment
-//    loadLanguages();
-    languageScreen();
-  }
-
   private void loadLanguages() {
-    ResourceBundle myResources = null;
+    ResourceBundle languageBundle = null;
     try {
-      myResources = PropertiesLoader.getResourceBundle(
-          "Text/Languages"); //TODO: handle errors in this?
+      languageBundle = PropertiesLoader.getResourceBundle(
+          "Text/Languages");
     } catch (NullPointerException e) {
       String message = String.format("Failed to load language list, defaulting to %s.",
           DEFAULT_LOCALE.getDisplayLanguage());
@@ -44,23 +40,34 @@ public class LanguageView {
       throw new IllegalStateException(message,
           e);
     }
-    DEFAULT_LANGUAGE = myResources.getString("defaultLanguage");
+    DEFAULT_LANGUAGE = languageBundle.getString("defaultLanguage");
     locale = DEFAULT_LOCALE;
-    String languages = myResources.getString("languages");
+    screenText = updateScreenTextBundle();
+
+    String languages = languageBundle.getString("languages");
     languageChoices = Arrays.asList(languages.split(","));
     for (String language : languageChoices) {
-      String localeString = myResources.getString(language);
+      String localeString = languageBundle.getString(language);
       languageToLocaleString.put(language, localeString);
     }
   }
 
-  private void languageScreen() {
+  private ResourceBundle updateScreenTextBundle() {
+    return PropertiesLoader.getResourceBundleWithLocale(
+        "Text/Screen/StartScreen/LanguageView/LanguageView", locale);
+  }
+
+  public void languageScreen() {
     ChoiceDialog<String> dialog = new ChoiceDialog<>(DEFAULT_LANGUAGE, languageChoices);
-    dialog.setTitle("Language of Cell Society"); //TODO: dynamic update
-    dialog.setHeaderText("Language Setting");
-    dialog.setContentText("Choose your language:");
+//    dialog.setTitle("Language of Cell Society"); //TODO: need header?
+    dialog.setHeaderText(screenText.getString("header"));
+    dialog.setContentText(screenText.getString("prompt"));
     Optional<String> result = dialog.showAndWait();
-    result.ifPresent(choice -> locale = Locale.of(languageToLocaleString.get(choice)));
+    result.ifPresent(choice -> {
+          locale = Locale.of(languageToLocaleString.get(choice));
+          screenText = updateScreenTextBundle();
+        }
+    );
   }
 
   public Locale getLocale() {

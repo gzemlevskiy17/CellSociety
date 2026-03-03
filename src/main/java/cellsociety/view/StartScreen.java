@@ -120,7 +120,7 @@ public class StartScreen {
     }
 
     private void setLanguage() {
-        languageView.setup();
+        languageView.languageScreen();
         firstButton.changeLocale(getLocale());
     }
 
