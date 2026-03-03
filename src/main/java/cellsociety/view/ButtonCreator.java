@@ -24,7 +24,7 @@ public class ButtonCreator {
                 locale);
         } catch (Exception e) {
             throw new IllegalStateException(
-                "Failed to load button properties for language: " + locale, e);
+                "Failed to load button properties for language: " + locale.getDisplayLanguage(), e);
         }
     }
 

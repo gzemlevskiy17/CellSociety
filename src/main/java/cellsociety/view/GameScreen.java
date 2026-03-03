@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+//TODO: comment
 public class GameScreen {
 
   public static final String THEME_STYLESHEET = "light.css";
@@ -61,7 +62,8 @@ public class GameScreen {
     gridView = newGridView;
   }
 
-  public void gameScreen(ParseResult parsingInfo, Runnable onSave, Runnable onLoad, Runnable pause, Runnable play,
+  public void gameScreen(ParseResult parsingInfo, Runnable onSave, Runnable onLoad, Runnable pause,
+      Runnable play,
       Runnable reset, Runnable setGameSpeed,
       Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack,
       int startingGenerations,
@@ -71,9 +73,9 @@ public class GameScreen {
     generations = startingGenerations;
     onPlay = true; // TODO: make more elegant
     buttons = new ButtonCreator(locale);
-    String[] names = { "Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
-        "NewGame" }; // TODO: reflection
-    String[] info = { "Info", "EditInfo" };
+    String[] names = {"Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
+        "NewGame"}; // TODO: reflection
+    String[] info = {"Info", "EditInfo"};
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
@@ -84,10 +86,13 @@ public class GameScreen {
         reset, setGameSpeed, createNewGameAction, clear, stepForward, stepBack, startSpeed);
     mainScreen.setBottom(simulationControl);
 
-    Scene scene = new Scene(mainScreen, 1000, 800); // TODO: properties
+    double windowWidth = Double.parseDouble(layoutResources.getString("window.height"));
+    double windowHeight = Double.parseDouble(layoutResources.getString("window.height"));
+    Scene scene = new Scene(mainScreen, windowWidth, windowHeight);
     addStyleSheets(scene);
 
-    String titleOfWindow = "Cell Society: Running " + gridView.getGameName(); // TODO: language & properties
+    String titleOfWindow =
+        "Cell Society: Running " + gridView.getGameName(); // TODO: language & properties
 
     stageLive.setTitle(titleOfWindow);
     stageLive.setScene(scene);
@@ -99,7 +104,7 @@ public class GameScreen {
     String themeStyleSheetPath = DEFAULT_RESOURCE_FOLDER + "Style/" + THEME_STYLESHEET;
     try {
       importedThemeStyleSheet = getClass().getResource(
-          themeStyleSheetPath)
+              themeStyleSheetPath)
           .toExternalForm();
     } catch (NullPointerException e) {
       String message = String.format("Failed to load theme stylesheet from %s.",
@@ -112,7 +117,7 @@ public class GameScreen {
     String layoutStyleSheetPath = DEFAULT_RESOURCE_FOLDER + "Style/" + LAYOUT_STYLESHEET;
     try {
       importedLayoutStyleSheet = getClass().getResource(
-          layoutStyleSheetPath)
+              layoutStyleSheetPath)
           .toExternalForm();
     } catch (NullPointerException e) {
       String message = String.format("Failed to load layout stylesheet from %s.",
@@ -167,11 +172,18 @@ public class GameScreen {
     HBox timeAreaBox = new HBox();
     timeAreaBox.setId("time-area-box");
 
-    speedSlider = new Slider(0, 10, startSpeed); // TODO: properties
-    speedSlider.setPrefWidth(400);
-    speedSlider.setMaxWidth(400);
-    speedSlider.setShowTickMarks(true);
-    speedSlider.setMajorTickUnit(1); // TODO: properties
+    double sliderMin = Double.parseDouble(layoutResources.getString("slider.min"));
+    double sliderMax = Double.parseDouble(layoutResources.getString("slider.max"));
+    speedSlider = new Slider(sliderMin, sliderMax, startSpeed);
+
+    double sliderPrefWidth = Double.parseDouble(layoutResources.getString("slider.prefWidth"));
+    double sliderMaxWidth = Double.parseDouble(layoutResources.getString("slider.maxWidth"));
+    speedSlider.setPrefWidth(sliderPrefWidth);
+    speedSlider.setMaxWidth(sliderMaxWidth);
+    speedSlider.setShowTickMarks(true); //TODO: need properties?
+
+    double majorTickUnit = Double.parseDouble(layoutResources.getString("slider.majorTickUnit"));
+    speedSlider.setMajorTickUnit(majorTickUnit);
     speedSlider.setSnapToTicks(true);
 
     speedSlider.valueProperty().addListener((observable) -> setGameSpeed.run());
@@ -253,7 +265,8 @@ public class GameScreen {
         && initialDir.isDirectory()) { // FIXME: maybe doesn't work because initial dir doesn't exist, see fixme above
       fileChooser.setInitialDirectory(initialDir);
     } else {
-      File userHome = new File(System.getProperty("user.home"));
+      File userHome = new File(
+          System.getProperty("user.home")); //FIXME: this is being called on my system
       fileChooser.setInitialDirectory(userHome);
     }
     File chosen = fileChooser.showOpenDialog(stage);
