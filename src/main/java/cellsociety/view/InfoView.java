@@ -4,6 +4,7 @@ import cellsociety.model.ParseResult;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,21 +25,26 @@ import javafx.stage.Stage;
 public class InfoView {
     private Stage newStage;
     private ParseResult currentResult;
+
+    private Class<?> clazz;
+    private Class<?>[] paramTypes = new Class<?>[] {};
     private String[] buttonNamesView = { "OK" };
     private String[] buttonNamesEdit = { "Save", "Cancel" };
-    private String[] infoSearch = { "GameType", "Title", "Author", "Description" };
+    private String[] infoSolid = { "GameType", "Rows", "Cols" };
+    private String[] infoSearch = { "Title", "Author", "Description" };
     private HashMap<String, Spinner<?>> valueChanges;
     private HashMap<String, TextField> textChanges;
     private HashMap<Integer, ColorPicker> colorChanges;
     private ButtonCreator buttonHold;
-  private Locale locale;
+    private Locale locale;
 
-  public InfoView(Stage ownerStage, ParseResult givenInfo, Locale locale) {
+    public InfoView(Stage ownerStage, ParseResult givenInfo, Locale locale) {
         newStage = new Stage();
         newStage.initOwner(ownerStage);
         currentResult = givenInfo;
-    this.locale = locale;
-    buttonHold = new ButtonCreator(this.locale);
+        clazz = currentResult.getClass();
+        this.locale = locale;
+        buttonHold = new ButtonCreator(this.locale);
         setUpChanges();
         makeActionEvent();
     }
@@ -83,6 +89,7 @@ public class InfoView {
     }
 
     public void showInfoView() {
+        clazz = currentResult.getClass();
         VBox stackOfParam = createTextArea(false);
         stackOfParam.getChildren().addAll(createParamArea(false));
         stackOfParam.getChildren().addAll(createColorArea(false));
@@ -100,39 +107,58 @@ public class InfoView {
     }
 
     public void showInfoEdit() {
-
+        clazz = currentResult.getClass();
+        VBox stackOfParam = createTextArea(true);
+        stackOfParam.getChildren().addAll(createParamArea(true));
+        stackOfParam.getChildren().addAll(createColorArea(true));
+        HBox buttonArea = new HBox(10);
+        for (String name : buttonNamesEdit) {
+            buttonArea.getChildren().add(buttonHold.getButton(name));
+        }
+        stackOfParam.getChildren().add(buttonArea);
+        stackOfParam.setAlignment(Pos.CENTER);
+        stackOfParam.setPadding(new Insets(10));
+        Scene editScene = new Scene(stackOfParam);
+        newStage.setScene(editScene);
+        newStage.setTitle("Show Edit Screen");
+        newStage.show();
     }
 
     public VBox createTextArea(boolean allowEditing) {
         VBox stackOfParam = new VBox(5);
-        Class<?> clazz = currentResult.getClass();
-        Class<?>[] paramTypes = new Class<?>[] {};
+        for (String paramName : infoSolid) {
+            HBox values = returnText(paramName, false);
+            stackOfParam.getChildren().add(values);
+        }
         for (String paramName : infoSearch) {
-            HBox values = new HBox(5);
-            values.getChildren().add(new Label(paramName));
-
-            String result = "";
-            try {
-                result = (String) clazz.getMethod("get" + paramName, paramTypes).invoke(currentResult, paramTypes);
-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-              // TODO: Auto-generated catch block
-                e.printStackTrace();
-                allowEditing = false;
-            }
-            Node text = null;
-            if (allowEditing) {
-                text = textChanges.get(paramName);
-                ((TextField) text).setText(result);
-            } else {
-                text = new Label(result);
-                ((Labeled) text).setWrapText(true);
-                text.prefWidth(200);
-            }
-            ScrollPane scrolling = new ScrollPane((Node) text);
-            values.getChildren().add(scrolling);
+            HBox values = returnText(paramName, allowEditing);
             stackOfParam.getChildren().add(values);
         }
         return stackOfParam;
+    }
+
+    private HBox returnText(String paramName, boolean allowEditing) {
+        HBox values = new HBox(5);
+        values.getChildren().add(new Label(paramName));
+
+        String result = "";
+        try {
+            result = "" + clazz.getMethod("get" + paramName, paramTypes).invoke(currentResult, paramTypes);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            allowEditing = false;
+        }
+        Node text = null;
+        if (allowEditing) {
+            text = textChanges.get(paramName);
+            ((TextField) text).setText(result);
+        } else {
+            text = new Label(result);
+            ((Labeled) text).setWrapText(true);
+            text.prefWidth(200);
+        }
+        ScrollPane scrolling = new ScrollPane((Node) text);
+        values.getChildren().add(scrolling);
+        return values;
     }
 
     private VBox createParamArea(boolean allowEditing) {
@@ -165,7 +191,7 @@ public class InfoView {
         return stackOfParam;
     }
 
-  private VBox createColorArea(boolean allowEditing) { //TODO: value of parameter is always false
+    private VBox createColorArea(boolean allowEditing) { // TODO: value of parameter is always false
         VBox stackOfParam = new VBox(5);
         Set<Integer> colorKeys = currentResult.getColorKeys();
 
@@ -189,8 +215,23 @@ public class InfoView {
         return stackOfParam;
     }
 
-  public void changeLocale(Locale locale) {
-    this.locale = locale;
-    buttonHold.changeLocale(this.locale);
+    public ParseResult getEditResults() {
+        int rows = currentResult.getRows();
+        int cols = currentResult.getCols();
+        String gameType = currentResult.getGameType();
+        String title = currentResult.getTitle();
+        String author = currentResult.getAuthor();
+        String description = currentResult.getDescription();
+        int[][] cells = currentResult.getCells();
+        Map<String, String> params = currentResult.getParams();
+        Map<Integer, String> colorMap = currentResult.getColorMap();
+        return new ParseResult(0, 0, null,
+                null, null, null, null,
+                null, null);
+    }
+
+    public void changeLocale(Locale locale) {
+        this.locale = locale;
+        buttonHold.changeLocale(this.locale);
     }
 }

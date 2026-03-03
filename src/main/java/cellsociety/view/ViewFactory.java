@@ -2,7 +2,7 @@ package cellsociety.view;
 
 import cellsociety.model.ParseResult;
 import cellsociety.view.grids.GridView;
-import cellsociety.view.grids.RectangularGridView;
+import cellsociety.view.grids.RectangleGridView;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.scene.paint.Color;
@@ -10,16 +10,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Factory that creates {@link GridView} instances from parsed XML configuration data.
+ * Factory that creates {@link GridView} instances from parsed XML configuration
+ * data.
  *
  * <p>
- * Converts hex color strings from the {@link ParseResult} into JavaFX {@link Color} objects and
- * builds a {@link RectangularGridView}. Falls back to default colors (white, black, red) if no
+ * Converts hex color strings from the {@link ParseResult} into JavaFX
+ * {@link Color} objects and
+ * builds a {@link RectangleGridView}. Falls back to default colors (white,
+ * black, red) if no
  * color map is provided in the XML.
  * </p>
  *
  * <p>
- * <b>Dependencies:</b> {@link ParseResult}, {@link RectangularGridView}
+ * <b>Dependencies:</b> {@link ParseResult}, {@link RectangleGridView}
  * </p>
  *
  * <p>
@@ -40,7 +43,8 @@ public class ViewFactory {
   private static final Logger LOG = LogManager.getLogger(ViewFactory.class);
 
   /**
-   * Creates a {@link GridView} with colors from the parsed configuration. Falls back to default
+   * Creates a {@link GridView} with colors from the parsed configuration. Falls
+   * back to default
    * colors (white, black, red) if no color map is provided.
    *
    * @param result the parsed XML configuration
@@ -65,11 +69,11 @@ public class ViewFactory {
     }
     String shape = result.getShape();
 
-    //TODO: store shape in properties file and handle unrecognized types
+    // TODO: store shape in properties file and handle unrecognized types
     try {
-      Class<?>[] gameParamTypes = new Class<?>[]{String.class, Map.class, int.class, int.class};
+      Class<?>[] gameParamTypes = new Class<?>[] { String.class, Map.class, int.class, int.class };
       return (GridView) Class.forName(
-              "cellsociety.view.grids." + shape + "GridView").getDeclaredConstructor(gameParamTypes)
+          "cellsociety.view.grids." + shape + "GridView").getDeclaredConstructor(gameParamTypes)
           .newInstance(gameType, colorMap, cols, rows);
     } catch (Exception e) {
       String message = shape + " constructor could not be invoked";
