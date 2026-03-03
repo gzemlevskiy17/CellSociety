@@ -2,7 +2,6 @@ package cellsociety.model.games;
 
 import cellsociety.model.Game;
 import cellsociety.model.Grid;
-
 import java.util.Map;
 import java.util.Random;
 
@@ -14,10 +13,9 @@ import java.util.Random;
  * </p>
  *
  * <p>
- * Uses sequential random updates inside updateGame(). Each step picks
- * rows*cols random cells and immediately moves them using setState(), so
- * subsequent picks see the updated getGrid(). commitChanges() is harmless since
- * setState() keeps state and nextState in sync.
+ * Uses sequential random updates inside updateGame(). Each step picks rows*cols random cells and
+ * immediately moves them using setState(), so subsequent picks see the updated getGrid().
+ * commitChanges() is harmless since setState() keeps state and nextState in sync.
  * </p>
  */
 public class FallingSand extends Game {

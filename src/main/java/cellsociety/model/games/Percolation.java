@@ -3,7 +3,6 @@ package cellsociety.model.games;
 import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.model.Grid;
-
 import java.util.List;
 import java.util.Map;
 
@@ -11,15 +10,14 @@ import java.util.Map;
  * Implementation of a Percolation-style simulation extending the generic Game.
  *
  * <p>
- * Purpose: Implements rules for percolation where empty cells (state 0) become
- * percolated (state 2) when they have a neighbor in the percolated state.
+ * Purpose: Implements rules for percolation where empty cells (state 0) become percolated (state 2)
+ * when they have a neighbor in the percolated state.
  * </p>
  *
  * <p>
- * Assumptions: Grid and Cell state encodings are consistent with the rule (0 =
- * empty, 2 =
- * percolated). The Game superclass handles state transitions and save/restore
- * behavior.
+ * Assumptions: Grid and Cell state encodings are consistent with the rule (0 = empty, 2 =
+ * percolated). The Game superclass handles state transitions and save/restore behavior. The blocked
+ * state does not need to be checked for because those cells will never change.
  * </p>
  *
  * <p>
@@ -29,7 +27,7 @@ import java.util.Map;
  * <p>
  * Example usage:
  * </p>
- * 
+ *
  * <pre>{@code
  * Grid grid = new Grid(rows, cols);
  * Percolation p = new Percolation(grid);
@@ -39,6 +37,9 @@ import java.util.Map;
  * @author Georgiy Zemlevskiy
  */
 public class Percolation extends Game {
+
+  public static final int EMPTY = 0;
+  public static final int PERCOLATED = 2;
 
   // TODO: paper uses a linkedlist with all open cells. for this we would need
   // either a Point class, or for the Cell to have coordinates. discuss
@@ -61,8 +62,8 @@ public class Percolation extends Game {
     for (int i = 0; i < getGrid().getRows(); i++) {
       for (int j = 0; j < getGrid().getColumns(); j++) {
         Cell cell = getGrid().getCell(i, j);
-        if (cell.getState() == 0 && hasPercolatedNeighbor(getGrid().getNeighbors(i, j))) {
-          cell.setNextState(2);
+        if (cell.getState() == EMPTY && hasPercolatedNeighbor(getGrid().getNeighbors(i, j))) {
+          cell.setNextState(PERCOLATED);
         }
       }
     }
@@ -70,7 +71,7 @@ public class Percolation extends Game {
 
   private boolean hasPercolatedNeighbor(List<Cell> neighbors) {
     for (Cell neighbor : neighbors) {
-      if (neighbor.getState() == 2) {
+      if (neighbor.getState() == PERCOLATED) {
         return true;
       }
     }

@@ -253,9 +253,9 @@ public class GameScreen {
   }
 
   public ParseResult getResultChanges() {
-    ParseResult ret = infoView.getEditResults();
-    parseHolder = ret;
-    return ret;
+    ParseResult changedResult = infoView.getEditResults();
+    parseHolder = changedResult;
+    return changedResult;
   }
 
   public Optional<File> startScreen(Stage stage) {

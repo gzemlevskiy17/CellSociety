@@ -5,6 +5,8 @@ import cellsociety.model.Game;
 import cellsociety.model.Grid;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Forest Fire spreading simulation.
@@ -32,27 +34,29 @@ import java.util.Map;
  */
 public class ForestFire extends Game {
 
-  private final String[] newVariables = new String[] { "ignitionProbability", "fillProbability" };
+  public static final int EMPTY = 0;
+  public static final int TREE = 1;
+  public static final int BURNING = 2;
+  private static final Logger LOG = LogManager.getLogger(ForestFire.class);
+  private final String[] newVariables = new String[]{"ignitionProbability",
+      "fillProbability"}; //TODO: replace with property file
 
   /**
    * Constructs a Forest Fire simulation with the given probabilities.
    *
-   * @param grid                the grid of cells; states should be 0 (empty), 1
-   *                            (tree), or 2 (burning)
+   * @param grid                the grid of cells; states should be 0 (empty), 1 (tree), or 2
+   *                            (burning)
    * @param ignitionProbability chance a tree spontaneously catches fire each step
    * @param fillProbability     chance an empty cell grows a new tree each step
    */
   public ForestFire(Grid grid, double ignitionProbability, double fillProbability) {
     super(grid);
-    if (ignitionProbability < 0 || ignitionProbability > 1)
-      throw new IllegalArgumentException("Illegal ignition probability: " + ignitionProbability);
 
-    setParam("ignitionProbability", String.valueOf(ignitionProbability));
+    validateParam(newVariables[0], ignitionProbability, new double[]{0, 1});
+    setParam(newVariables[0], String.valueOf(ignitionProbability));
 
-    if (fillProbability < 0 || fillProbability > 1)
-      throw new IllegalArgumentException("Illegal fill probability: " + ignitionProbability);
-
-    setParam("fillProbability", String.valueOf(fillProbability));
+    validateParam(newVariables[1], fillProbability, new double[]{0, 1});
+    setParam(newVariables[1], String.valueOf(fillProbability));
   }
 
   public ForestFire(Grid grid, Map<String, String> params) {
@@ -62,10 +66,20 @@ public class ForestFire extends Game {
       try {
         probability = Double.parseDouble(getParam(vari));
       } catch (Exception e) {
+        throw new IllegalArgumentException(
+            "Illegal " + vari + ": " + getParam(vari)); //TODO: understand
+      }
+      if (probability < 0 || probability > 1) {
         throw new IllegalArgumentException("Illegal " + vari + ": " + getParam(vari));
       }
-      if (probability < 0 || probability > 1)
-        throw new IllegalArgumentException("Illegal " + vari + ": " + getParam(vari));
+    }
+  }
+
+  private void validateParam(String parameterName, double parameter, double[] bounds) {
+    if (parameter < bounds[0] || parameter > bounds[1]) {
+      String message = String.format("Illegal %s probability: " + parameter, parameterName);
+      LOG.warn(message);
+      throw new IllegalArgumentException(message);
     }
   }
 
@@ -81,29 +95,27 @@ public class ForestFire extends Game {
   }
 
   private void updateCell(Cell cell, List<Cell> neighbors) {
-    if (cell.getState() == 2) {
-      cell.setNextState(0);
+    if (cell.getState() == BURNING) {
+      cell.setNextState(EMPTY);
     }
 
-    if (cell.getState() == 1) {
+    if (cell.getState() == TREE) {
       for (Cell neighbor : neighbors) {
-        if (neighbor.getState() == 2) {
-          cell.setNextState(2);
+        if (neighbor.getState() == BURNING) {
+          cell.setNextState(BURNING);
           break;
         }
       }
-      if (cell.getNextState() == 1) {
+      if (cell.getNextState() == TREE) {
         if (Math.random() < Double.parseDouble(getParam("ignitionProbability"))) {
-          // System.out.println("ignition");
-          cell.setNextState(2);
+          cell.setNextState(BURNING);
         }
       }
     }
 
-    if (cell.getState() == 0) {
+    if (cell.getState() == EMPTY) {
       if (Math.random() < Double.parseDouble(getParam("fillProbability"))) {
-        // System.out.println("fill");
-        cell.setNextState(1);
+        cell.setNextState(TREE);
       }
     }
   }

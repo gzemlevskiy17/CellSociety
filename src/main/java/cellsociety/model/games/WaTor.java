@@ -3,7 +3,6 @@ package cellsociety.model.games;
 import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.model.Grid;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -47,193 +46,201 @@ import java.util.Map;
  */
 
 public class WaTor extends Game {
-    private class Shark {
-        private int energy;
-        private int life = 0;
 
-        public Shark(int energy) {
-            this.energy = energy;
-        }
+  public static final int EMPTY = 0;
+  public static final int FISH = 1;
+  public static final int SHARK = 2;
+  private final String[] newVariables = new String[]{"pyRepro", "pdrEner", "pdrRepro",
+      "pdrEatsFor"};
+  private boolean moved = false;
+  private HashMap<Cell, Shark> sharkLives = new HashMap<Cell, Shark>();
+  private HashMap<Cell, Fish> fishLives = new HashMap<Cell, Fish>();
 
-        private boolean isDead() {
-            return energy <= 0;
-        }
+  public WaTor(Grid grid, Map<String, String> params) throws Exception {
+    super(grid, params);
+    int val = -1;
+    for (String vari : newVariables) {
+      try {
+        val = Integer.parseInt(getParam(vari));
+      } catch (Exception e) {
+        throw new IllegalArgumentException("Illegal " + vari + ": " + getParam(vari));
+      }
 
-        private int reProd() {
-            return life;
-        }
-
-        private void reset() {
-            life = 0;
-        }
-
-        private void moved(int eat) {
-            energy += eat;
-            life++;
-        }
+      if (val < 0) {
+        throw new IllegalArgumentException("Illegal " + vari + ": " + getParam(vari));
+      }
     }
+  }
 
-    private class Fish {
-        private int life = 0;
+  @Override
+  protected void updateGame() {
+    // first run the sharks
+    sharkMove();
+    // finally run the fish
+    fishMove();
+  }
 
-        private int reProd() {
-            return life;
-        }
-
-        private void reset() {
-            life = 0;
-        }
-
-        private void moved() {
-            life++;
-        }
-    }
-
-    private boolean moved = false;
-    private HashMap<Cell, Shark> sharkLives = new HashMap<Cell, Shark>();
-    private HashMap<Cell, Fish> fishLives = new HashMap<Cell, Fish>();
-    private final String[] newVariables = new String[] { "pyRepro", "pdrEner", "pdrRepro", "pdrEatsFor" };
-
-    public WaTor(Grid grid, Map<String, String> params) throws Exception {
-        super(grid, params);
-        int val = -1;
-        for (String vari : newVariables) {
-            try {
-                val = Integer.parseInt(getParam(vari));
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Illegal " + vari + ": " + getParam(vari));
+  private void sharkMove() {
+    for (int i = 0; i < getGrid().getRows(); i++) {
+      for (int j = 0; j < getGrid().getColumns(); j++) {
+        Cell cell = getGrid().getCell(i, j);
+        if (cell.getState() == SHARK && cell.getNextState() == SHARK) {
+          moved = false;
+          Shark shark;
+          if (!sharkLives.containsKey(cell)) {
+            shark = new Shark((int) Double.parseDouble(getParam(newVariables[1])));
+            sharkLives.put(cell, shark);
+          } else {
+            shark = sharkLives.get(cell);
+          }
+          if (shark.isDead()) {
+            sharkLives.remove(cell);
+            cell.setNextState(EMPTY);
+          } else {
+            Cell moves = sharkMoves(shark, i, j);
+            shark.moved(-1);
+            cell.setNextState(EMPTY);
+            moves.setNextState(SHARK);
+            sharkLives.remove(cell);
+            sharkLives.put(moves, shark);
+            if (moved && shark.reProd() >= (int) Double.parseDouble(getParam(newVariables[2]))) {
+              shark.reset();
+              cell.setNextState(2);
+              Shark child = new Shark((int) Double.parseDouble(getParam(newVariables[1])));
+              sharkLives.put(cell, child);
             }
-
-            if (val < 0)
-                throw new IllegalArgumentException("Illegal " + vari + ": " + getParam(vari));
+          }
         }
+      }
     }
+  }
 
-    @Override
-    protected void updateGame() {
-        // first run the sharks
-        sharkMove();
-        // finally run the fish
-        fishMove();
-    }
-
-    private void sharkMove() {
-        for (int i = 0; i < getGrid().getRows(); i++) {
-            for (int j = 0; j < getGrid().getColumns(); j++) {
-                Cell cell = getGrid().getCell(i, j);
-                if (cell.getState() == 2 && cell.getNextState() == 2) {
-                    moved = false;
-                    Shark sharky;
-                    if (!sharkLives.containsKey(cell)) {
-                        sharky = new Shark((int) Double.parseDouble(getParam(newVariables[1])));
-                        sharkLives.put(cell, sharky);
-                    } else {
-                        sharky = sharkLives.get(cell);
-                    }
-                    if (sharky.isDead()) {
-                        sharkLives.remove(cell);
-                        cell.setNextState(0);
-                    } else {
-                        Cell moves = sharkMoves(sharky, i, j);
-                        sharky.moved(-1);
-                        cell.setNextState(0);
-                        moves.setNextState(2);
-                        sharkLives.remove(cell);
-                        sharkLives.put(moves, sharky);
-                        if (moved && sharky.reProd() >= (int) Double.parseDouble(getParam(newVariables[2]))) {
-                            sharky.reset();
-                            cell.setNextState(2);
-                            Shark child = new Shark((int) Double.parseDouble(getParam(newVariables[1])));
-                            sharkLives.put(cell, child);
-                        }
-                    }
-                }
-            }
+  public void fishMove() {
+    for (int i = 0; i < getGrid().getRows(); i++) {
+      for (int j = 0; j < getGrid().getColumns(); j++) {
+        Cell cell = getGrid().getCell(i, j);
+        if (cell.getState() == FISH && cell.getNextState() == FISH) {
+          moved = false;
+          Fish fishy;
+          if (!fishLives.containsKey(cell)) {
+            fishy = new Fish();
+            fishLives.put(cell, fishy);
+          } else {
+            fishy = fishLives.get(cell);
+          }
+          Cell moves = fishMoves(i, j);
+          cell.setNextState(EMPTY);
+          moves.setNextState(FISH);
+          fishLives.remove(cell);
+          fishLives.put(moves, fishy);
+          fishy.moved();
+          if (moved && fishy.reProd() >= (int) Double.parseDouble(getParam(newVariables[0]))) {
+            fishy.reset();
+            cell.setNextState(FISH);
+            Fish child = new Fish();
+            fishLives.put(cell, child);
+          }
         }
+      }
+    }
+  }
+
+  private Cell sharkMoves(Shark sharky, int i, int j) {
+    List<Cell> fishFood = getGrid().getNeighbors(i, j);
+    fishFood = findFood(fishFood);
+    if (!fishFood.isEmpty()) {
+      Collections.shuffle(fishFood);
+      sharky.moved((int) Double.parseDouble(getParam(newVariables[3])));
+      fishLives.remove(fishFood.getFirst());
+      moved = true;
+      return fishFood.getFirst();
+    } else {
+      List<Cell> empty = getGrid().getNeighbors(i, j);
+      empty = findEmpty(empty);
+      if (!empty.isEmpty()) {
+        Collections.shuffle(empty);
+        moved = true;
+        return empty.getFirst();
+      }
+    }
+    return getGrid().getCell(i, j);
+  }
+
+  private Cell fishMoves(int i, int j) {
+    List<Cell> empty = getGrid().getNeighbors(i, j);
+    empty = findEmpty(empty);
+    if (!empty.isEmpty()) {
+      Collections.shuffle(empty);
+      moved = true;
+      return empty.getFirst();
+    }
+    return getGrid().getCell(i, j);
+
+  }
+
+  private List<Cell> findEmpty(List<Cell> empty) {
+    List<Cell> ret = new ArrayList<Cell>();
+    for (Cell looking : empty) {
+      if (looking.getNextState() == EMPTY) {
+        ret.add(looking);
+      }
+    }
+    return ret;
+  }
+
+  private List<Cell> findFood(List<Cell> fishFood) {
+
+    List<Cell> ret = new ArrayList<Cell>();
+    for (Cell looking : fishFood) {
+      if (looking.getNextState() == FISH) {
+        ret.add(looking);
+      }
+    }
+    return ret;
+  }
+
+  private class Shark {
+
+    private int energy;
+    private int life = 0;
+
+    public Shark(int energy) {
+      this.energy = energy;
     }
 
-    public void fishMove() {
-        for (int i = 0; i < getGrid().getRows(); i++) {
-            for (int j = 0; j < getGrid().getColumns(); j++) {
-                Cell cell = getGrid().getCell(i, j);
-                if (cell.getState() == 1 && cell.getNextState() == 1) {
-                    moved = false;
-                    Fish fishy;
-                    if (!fishLives.containsKey(cell)) {
-                        fishy = new Fish();
-                        fishLives.put(cell, fishy);
-                    } else {
-                        fishy = fishLives.get(cell);
-                    }
-                    Cell moves = fishMoves(i, j);
-                    cell.setNextState(0);
-                    moves.setNextState(1);
-                    fishLives.remove(cell);
-                    fishLives.put(moves, fishy);
-                    fishy.moved();
-                    if (moved && fishy.reProd() >= (int) Double.parseDouble(getParam(newVariables[0]))) {
-                        fishy.reset();
-                        cell.setNextState(1);
-                        Fish child = new Fish();
-                        fishLives.put(cell, child);
-                    }
-                }
-            }
-        }
+    private boolean isDead() {
+      return energy <= 0;
     }
 
-    private Cell sharkMoves(Shark sharky, int i, int j) {
-        List<Cell> fishFood = getGrid().getNeighbors(i, j);
-        fishFood = findFood(fishFood);
-        if (!fishFood.isEmpty()) {
-            Collections.shuffle(fishFood);
-            sharky.moved((int) Double.parseDouble(getParam(newVariables[3])));
-            fishLives.remove(fishFood.get(0));
-            moved = true;
-            return fishFood.get(0);
-        } else {
-            List<Cell> empty = getGrid().getNeighbors(i, j);
-            empty = findEmpty(empty);
-            if (!empty.isEmpty()) {
-                Collections.shuffle(empty);
-                moved = true;
-                return empty.get(0);
-            }
-        }
-        return getGrid().getCell(i, j);
+    private int reProd() {
+      return life;
     }
 
-    private Cell fishMoves(int i, int j) {
-        List<Cell> empty = getGrid().getNeighbors(i, j);
-        empty = findEmpty(empty);
-        if (!empty.isEmpty()) {
-            Collections.shuffle(empty);
-            moved = true;
-            return empty.get(0);
-        }
-        return getGrid().getCell(i, j);
-
+    private void reset() {
+      life = 0;
     }
 
-    private List<Cell> findEmpty(List<Cell> empty) {
-        List<Cell> ret = new ArrayList<Cell>();
-        for (Cell looking : empty) {
-            if (looking.getNextState() == 0) {
-                ret.add(looking);
-            }
-        }
-        return ret;
+    private void moved(int eat) {
+      energy += eat;
+      life++;
+    }
+  }
+
+  private class Fish {
+
+    private int life = 0;
+
+    private int reProd() {
+      return life;
     }
 
-    private List<Cell> findFood(List<Cell> fishFood) {
-
-        List<Cell> ret = new ArrayList<Cell>();
-        for (Cell looking : fishFood) {
-            if (looking.getNextState() == 1) {
-                ret.add(looking);
-            }
-        }
-        return ret;
+    private void reset() {
+      life = 0;
     }
+
+    private void moved() {
+      life++;
+    }
+  }
 
 }
