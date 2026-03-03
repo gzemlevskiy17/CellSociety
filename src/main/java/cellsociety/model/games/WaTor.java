@@ -110,7 +110,7 @@ public class WaTor extends Game {
         }
     }
 
-    public void fishMove() {
+    private void fishMove() {
         for (int i = 0; i < getGrid().getRows(); i++) {
             for (int j = 0; j < getGrid().getColumns(); j++) {
                 Cell cell = getGrid().getCell(i, j);
