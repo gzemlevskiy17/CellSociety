@@ -1,5 +1,6 @@
 package cellsociety.view;
 
+import cellsociety.controller.GameRunner;
 import cellsociety.model.ParseResult;
 import cellsociety.view.grids.GridView;
 import cellsociety.view.grids.RectangleGridView;

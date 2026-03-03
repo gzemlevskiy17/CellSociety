@@ -69,7 +69,8 @@ public class Controller {
   private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 
   private double gameSpeed;
-  private int generations = 0; // TODO: add to constructor
+  private int generations;
+  private int cellMax;
 
   /**
    * Constructs a Controller that coordinates the model, view, and UI controls.
@@ -87,6 +88,9 @@ public class Controller {
     this.game = game;
     this.gameScreen = gameScreen;
     this.gridView = gridView;
+    cellMax = infoResult.getColorMap().size();
+    generations = 0;
+    gridView.addMouseEvents(this);
     gameScreen.setGridView(gridView);
     try {
       this.gameSpeed = Double.parseDouble(infoResult.getParams().get("speed"));
@@ -110,6 +114,16 @@ public class Controller {
     updateGrid();
     generations++;
     gameScreen.setGenerations(generations);
+  }
+
+  /**
+   * Enables changing
+   */
+  public void pushFromScreentoGrid(int yRows, int xCols) {
+    Cell cell = game.getCell(yRows, xCols);
+    cell.setState(((cell.getState() + 1) % cellMax));
+    cell.setNextState(cell.getState());
+    gridView.updateCell(yRows, xCols, ((cell.getState() + 1) % cellMax));
   }
 
   /**

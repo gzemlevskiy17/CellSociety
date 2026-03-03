@@ -1,6 +1,9 @@
 package cellsociety.view.grids;
 
 import java.util.Map;
+
+import cellsociety.controller.Controller;
+import cellsociety.controller.GameRunner;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -99,5 +102,18 @@ public class HexagonGridView extends GridView {
   @Override
   public void updateCell(int row, int col, int state) {
     hexArray[row][col].setFill(getGridColors().getOrDefault(state, Color.WHITE));
+  }
+
+  @Override
+  public void addMouseEvents(Controller controller) {
+    for (int row = 0; row < getNumRows(); row++) {
+      for (int col = 0; col < getNumCols(); col++) {
+        int indepRow = row;
+        int indepCol = col;
+        hexArray[row][col].setOnMouseClicked(event -> {
+          controller.pushFromScreentoGrid(indepRow, indepCol);
+        });
+      }
+    }
   }
 }

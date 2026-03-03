@@ -1,6 +1,8 @@
 package cellsociety.view.grids;
 
 import java.util.Map;
+
+import cellsociety.controller.Controller;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -44,5 +46,19 @@ public class RectangleGridView extends GridView {
     @Override
     public void updateCell(int row, int col, int state) {
         RectArray[row][col].setFill(getGridColors().get(state));
+    }
+
+    @Override
+    public void addMouseEvents(Controller controller) {
+        for (int row = 0; row < getNumRows(); row++) {
+            for (int col = 0; col < getNumCols(); col++) {
+                int indepRow = row;
+                int indepCol = col;
+
+                RectArray[row][col].setOnMouseClicked(event -> {
+                    controller.pushFromScreentoGrid(indepRow, indepCol);
+                });
+            }
+        }
     }
 }
