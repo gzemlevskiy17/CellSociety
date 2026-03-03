@@ -1,6 +1,6 @@
 package cellsociety.view.grids;
 
-import java.util.HashMap;
+import java.util.Map;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -8,7 +8,7 @@ public class RectangularGridView extends GridView {
 
     private Rectangle[][] RectArray;
 
-    public RectangularGridView(String gameName, HashMap<Integer, Color> colors, int x, int y) {
+    public RectangularGridView(String gameName, Map<Integer, Color> colors, int x, int y) {
         super(gameName, colors, x, y);
     }
 

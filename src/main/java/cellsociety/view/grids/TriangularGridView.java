@@ -1,6 +1,6 @@
 package cellsociety.view.grids;
 
-import java.util.HashMap;
+import java.util.Map;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -24,7 +24,7 @@ public class TriangularGridView extends GridView {
 
   private Polygon[][] triArray;
 
-  public TriangularGridView(String gameName, HashMap<Integer, Color> colors, int cols, int rows) {
+  public TriangularGridView(String gameName, Map<Integer, Color> colors, int cols, int rows) {
     super(gameName, colors, cols, rows);
   }
 
