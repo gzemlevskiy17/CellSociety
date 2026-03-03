@@ -66,13 +66,13 @@ public class GameScreen {
   public void gameScreen(ParseResult parsingInfo, Runnable onSave, Runnable onLoad, Runnable pause,
       Runnable play,
       Runnable reset, Runnable setGameSpeed,
-      Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack,
+      Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack, Runnable pullChanges,
       int startingGenerations,
       double startSpeed) {
     parseHolder = parsingInfo;
     generations = startingGenerations;
     onPlay = true; // TODO: make more elegant
-    infoView = new InfoView(stageLive, parseHolder, locale);
+    infoView = new InfoView(stageLive, parseHolder, locale, pullChanges);
     buttons = new ButtonCreator(locale);
     String[] names = { "Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
         "NewGame" }; // TODO: reflection
@@ -250,6 +250,12 @@ public class GameScreen {
     this.generations = generations;
     dynamicGenerations.setText(
         "Gen: " + this.generations);
+  }
+
+  public ParseResult getResultChanges() {
+    ParseResult ret = infoView.getEditResults();
+    parseHolder = ret;
+    return ret;
   }
 
   public Optional<File> startScreen(Stage stage) {

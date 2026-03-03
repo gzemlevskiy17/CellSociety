@@ -129,7 +129,7 @@ public class GameRunner {
     controller = new Controller(game, gameScreen, gridView, currentParseResult,
         createNewGameAction);
     controller.gameScreenShow(currentParseResult, this::handleSave, this::setup, createNewGameAction,
-        this::loadForResults);
+        this::loadForResults, this::toBeUpdates);
     controller.reset();
   }
 
@@ -142,7 +142,8 @@ public class GameRunner {
         currentCells[r][c] = reader.getCellState(r, c);
       }
     }
-    updateParams("speed", controller.getGameSpeed() + "");
+    Map<String, String> currentParams = currentParseResult.getParams();
+    currentParams.put("speed", controller.getGameSpeed() + "");
     ParseResult snapshot = new ParseResult(
         currentParseResult.getRows(),
         currentParseResult.getCols(),
@@ -151,7 +152,7 @@ public class GameRunner {
         currentParseResult.getAuthor(),
         currentParseResult.getDescription(),
         currentCells,
-        currentParseResult.getParams(),
+        currentParams,
         currentParseResult.getColorMap());
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Save Simulation As");
@@ -175,8 +176,9 @@ public class GameRunner {
     }
   }
 
-  private void updateParams(String name, String newValue) {
-    Map<String, String> toBeChanged = currentParseResult.getParams();
-    toBeChanged.put(name, newValue);
+  private void toBeUpdates() {
+    ParseResult changes = gameScreen.getResultChanges();
+    currentParseResult = changes;
+    controller.toBeUpdates(currentParseResult);
   }
 }

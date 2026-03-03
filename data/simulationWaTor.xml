@@ -3,7 +3,7 @@
     <type>WaTor</type>
     <title>Large Wa-Tor</title>
     <author>Michael</author>
-    <description>Large 40x40 grid with balanced populations for long-running dynamics.</description>
+    <description>large 40x40 grid with balanced populations for long-running dynamics.</description>
     <grid>
         <rows>40</rows>
         <columns>40</columns>

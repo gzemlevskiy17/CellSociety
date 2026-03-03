@@ -47,7 +47,7 @@ public class InfoView {
     private static final String LAYOUT_STYLESHEET = "";
     private static final String MODEL_RESOURCE_FOLDER = "model/";
 
-    public InfoView(Stage ownerStage, ParseResult givenInfo, Locale locale) {
+    public InfoView(Stage ownerStage, ParseResult givenInfo, Locale locale, Runnable save) {
         newStage = new Stage();
         newStage.initOwner(ownerStage);
         currentResult = givenInfo;
@@ -61,7 +61,7 @@ public class InfoView {
             new ErrorView("Missing Variables", "No Properties File for " + currentResult.getGameType());
         }
         setUpChanges();
-        makeActionEvent();
+        makeActionEvent(save);
     }
 
     private void setUpChanges() {
@@ -116,7 +116,7 @@ public class InfoView {
         }
     }
 
-    private void makeActionEvent() {
+    private void makeActionEvent(Runnable save) {
         for (String name : buttonNamesView) {
             buttonHold.addEmptyButton(name);
         }
@@ -124,6 +124,12 @@ public class InfoView {
             buttonHold.addEmptyButton(name);
         }
         buttonHold.addActionToButton("OK", event -> {
+            newStage.close();
+        });
+        buttonHold.addActionToButton("Save", event -> {
+            save.run();
+        });
+        buttonHold.addActionToButton("Cancel", event -> {
             newStage.close();
         });
     }
@@ -295,6 +301,28 @@ public class InfoView {
         try {
             description = textChanges.get("Description").getText();
         } catch (Exception e) {
+        }
+        for (String name : paramVariables) {
+            if (intChanges.containsKey(name)) {
+                try {
+                    params.put(name, Integer.toString(intChanges.get(name).getValue()));
+                } catch (Exception e) {
+                }
+            } else {
+                if (doubleChanges.containsKey(name)) {
+                    try {
+                        params.put(name, Double.toString(doubleChanges.get(name).getValue()));
+                    } catch (Exception e) {
+                    }
+                } else {
+                    if (textChanges.containsKey(name)) {
+                        try {
+                            params.put(name, textChanges.get(name).getText());
+                        } catch (Exception e) {
+                        }
+                    }
+                }
+            }
         }
 
         return new ParseResult(rows, cols, gameType, title, author, description, cells, params, colorMap);
