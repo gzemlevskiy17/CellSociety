@@ -99,7 +99,7 @@ public class WaTor extends Game {
         int val = -1;
         for (String vari : newVariables) {
             try {
-                val = (int) Double.parseDouble(getParam(vari));
+                val = Integer.parseInt(getParam(vari));
             } catch (Exception e) {
                 throw new IllegalArgumentException("Illegal " + vari + ": " + getParam(vari));
             }

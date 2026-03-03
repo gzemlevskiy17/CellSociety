@@ -39,7 +39,7 @@ public class GameScreen {
   private ResourceBundle layoutResources;
   private static final Logger LOG = LogManager.getLogger(GameScreen.class);
   private static final String LAYOUT_STYLESHEET = "GameScreen.css";
-  private static final String CONFIG_RESOURCE_FOLDER = "Config/";
+  private static final String CONFIG_RESOURCE_FOLDER = "view/Config/";
   private static final String GAME_SCREEN_CONFIG = "GameScreen"; // TODO: parameterize
   // TODO: figure out default_resource_folder across multiple files
 
@@ -73,9 +73,9 @@ public class GameScreen {
     generations = startingGenerations;
     onPlay = true; // TODO: make more elegant
     buttons = new ButtonCreator(locale);
-    String[] names = {"Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
-        "NewGame"}; // TODO: reflection
-    String[] info = {"Info", "EditInfo"};
+    String[] names = { "Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
+        "NewGame" }; // TODO: reflection
+    String[] info = { "Info", "EditInfo" };
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
@@ -86,13 +86,12 @@ public class GameScreen {
         reset, setGameSpeed, createNewGameAction, clear, stepForward, stepBack, startSpeed);
     mainScreen.setBottom(simulationControl);
 
-    double windowWidth = Double.parseDouble(layoutResources.getString("window.height"));
+    double windowWidth = Double.parseDouble(layoutResources.getString("window.width"));
     double windowHeight = Double.parseDouble(layoutResources.getString("window.height"));
     Scene scene = new Scene(mainScreen, windowWidth, windowHeight);
     addStyleSheets(scene);
 
-    String titleOfWindow =
-        "Cell Society: Running " + gridView.getGameName(); // TODO: language & properties
+    String titleOfWindow = "Cell Society: Running " + gridView.getGameName(); // TODO: language & properties
 
     stageLive.setTitle(titleOfWindow);
     stageLive.setScene(scene);
@@ -104,7 +103,7 @@ public class GameScreen {
     String themeStyleSheetPath = DEFAULT_RESOURCE_FOLDER + "Style/" + THEME_STYLESHEET;
     try {
       importedThemeStyleSheet = getClass().getResource(
-              themeStyleSheetPath)
+          themeStyleSheetPath)
           .toExternalForm();
     } catch (NullPointerException e) {
       String message = String.format("Failed to load theme stylesheet from %s.",
@@ -117,7 +116,7 @@ public class GameScreen {
     String layoutStyleSheetPath = DEFAULT_RESOURCE_FOLDER + "Style/" + LAYOUT_STYLESHEET;
     try {
       importedLayoutStyleSheet = getClass().getResource(
-              layoutStyleSheetPath)
+          layoutStyleSheetPath)
           .toExternalForm();
     } catch (NullPointerException e) {
       String message = String.format("Failed to load layout stylesheet from %s.",
@@ -142,7 +141,7 @@ public class GameScreen {
     }
 
     buttons.addActionToButton("Info", e -> infoView.showInfoView());
-    // buttons.addActionToButton("EditInfo", e -> );
+    buttons.addActionToButton("EditInfo", e -> infoView.showInfoEdit());
     VBox infoControl = new VBox();
     infoControl.setId("info-control-box");
     for (String name : names) {
@@ -180,7 +179,7 @@ public class GameScreen {
     double sliderMaxWidth = Double.parseDouble(layoutResources.getString("slider.maxWidth"));
     speedSlider.setPrefWidth(sliderPrefWidth);
     speedSlider.setMaxWidth(sliderMaxWidth);
-    speedSlider.setShowTickMarks(true); //TODO: need properties?
+    speedSlider.setShowTickMarks(true); // TODO: need properties?
 
     double majorTickUnit = Double.parseDouble(layoutResources.getString("slider.majorTickUnit"));
     speedSlider.setMajorTickUnit(majorTickUnit);
@@ -234,7 +233,7 @@ public class GameScreen {
     }
   }
 
-  public void simPausedButtonChange() { //FIXME: better method name; javadoc
+  public void simPausedButtonChange() { // FIXME: better method name; javadoc
     onPlay = false;
     buttons.setButtonText("Play", "Play");
   }
@@ -266,7 +265,7 @@ public class GameScreen {
       fileChooser.setInitialDirectory(initialDir);
     } else {
       File userHome = new File(
-          System.getProperty("user.home")); //FIXME: this is being called on my system
+          System.getProperty("user.home")); // FIXME: this is being called on my system
       fileChooser.setInitialDirectory(userHome);
     }
     File chosen = fileChooser.showOpenDialog(stage);

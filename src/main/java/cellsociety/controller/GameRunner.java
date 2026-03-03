@@ -101,6 +101,7 @@ public class GameRunner {
         new ErrorView("Configuration Error", e.getMessage());
       } catch (Exception e) {
         new ErrorView("Unexpected Error", "Failed to load simulation: " + e.getMessage());
+        e.printStackTrace();
       }
     });
   }

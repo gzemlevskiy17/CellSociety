@@ -1,10 +1,12 @@
 package cellsociety.view;
 
+import cellsociety.controller.PropertiesLoader;
 import cellsociety.model.ParseResult;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class InfoView {
@@ -32,11 +35,17 @@ public class InfoView {
     private String[] buttonNamesEdit = { "Save", "Cancel" };
     private String[] infoSolid = { "GameType", "Rows", "Cols" };
     private String[] infoSearch = { "Title", "Author", "Description" };
-    private HashMap<String, Spinner<?>> valueChanges;
+    private String[] paramVariables = {};
+    private HashMap<String, Spinner<Integer>> intChanges;
+    private HashMap<String, Spinner<Double>> doubleChanges;
     private HashMap<String, TextField> textChanges;
     private HashMap<Integer, ColorPicker> colorChanges;
     private ButtonCreator buttonHold;
     private Locale locale;
+
+    private ResourceBundle gameResources;
+    private static final String LAYOUT_STYLESHEET = "";
+    private static final String MODEL_RESOURCE_FOLDER = "model/";
 
     public InfoView(Stage ownerStage, ParseResult givenInfo, Locale locale) {
         newStage = new Stage();
@@ -45,29 +54,60 @@ public class InfoView {
         clazz = currentResult.getClass();
         this.locale = locale;
         buttonHold = new ButtonCreator(this.locale);
+        try {
+            gameResources = PropertiesLoader.getResourceBundle(MODEL_RESOURCE_FOLDER + currentResult.getGameType());
+            paramVariables = gameResources.getString("variables").split("[,\s]+");
+        } catch (Exception e) {
+            new ErrorView("Missing Variables", "No Properties File for " + currentResult.getGameType());
+        }
         setUpChanges();
         makeActionEvent();
     }
 
     private void setUpChanges() {
-        valueChanges = new HashMap<String, Spinner<?>>();
+        intChanges = new HashMap<String, Spinner<Integer>>();
+        doubleChanges = new HashMap<String, Spinner<Double>>();
         textChanges = new HashMap<String, TextField>();
         colorChanges = new HashMap<Integer, ColorPicker>();
         for (String name : infoSearch) {
             textChanges.put(name, new TextField());
         }
-        Set<String> params = currentResult.getParamKeys();
-        for (String name : params) {
-            try {
-                Spinner<Double> spinner = new Spinner<>();
-                double init = Double.parseDouble(currentResult.getParam(name));
-                SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 1.0,
-                        init, 0.1);
-                spinner.setValueFactory(valueFactory);
+        for (String name : paramVariables) {
+            switch (gameResources.getString(name + ".type")) {
+                case "String":
+                    textChanges.put(name, new TextField());
+                    break;
+                case "int":
+                    try {
+                        Spinner<Integer> spinner = new Spinner<Integer>();
+                        int init = Integer.parseInt(currentResult.getParam(name));
+                        int minim = Integer.parseInt(gameResources.getString(name + ".min"));
+                        int maxim = Integer.parseInt(gameResources.getString(name + ".max"));
+                        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(
+                                minim, maxim, init, 1);
+                        spinner.setValueFactory(valueFactory);
 
-                valueChanges.put(name, spinner);
-            } catch (Exception e) {
-                textChanges.put(name, new TextField());
+                        intChanges.put(name, spinner);
+                    } catch (Exception e) {
+                        textChanges.put(name, new TextField());
+                    }
+                    break;
+                case "double":
+                    try {
+                        Spinner<Double> spinner = new Spinner<Double>();
+                        double init = Double.parseDouble(currentResult.getParam(name));
+                        double minim = Double.parseDouble(gameResources.getString(name + ".min"));
+                        double maxim = Double.parseDouble(gameResources.getString(name + ".max"));
+                        SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(
+                                minim, maxim,
+                                init);
+                        spinner.setValueFactory(valueFactory);
+
+                        doubleChanges.put(name, spinner);
+                    } catch (Exception e) {
+                        textChanges.put(name, new TextField());
+                    }
+                    break;
             }
         }
         Set<Integer> colors = currentResult.getColorKeys();
@@ -163,29 +203,42 @@ public class InfoView {
 
     private VBox createParamArea(boolean allowEditing) {
         VBox stackOfParam = new VBox(5);
-        Set<String> paramKeys = currentResult.getParamKeys();
 
-        for (String param : paramKeys) {
+        for (String param : paramVariables) {
             HBox values = new HBox(5);
             values.getChildren().add(new Label(param));
 
-            Node text = null;
             if (allowEditing) {
-                if (valueChanges.containsKey(param)) {
-                    text = valueChanges.get(param);
-                    ((Spinner<Double>) text).getValueFactory()
-                            .setValue(Double.parseDouble(currentResult.getParam(param)));
-                } else {
-                    text = textChanges.get(param);
-                    ((TextField) text).setText(currentResult.getParam(param));
+                switch (gameResources.getString(param + ".type")) {
+                    case "String":
+                        TextField text = textChanges.get(param);
+                        text.setText(currentResult.getParam(param));
+                        ScrollPane scrolling = new ScrollPane(text);
+                        values.getChildren().add(scrolling);
+                        break;
+                    case "int":
+                        Spinner<Integer> numInt = intChanges.get(param);
+                        numInt.getValueFactory()
+                                .setValue(Integer.parseInt(currentResult.getParam(param)));
+
+                        values.getChildren().add(numInt);
+                        break;
+                    case "double":
+                        Spinner<Double> numDouble = doubleChanges.get(param);
+                        numDouble.getValueFactory()
+                                .setValue(Double.parseDouble(currentResult.getParam(param)));
+
+                        values.getChildren().add(numDouble);
+                        break;
                 }
             } else {
-                text = new Label(currentResult.getParam(param));
-                ((Labeled) text).setWrapText(true);
-                text.prefWidth(200);
+                Label textOnly = new Label(currentResult.getParam(param));
+                textOnly.setWrapText(true);
+                textOnly.prefWidth(200);
+
+                ScrollPane scrolling = new ScrollPane(textOnly);
+                values.getChildren().add(scrolling);
             }
-            ScrollPane scrolling = new ScrollPane((Node) text);
-            values.getChildren().add(scrolling);
             stackOfParam.getChildren().add(values);
         }
         return stackOfParam;
@@ -200,11 +253,14 @@ public class InfoView {
             values.getChildren().add(new Label("State" + state + ":"));
 
             Node text = null;
+            String currentColor = currentResult.getColor(state);
             if (allowEditing) {
                 text = colorChanges.get(state);
-                ((ColorPicker) text).setValue(Color.web(currentResult.getColor(state)));
+                ((ColorPicker) text).setValue(Color.web(currentColor));
             } else {
-                text = new Label(currentResult.getColor(state));
+                Rectangle colorPatch = new Rectangle(25, 25, Color.web(currentColor));
+                values.getChildren().add(colorPatch);
+                text = new Label(currentColor);
                 ((Labeled) text).setWrapText(true);
                 text.prefWidth(200);
             }
@@ -225,6 +281,13 @@ public class InfoView {
         int[][] cells = currentResult.getCells();
         Map<String, String> params = currentResult.getParams();
         Map<Integer, String> colorMap = currentResult.getColorMap();
+
+        try {
+
+        } catch (Exception e) {
+
+        }
+
         return new ParseResult(0, 0, null,
                 null, null, null, null,
                 null, null);

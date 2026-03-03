@@ -18,22 +18,21 @@ public class StartScreen {
 
     public static final String THEME_STYLESHEET = "light.css";
     private LanguageView languageView;
-    private static final String DEFAULT_THEME = "Light"; //TODO: set defaults
+    private static final String DEFAULT_THEME = "Light"; // TODO: set defaults
     private ButtonCreator firstButton;
-    private String[] themeChoices = {"Light", "Dark"}; //TOOD: load dynamically
+    private String[] themeChoices = { "Light", "Dark" }; // TOOD: load dynamically
     private String chosenTheme = DEFAULT_THEME;
     private static final Logger LOG = LogManager.getLogger(StartScreen.class);
     private static final String LAYOUT_STYLESHEET = "StartScreen.css";
-    private static final String CONFIG_RESOURCE_FOLDER = "Config/";
-    private static final String GAME_SCREEN_CONFIG = "StartScreen"; //TODO: parameterize
+    private static final String CONFIG_RESOURCE_FOLDER = "view/Config/";
+    private static final String GAME_SCREEN_CONFIG = "StartScreen"; // TODO: parameterize
     // TODO: figure out default_resource_folder across multiple files
-
 
     public StartScreen(Stage stage, Runnable start) {
         languageView = new LanguageView();
         firstButton = new ButtonCreator(languageView.getLocale());
 
-        String[] names = {"Language", "Theme", "Choice"}; //TODO: properties
+        String[] names = { "Language", "Theme", "Choice" }; // TODO: properties
 
         for (String name : names) {
             firstButton.addEmptyButton(name);
@@ -46,13 +45,12 @@ public class StartScreen {
         Scene scene = new Scene(root);
         addStyleSheets(scene);
 
-        HBox hBox = new HBox(); //TODO: rename to be more descriptive
+        HBox hBox = new HBox(); // TODO: rename to be more descriptive
         hBox.setId("hbox");
-
 
         Label bigLabel = new Label("Cell Society");
         bigLabel.setId("big-label");
-        bigLabel.setMaxWidth(Double.MAX_VALUE); //TODO: Properties
+        bigLabel.setMaxWidth(Double.MAX_VALUE); // TODO: Properties
         bigLabel.setPrefHeight(100);
         hBox.getChildren().add(bigLabel);
 
@@ -65,23 +63,24 @@ public class StartScreen {
         root.setTop(hBox);
         root.setCenter(buttonHBox);
 
-        stage.setTitle("Launcher"); //TODO: properties
+        stage.setTitle("Launcher"); // TODO: properties
         stage.setScene(scene);
         stage.sizeToScene();
         stage.show();
     }
 
     private void addStyleSheets(
-        Scene scene) { //TODO: deduplicate (create new class that handles variables and maybe stylesheet creation)?
+            Scene scene) { // TODO: deduplicate (create new class that handles variables and maybe
+                           // stylesheet creation)?
         String importedThemeStyleSheet = null;
         String themeStyleSheetPath = DEFAULT_RESOURCE_FOLDER + "Style/" + THEME_STYLESHEET;
         try {
             importedThemeStyleSheet = getClass().getResource(
                     themeStyleSheetPath)
-                .toExternalForm();
+                    .toExternalForm();
         } catch (NullPointerException e) {
             String message = String.format("Failed to load theme stylesheet from %s.",
-                themeStyleSheetPath);
+                    themeStyleSheetPath);
             LOG.warn(message, e);
             throw new RuntimeException(message, e);
         }
@@ -91,24 +90,23 @@ public class StartScreen {
         try {
             importedLayoutStyleSheet = getClass().getResource(
                     layoutStyleSheetPath)
-                .toExternalForm();
+                    .toExternalForm();
         } catch (NullPointerException e) {
             String message = String.format("Failed to load layout stylesheet from %s.",
-                layoutStyleSheetPath);
+                    layoutStyleSheetPath);
             LOG.warn(message, e);
             throw new RuntimeException(message, e);
         }
 
         scene.getStylesheets()
-            .addAll(
-                importedThemeStyleSheet,
-                importedLayoutStyleSheet
-            );
+                .addAll(
+                        importedThemeStyleSheet,
+                        importedLayoutStyleSheet);
     }
 
     private void findTheme() {
         ChoiceDialog<String> dialog = new ChoiceDialog<>(DEFAULT_THEME, Arrays.asList(themeChoices));
-        dialog.setTitle("Theming Cell Society"); //TODO: properties
+        dialog.setTitle("Theming Cell Society"); // TODO: properties
         dialog.setHeaderText("Theme Setting");
         dialog.setContentText("Choose your theme:");
         Optional<String> result = dialog.showAndWait();

@@ -31,7 +31,7 @@ public class LanguageView {
     ResourceBundle languageBundle = null;
     try {
       languageBundle = PropertiesLoader.getResourceBundle(
-          "Text/Languages");
+          "view/Text/Languages");
     } catch (NullPointerException e) {
       String message = String.format("Failed to load language list, defaulting to %s.",
           DEFAULT_LOCALE.getDisplayLanguage());
@@ -54,20 +54,19 @@ public class LanguageView {
 
   private ResourceBundle updateScreenTextBundle() {
     return PropertiesLoader.getResourceBundleWithLocale(
-        "Text/Screen/StartScreen/LanguageView/LanguageView", locale);
+        "view/Text/Screen/StartScreen/LanguageView/LanguageView", locale);
   }
 
   public void languageScreen() {
     ChoiceDialog<String> dialog = new ChoiceDialog<>(DEFAULT_LANGUAGE, languageChoices);
-//    dialog.setTitle("Language of Cell Society"); //TODO: need header?
+    // dialog.setTitle("Language of Cell Society"); //TODO: need header?
     dialog.setHeaderText(screenText.getString("header"));
     dialog.setContentText(screenText.getString("prompt"));
     Optional<String> result = dialog.showAndWait();
     result.ifPresent(choice -> {
-          locale = Locale.of(languageToLocaleString.get(choice));
-          screenText = updateScreenTextBundle();
-        }
-    );
+      locale = Locale.of(languageToLocaleString.get(choice));
+      screenText = updateScreenTextBundle();
+    });
   }
 
   public Locale getLocale() {

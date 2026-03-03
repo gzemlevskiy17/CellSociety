@@ -20,11 +20,11 @@ public class ButtonCreator {
     public ButtonCreator(Locale locale) {
         buttonHolder = new LinkedHashMap<>();
         try {
-            myResources = PropertiesLoader.getResourceBundleWithLocale("Text/Buttons/Buttons",
-                locale);
+            myResources = PropertiesLoader.getResourceBundleWithLocale("view/Text/Buttons/Buttons",
+                    locale);
         } catch (Exception e) {
             throw new IllegalStateException(
-                "Failed to load button properties for language: " + locale.getDisplayLanguage(), e);
+                    "Failed to load button properties for language: " + locale.getDisplayLanguage(), e);
         }
     }
 
@@ -54,11 +54,11 @@ public class ButtonCreator {
 
     public void changeLocale(Locale locale) { // resource bundle does not work, rewrite
         try {
-            myResources = PropertiesLoader.getResourceBundleWithLocale("Text/Buttons/Buttons",
-                locale);
+            myResources = PropertiesLoader.getResourceBundleWithLocale("view/Text/Buttons/Buttons",
+                    locale);
         } catch (Exception e) {
             throw new IllegalStateException(
-                "Failed to load button properties for language: " + locale.getDisplayLanguage(), e);
+                    "Failed to load button properties for language: " + locale.getDisplayLanguage(), e);
         }
         for (String name : buttonHolder.keySet()) {
             setButtonText(name, name);
