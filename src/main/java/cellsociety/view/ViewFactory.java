@@ -2,7 +2,6 @@ package cellsociety.view;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import cellsociety.model.ParseResult;
 import cellsociety.view.grids.GridView;
@@ -54,7 +53,7 @@ public class ViewFactory {
     String gameType = result.getGameType();
 
     HashMap<Integer, Color> colorMap = new HashMap<>();
-    java.util.Map<Integer, String> parsedColors = result.getColorMap();
+    Map<Integer, String> parsedColors = result.getColorMap();
 
     if (parsedColors != null && !parsedColors.isEmpty()) {
       for (Integer id : parsedColors.keySet()) {
@@ -66,9 +65,10 @@ public class ViewFactory {
       colorMap.put(2, Color.RED);
     }
     String shape = result.getShape();
-    Map<String, Supplier<GridView>> shapes = Map.of(
-        "Hexagonal", () -> new HexagonalGridView(gameType, colorMap, cols, rows),
-        "Triangular", () -> new TriangularGridView(gameType, colorMap, cols, rows));
-    return shapes.getOrDefault(shape, () -> new RectangularGridView(gameType, colorMap, cols, rows)).get();
+    return switch (shape) {
+      case "Hexagonal" -> new HexagonalGridView(gameType, colorMap, cols, rows);
+      case "Triangular" -> new TriangularGridView(gameType, colorMap, cols, rows);
+      default -> new RectangularGridView(gameType, colorMap, cols, rows);
+    };
   }
 }
