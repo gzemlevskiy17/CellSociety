@@ -51,7 +51,6 @@ public class GameScreen extends StylableView {
   public GameScreen(Stage stage) {
     myStage = stage;
     config = PropertiesLoader.getResourceBundle("view/Config/GameScreen/GameScreen");
-    buttonsToCreate = PropertiesLoader.getResourceBundle("view/Config/GameScreen/Buttons");
     registerLanguageListener();
   }
 
@@ -79,7 +78,7 @@ public class GameScreen extends StylableView {
     onPlay = true; // TODO: make more elegant
     infoView = new InfoView(myStage, parseHolder, pullChanges);
     buttons = new ButtonCreator();
-    String[] names = buttonsToCreate.getString("names").split("[,\s]+"); // TODO: reflection
+    String[] names = config.getString("buttonNames").split("[,\s]+"); // TODO: reflection
     String[] info = { "Info", "EditInfo" };
     String[] toggling = { "Outline" };
 
@@ -103,7 +102,7 @@ public class GameScreen extends StylableView {
 
     myStage.setOnHidden(event -> unregisterAllListeners());
 
-    String titleOfWindow = config.getString("title") + gridView.getGameName();
+    String titleOfWindow = gridView.getGameName();
 
     myStage.setTitle(titleOfWindow);
     myStage.setScene(scene);
@@ -203,6 +202,7 @@ public class GameScreen extends StylableView {
 
   private VBox createToggleArea(String[] names, Runnable toggleOutline) {
     VBox toggle = new VBox(10);
+    toggle.setId("toggle-area-box");
 
     for (String name : names) {
       buttons.addEmptyButton(name);
@@ -215,7 +215,6 @@ public class GameScreen extends StylableView {
     for (String name : names) {
       toggle.getChildren().add(buttons.getButton(name));
     }
-    toggle.setId("toggle-area-box");
     return toggle;
   }
 

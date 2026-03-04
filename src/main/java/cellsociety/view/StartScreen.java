@@ -15,33 +15,33 @@ import org.apache.logging.log4j.Logger;
  * The application launch screen shown before a simulation is loaded.
  *
  * <p>Presents buttons to choose a language, select a visual theme, and open a
- * simulation file. Delegates locale changes to {@link LanguageView} and
- * exposes the selected locale via {@link #getLocale()}.</p>
+ * simulation file. Delegates locale changes to {@link LanguageView} *
  *
  * @author cellsociety team
  */
 
 public class StartScreen extends StylableView {
+
   private static final Logger LOG = LogManager.getLogger(StartScreen.class);
 
-  private LanguageView languageView;
-  private ThemeView themeView;
   private ButtonCreator buttonCreator;
+  private ThemeView themeView;
+  private LanguageView languageView;
   private ResourceBundle screenText;
-  // TODO: figure out default_resource_folder across multiple files
+  private ResourceBundle config;
 
   public StartScreen(Stage stage, Runnable start) {
+    themeView = new ThemeView();
     languageView = new LanguageView();
     buttonCreator = new ButtonCreator();
-    themeView = new ThemeView();
+    config = PropertiesLoader.getResourceBundle("view/Config/StartScreen/StartScreen");
 
-
-    String[] names = {"Language", "Theme", "Choice"}; // TODO: properties
+    String[] names = config.getString("buttonNames").split("[,\s]+");
 
     for (String name : names) {
       buttonCreator.addEmptyButton(name);
     }
-    buttonCreator.addActionToButton("Language", e -> setLanguage());
+    buttonCreator.addActionToButton("Language", e -> setLanguage()); //TODO: remove duplicate names
     buttonCreator.addActionToButton("Theme", e -> setTheme());
     buttonCreator.addActionToButton("Choice", e -> start.run());
 
@@ -57,8 +57,8 @@ public class StartScreen extends StylableView {
 
     Label bigLabel = new Label("Cell Society");
     bigLabel.setId("big-label");
-    bigLabel.setMaxWidth(Double.MAX_VALUE); // TODO: Properties
-    bigLabel.setPrefHeight(100);
+    bigLabel.setMaxWidth(Double.parseDouble(config.getString("titleLabel.maxWidth")));
+    bigLabel.setPrefHeight(Double.parseDouble(config.getString("titleLabel.prefHeight")));
     hBox.getChildren().add(bigLabel);
 
     HBox buttonHBox = new HBox();
@@ -70,7 +70,7 @@ public class StartScreen extends StylableView {
     root.setTop(hBox);
     root.setCenter(buttonHBox);
 
-    stage.setTitle("Launcher"); // TODO: properties
+    stage.setTitle(screenText.getString("window.title"));
     stage.setScene(scene);
     stage.sizeToScene();
     stage.show();

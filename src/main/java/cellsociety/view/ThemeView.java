@@ -56,11 +56,11 @@ public class ThemeView extends StylableView {
     // dialog.setTitle("Theme of Cell Society"); //TODO: need header?
     dialog.setHeaderText(screenText.getString("header"));
     dialog.setContentText(screenText.getString("prompt"));
-    Optional<String> result = dialog.showAndWait();
     Scene scene = dialog.getDialogPane().getScene();
 
     registerThemeListener(scene);
     dialog.setOnHidden(event -> unregisterAllListeners());
+    Optional<String> result = dialog.showAndWait();
 
     result.ifPresentOrElse(choice -> themeManager.setTheme(choice),
         () -> themeManager.setTheme(themeManager.getDefaultTheme()));

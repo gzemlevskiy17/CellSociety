@@ -75,12 +75,12 @@ public class LanguageView extends StylableView {
     // dialog.setTitle("Language of Cell Society"); //TODO: need header?
     dialog.setHeaderText(screenText.getString("header"));
     dialog.setContentText(screenText.getString("prompt"));
-    Optional<String> result = dialog.showAndWait();
     Scene scene = dialog.getDialogPane().getScene();
 
     registerThemeListener(scene);
 
     dialog.setOnHidden(event -> unregisterAllListeners());
+    Optional<String> result = dialog.showAndWait();
 
     // Don't need default choice as it will be set in loadLanguages()
     result.ifPresent(choice -> languageManager.setLocale(languagetoLocale.get(choice)));
