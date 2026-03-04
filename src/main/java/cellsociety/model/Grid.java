@@ -211,7 +211,7 @@ public class Grid {
    * Resets the grid to its initial state and clears the history.
    */
   public void resetToInitialState() {
-    cells = initialState;
+    cells = copyGrid(initialState);
     history = new ArrayDeque<>();
   }
 }
