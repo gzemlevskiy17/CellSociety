@@ -51,14 +51,6 @@ public class GameScreen {
         CONFIG_RESOURCE_FOLDER + GAME_SCREEN_CONFIG);
   }
 
-  public void checkAllNotNull(Object... params) throws Exception { // TODO: do we need this
-    for (Object param : params) {
-      if (param == null) {
-        throw new NullPointerException("A parameter is null.");
-      }
-    }
-  }
-
   public void setGridView(GridView newGridView) {
     gridView = newGridView;
   }
@@ -266,7 +258,6 @@ public class GameScreen {
     ExtensionFilter onlyXML = new ExtensionFilter("*.xml", "*.xml");
 
     fileChooser.getExtensionFilters().add(onlyXML);
-    // fileChooser.setTitle("Open My File"); //TODO: need title?
     if (initialDir.exists()
         && initialDir.isDirectory()) { // FIXME: maybe doesn't work because initial dir doesn't exist, see fixme above
       fileChooser.setInitialDirectory(initialDir);

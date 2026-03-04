@@ -18,7 +18,7 @@ class XMLValidator {
 
   static final List<String> VALID_TYPES = Arrays.asList(
       "GameOfLife", "ForestFire", "Segregation", "Percolation", "WaTor", "FallingSand",
-      "ForagingAnts");
+      "ForagingAnts", "SugarScape", "LangtonsLoop", "SDSRLoop");
 
   static final List<String> VALID_NEIGHBORHOODS = Arrays.asList(
       "Moore", "VonNeumann", "ExtendedMoore", "Hexagonal", "Triangular");

@@ -67,9 +67,9 @@ public class ViewFactory {
     String shape = result.getShape();
 
     try {
-      Class<?>[] gameParamTypes = new Class<?>[]{String.class, Map.class, int.class, int.class};
+      Class<?>[] gameParamTypes = new Class<?>[] { String.class, Map.class, int.class, int.class };
       return (GridView) Class.forName(
-              "cellsociety.view.grids." + shape + "GridView")
+          "cellsociety.view.grids." + shape + "GridView")
           .getDeclaredConstructor(gameParamTypes)
           .newInstance(gameType, colorMap, cols, rows);
     } catch (Exception e) {
