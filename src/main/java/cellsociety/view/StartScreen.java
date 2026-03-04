@@ -118,11 +118,7 @@ public class StartScreen {
         dialog.setHeaderText("Theme Setting");
         dialog.setContentText("Choose your theme:");
         Optional<String> result = dialog.showAndWait();
-        result.ifPresentOrElse(choice -> setTheme(choice), () -> setTheme(DEFAULT_THEME));
-    }
-
-    private void setTheme(String theme) {
-        chosenTheme = theme;
+        result.ifPresent(choice -> LOG.info("Theme selected: {}", choice));
     }
 
     private void setLanguage() {

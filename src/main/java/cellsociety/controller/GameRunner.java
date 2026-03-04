@@ -21,6 +21,8 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Orchestrates application flow for a single window: shows start screen, loads
@@ -68,6 +70,7 @@ public class GameRunner {
   private ParseResult currentParseResult;
   private StartScreen startScreen;
 
+  private static final Logger LOG = LogManager.getLogger(GameRunner.class);
   private Runnable createNewGameAction;
 
   /**
@@ -102,7 +105,7 @@ public class GameRunner {
         new ErrorView("Configuration Error", e.getMessage());
       } catch (Exception e) {
         new ErrorView("Unexpected Error", "Failed to load simulation: " + e.getMessage());
-        e.printStackTrace();
+        LOG.warn("Unexpected error loading simulation", e);
       }
     });
   }
