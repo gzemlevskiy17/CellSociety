@@ -1,6 +1,5 @@
 package cellsociety.model;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -165,7 +164,7 @@ public abstract class Game {
    */
   public String getParam(String name) {
     if (gameParams == null)
-      throw new NullPointerException("Parameter Storage does not exist");
+      throw new IllegalStateException("Parameter storage has not been initialised");
     try {
       return gameParams.get(name);
     } catch (Exception e) {

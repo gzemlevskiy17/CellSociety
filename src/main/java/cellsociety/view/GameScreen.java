@@ -53,14 +53,6 @@ public class GameScreen extends StylableView {
     registerLanguageListener();
   }
 
-  public void checkAllNotNull(Object... params) throws Exception { // TODO: do we need this
-    for (Object param : params) {
-      if (param == null) {
-        throw new NullPointerException("A parameter is null.");
-      }
-    }
-  }
-
   public void setGridView(GridView newGridView) {
     gridView = newGridView;
   }

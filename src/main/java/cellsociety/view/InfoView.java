@@ -22,6 +22,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Displays and edits simulation metadata and parameters in a secondary window.
@@ -35,6 +37,7 @@ import javafx.stage.Stage;
  */
 
 public class InfoView extends StylableView {
+  private static final Logger LOG = LogManager.getLogger(InfoView.class);
   private Stage newStage;
   private ParseResult currentResult;
 
@@ -100,6 +103,7 @@ public class InfoView extends StylableView {
 
             intChanges.put(name, spinner);
           } catch (Exception e) {
+            LOG.warn("Could not create int spinner for param '{}', falling back to text field", name, e);
             textChanges.put(name, new TextField());
           }
           break;
@@ -116,6 +120,7 @@ public class InfoView extends StylableView {
 
             doubleChanges.put(name, spinner);
           } catch (Exception e) {
+            LOG.warn("Could not create double spinner for param '{}', falling back to text field", name, e);
             textChanges.put(name, new TextField());
           }
           break;

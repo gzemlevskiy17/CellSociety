@@ -3,7 +3,6 @@ package cellsociety.view.grids;
 import java.util.Map;
 
 import cellsociety.controller.Controller;
-import cellsociety.controller.GameRunner;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;

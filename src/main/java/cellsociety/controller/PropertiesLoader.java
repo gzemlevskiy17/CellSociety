@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
  * application's resource directory.
  *
  * <p>All bundles are resolved relative to {@link #DEFAULT_RESOURCE_PACKAGE}.
- * Throws {@link NullPointerException} if a bundle cannot be found, so callers
+ * Throws {@link IllegalArgumentException} if a bundle cannot be found, so callers
  * can catch a single exception type regardless of the underlying cause.</p>
  *
  * @author cellsociety team
@@ -40,7 +40,7 @@ public class PropertiesLoader {
       String message = String.format("Failed to load properties from file: %s.",
           fileName);
       LOG.warn(message, e);
-      throw new NullPointerException(message);
+      throw new IllegalArgumentException(message, e);
     }
   }
 }

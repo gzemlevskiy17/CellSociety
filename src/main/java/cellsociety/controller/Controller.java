@@ -280,7 +280,7 @@ public class Controller {
     gameScreen.simPausedButtonChange();
   }
 
-  public void toBeUpdates(ParseResult changes) {
+  public void applyUpdates(ParseResult changes) {
     game.updateParams(changes.getParams());
 
     Map<Integer, Color> colorMap = new HashMap<>();
