@@ -7,7 +7,8 @@ import java.util.function.Consumer;
 public class ThemeManager {
 
   private static ThemeManager instance;
-  private String currentTheme = "Light"; //TODO: default theme
+  private static String DEFAULT_THEME = "Light";
+  private static String currentTheme;
   private List<Consumer<String>> listeners = new ArrayList<>();
 
   //TODO: rename to design pattern
@@ -17,6 +18,7 @@ public class ThemeManager {
   public static ThemeManager getInstance() {
     if (instance == null) {
       instance = new ThemeManager();
+      currentTheme = DEFAULT_THEME;
     }
     return instance;
   }
@@ -42,5 +44,14 @@ public class ThemeManager {
     for (Consumer<String> listener : listeners) {
       listener.accept(currentTheme);
     }
+  }
+
+  public String getDefaultTheme() {
+    return DEFAULT_THEME;
+  }
+
+  public void setDefaultTheme(String theme) {
+    DEFAULT_THEME = theme;
+    currentTheme = DEFAULT_THEME;
   }
 }

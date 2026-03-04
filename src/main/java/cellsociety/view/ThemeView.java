@@ -3,7 +3,6 @@ package cellsociety.view;
 import cellsociety.controller.PropertiesLoader;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -15,17 +14,17 @@ import org.apache.logging.log4j.Logger;
 public class ThemeView {
 
   private static final Logger LOG = LogManager.getLogger(ThemeView.class);
-  private String DEFAULT_THEME = "light";
   private List<String> themeChoices;
-  private String theme;
   private ResourceBundle screenText;
   private StyleLoader styleLoader;
   private ThemeManager themeManager;
-  private Consumer<String> themeListener;
+  private LanguageManager languageManager;
 
-  public ThemeView(Locale locale) {
+  public ThemeView() {
+    languageManager = LanguageManager.getInstance();
     screenText = PropertiesLoader.getResourceBundleWithLocale(
-        "view/Text/Screen/StartScreen/ThemeView/ThemeView", locale); //TODO: deal with string
+        "view/Text/Screen/StartScreen/ThemeView/ThemeView",
+        languageManager.getLocale()); //TODO: deal with string
     themeManager = ThemeManager.getInstance();
     styleLoader = new StyleLoader();
     loadThemes();
@@ -38,15 +37,13 @@ public class ThemeView {
           "view/Text/Themes"); //TODO: deal with string
     } catch (NullPointerException e) {
       String message = String.format("Failed to load theme list, defaulting to %s.",
-          DEFAULT_THEME);
-      theme = DEFAULT_THEME;
+          themeManager.getDefaultTheme());
       LOG.warn(message, e);
       throw new IllegalStateException(message,
           e);
     }
-    DEFAULT_THEME = themeBundle.getString("defaultTheme");
-    theme = DEFAULT_THEME; //TODO: handle default theme stylesheet not being found
-//    ThemeManager.setTheme(theme); //TODO: need to have global variable for this?
+    themeManager.setDefaultTheme(themeBundle.getString(
+        "defaultTheme")); //TODO: handle default theme not being found in stylesheet
 
     String themes = themeBundle.getString("themes");
     themeChoices = Arrays.asList(themes.split(","));
@@ -54,16 +51,16 @@ public class ThemeView {
   }
 
   public void themeChoiceScreen() {
-    ChoiceDialog<String> dialog = new ChoiceDialog<>(DEFAULT_THEME, themeChoices);
-    // dialog.setTitle("Language of Cell Society"); //TODO: need header?
+    ChoiceDialog<String> dialog = new ChoiceDialog<>(themeManager.getDefaultTheme(), themeChoices);
+    // dialog.setTitle("Theme of Cell Society"); //TODO: need header?
     dialog.setHeaderText(screenText.getString("header"));
     dialog.setContentText(screenText.getString("prompt"));
     Optional<String> result = dialog.showAndWait();
     Scene scene = dialog.getDialogPane().getScene();
-    styleLoader.addThemeStyleSheet(scene, theme);
+    styleLoader.addThemeStyleSheet(scene, themeManager.getTheme());
 
     // Listen for theme changes while dialog is open
-    themeListener = theme -> styleLoader.addThemeStyleSheet(scene, theme);
+    Consumer<String> themeListener = theme -> styleLoader.addThemeStyleSheet(scene, theme);
     themeManager.addListener(themeListener);
 
     dialog.setOnHidden(event -> {
@@ -71,13 +68,7 @@ public class ThemeView {
       themeManager.removeListener(themeListener);
     });
 
-    result.ifPresent(choice -> {
-      theme = choice;
-      styleLoader.addThemeStyleSheet(scene, theme);
-    });
-  }
-
-  public String getTheme() {
-    return theme;
+    result.ifPresentOrElse(choice -> themeManager.setTheme(choice),
+        () -> themeManager.setTheme(themeManager.getDefaultTheme()));
   }
 }
