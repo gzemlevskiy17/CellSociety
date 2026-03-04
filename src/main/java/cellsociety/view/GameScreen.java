@@ -25,7 +25,7 @@ import org.apache.logging.log4j.Logger;
 //TODO: comment
 public class GameScreen {
 
-  public static final String THEME_STYLESHEET = "light.css";
+  public static final String THEME_STYLESHEET = "Light.css";
   private Stage stageLive;
   private GridView gridView;
   private InfoView infoView;

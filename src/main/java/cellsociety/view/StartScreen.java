@@ -1,12 +1,7 @@
 package cellsociety.view;
 
-import static cellsociety.controller.PropertiesLoader.DEFAULT_RESOURCE_FOLDER;
-
-import java.util.Arrays;
 import java.util.Locale;
-import java.util.Optional;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -16,113 +11,67 @@ import org.apache.logging.log4j.Logger;
 
 public class StartScreen {
 
-    public static final String THEME_STYLESHEET = "light.css";
-    private LanguageView languageView;
-    private static final String DEFAULT_THEME = "Light"; // TODO: set defaults
-    private ButtonCreator firstButton;
-    private String[] themeChoices = { "Light", "Dark" }; // TOOD: load dynamically
-    private String chosenTheme = DEFAULT_THEME;
-    private static final Logger LOG = LogManager.getLogger(StartScreen.class);
-    private static final String LAYOUT_STYLESHEET = "StartScreen.css";
-    private static final String CONFIG_RESOURCE_FOLDER = "view/Config/";
-    private static final String GAME_SCREEN_CONFIG = "StartScreen"; // TODO: parameterize
-    // TODO: figure out default_resource_folder across multiple files
+  private static final Logger LOG = LogManager.getLogger(StartScreen.class);
 
-    public StartScreen(Stage stage, Runnable start) {
-        languageView = new LanguageView();
-        firstButton = new ButtonCreator(languageView.getLocale());
+  private LanguageView languageView;
+  private ThemeView themeView;
+  private ButtonCreator firstButton;
+  private StyleLoader styleLoader;
+  // TODO: figure out default_resource_folder across multiple files
 
-        String[] names = { "Language", "Theme", "Choice" }; // TODO: properties
+  public StartScreen(Stage stage, Runnable start) {
+    languageView = new LanguageView();
+    firstButton = new ButtonCreator(languageView.getLocale());
+    themeView = new ThemeView(languageView.getLocale());
+    styleLoader = new StyleLoader();
 
-        for (String name : names) {
-            firstButton.addEmptyButton(name);
-        }
-        firstButton.addActionToButton("Language", e -> setLanguage());
-        firstButton.addActionToButton("Theme", e -> findTheme());
-        firstButton.addActionToButton("Choice", e -> start.run());
+    String[] names = {"Language", "Theme", "Choice"}; // TODO: properties
 
-        BorderPane root = new BorderPane();
-        Scene scene = new Scene(root);
-        addStyleSheets(scene);
-
-        HBox hBox = new HBox(); // TODO: rename to be more descriptive
-        hBox.setId("hbox");
-
-        Label bigLabel = new Label("Cell Society");
-        bigLabel.setId("big-label");
-        bigLabel.setMaxWidth(Double.MAX_VALUE); // TODO: Properties
-        bigLabel.setPrefHeight(100);
-        hBox.getChildren().add(bigLabel);
-
-        HBox buttonHBox = new HBox();
-        buttonHBox.setId("button-hbox");
-
-        for (String name : names) {
-            buttonHBox.getChildren().add(firstButton.getButton(name));
-        }
-        root.setTop(hBox);
-        root.setCenter(buttonHBox);
-
-        stage.setTitle("Launcher"); // TODO: properties
-        stage.setScene(scene);
-        stage.sizeToScene();
-        stage.show();
+    for (String name : names) {
+      firstButton.addEmptyButton(name);
     }
+    firstButton.addActionToButton("Language", e -> setLanguage());
+    firstButton.addActionToButton("Theme", e -> setTheme());
+    firstButton.addActionToButton("Choice", e -> start.run());
 
-    private void addStyleSheets(
-            Scene scene) { // TODO: deduplicate (create new class that handles variables and maybe
-                           // stylesheet creation)?
-        String importedThemeStyleSheet = null;
-        String themeStyleSheetPath = DEFAULT_RESOURCE_FOLDER + "Style/" + THEME_STYLESHEET;
-        try {
-            importedThemeStyleSheet = getClass().getResource(
-                    themeStyleSheetPath)
-                    .toExternalForm();
-        } catch (NullPointerException e) {
-            String message = String.format("Failed to load theme stylesheet from %s.",
-                    themeStyleSheetPath);
-            LOG.warn(message, e);
-            throw new RuntimeException(message, e);
-        }
+    BorderPane root = new BorderPane();
+    Scene scene = new Scene(root);
+    styleLoader.addStyleSheets(scene, "Light", "StartScreen");
 
-        String importedLayoutStyleSheet = null;
-        String layoutStyleSheetPath = DEFAULT_RESOURCE_FOLDER + "Style/" + LAYOUT_STYLESHEET;
-        try {
-            importedLayoutStyleSheet = getClass().getResource(
-                    layoutStyleSheetPath)
-                    .toExternalForm();
-        } catch (NullPointerException e) {
-            String message = String.format("Failed to load layout stylesheet from %s.",
-                    layoutStyleSheetPath);
-            LOG.warn(message, e);
-            throw new RuntimeException(message, e);
-        }
+    HBox hBox = new HBox(); // TODO: rename to be more descriptive
+    hBox.setId("hbox");
 
-        scene.getStylesheets()
-                .addAll(
-                        importedThemeStyleSheet,
-                        importedLayoutStyleSheet);
+    Label bigLabel = new Label("Cell Society");
+    bigLabel.setId("big-label");
+    bigLabel.setMaxWidth(Double.MAX_VALUE); // TODO: Properties
+    bigLabel.setPrefHeight(100);
+    hBox.getChildren().add(bigLabel);
+
+    HBox buttonHBox = new HBox();
+    buttonHBox.setId("button-hbox");
+
+    for (String name : names) {
+      buttonHBox.getChildren().add(firstButton.getButton(name));
     }
+    root.setTop(hBox);
+    root.setCenter(buttonHBox);
 
-    private void findTheme() {
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(DEFAULT_THEME, Arrays.asList(themeChoices));
-        dialog.setTitle("Theming Cell Society"); // TODO: properties
-        dialog.setHeaderText("Theme Setting");
-        dialog.setContentText("Choose your theme:");
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresentOrElse(choice -> setTheme(choice), () -> setTheme(DEFAULT_THEME));
-    }
+    stage.setTitle("Launcher"); // TODO: properties
+    stage.setScene(scene);
+    stage.sizeToScene();
+    stage.show();
+  }
 
-    private void setTheme(String theme) {
-        chosenTheme = theme;
-    }
+  private void setTheme() {
+    themeView.themeChoiceScreen();
+  }
 
-    private void setLanguage() {
-        languageView.languageScreen();
-        firstButton.changeLocale(getLocale());
-    }
+  private void setLanguage() {
+    languageView.languageChoiceScreen();
+    firstButton.changeLocale(getLocale());
+  }
 
-    public Locale getLocale() {
-        return languageView.getLocale();
-    }
+  public Locale getLocale() {
+    return languageView.getLocale();
+  }
 }

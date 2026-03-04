@@ -142,18 +142,7 @@ public class GameRunner {
         currentCells[r][c] = reader.getCellState(r, c);
       }
     }
-    Map<String, String> currentParams = currentParseResult.getParams();
-    currentParams.put("speed", controller.getGameSpeed() + "");
-    ParseResult snapshot = new ParseResult(
-        currentParseResult.getRows(),
-        currentParseResult.getCols(),
-        currentParseResult.getGameType(),
-        currentParseResult.getTitle(),
-        currentParseResult.getAuthor(),
-        currentParseResult.getDescription(),
-        currentCells,
-        currentParams,
-        currentParseResult.getColorMap());
+    ParseResult snapshot = getSnapshot(currentCells);
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Save Simulation As");
     File dataDir = new File(
@@ -176,9 +165,23 @@ public class GameRunner {
     }
   }
 
+  private ParseResult getSnapshot(int[][] currentCells) {
+    Map<String, String> currentParams = currentParseResult.getParams();
+    currentParams.put("speed", controller.getGameSpeed() + "");
+    return new ParseResult(
+        currentParseResult.getRows(),
+        currentParseResult.getCols(),
+        currentParseResult.getGameType(),
+        currentParseResult.getTitle(),
+        currentParseResult.getAuthor(),
+        currentParseResult.getDescription(),
+        currentCells,
+        currentParams,
+        currentParseResult.getColorMap());
+  }
+
   private void toBeUpdates() {
-    ParseResult changes = gameScreen.getResultChanges();
-    currentParseResult = changes;
+    currentParseResult = gameScreen.getResultChanges();
     controller.toBeUpdates(currentParseResult);
   }
 }
