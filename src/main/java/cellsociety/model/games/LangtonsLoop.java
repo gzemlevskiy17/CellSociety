@@ -41,8 +41,8 @@ import java.util.Map;
  */
 public class LangtonsLoop extends Game {
 
-  protected static final int PACK_BASE = 9;
-  protected static final int BACKGROUND = 0;
+  private static final int PACK_BASE = 9;
+  private static final int BACKGROUND = 0;
 
   private final Map<Integer, Integer> transitions;
 
