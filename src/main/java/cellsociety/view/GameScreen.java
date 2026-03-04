@@ -4,7 +4,6 @@ import cellsociety.controller.PropertiesLoader;
 import cellsociety.model.ParseResult;
 import cellsociety.view.grids.GridView;
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -255,18 +254,16 @@ public class GameScreen extends StylableView {
 
   public Optional<File> startScreen(Stage stage) {
     FileChooser fileChooser = new FileChooser();
-    File initialDir = new File(
-        Paths.get(".").toAbsolutePath().normalize().resolve("cellsociety_team01/data")
-            .toString()); // FIXME: make restriction work, probably due to absolute path
+    File initialDir = new File("data/");
     ExtensionFilter onlyXML = new ExtensionFilter("*.xml", "*.xml");
 
     fileChooser.getExtensionFilters().add(onlyXML);
     if (initialDir.exists()
-        && initialDir.isDirectory()) { // FIXME: maybe doesn't work because initial dir doesn't exist, see fixme above
+        && initialDir.isDirectory()) {
       fileChooser.setInitialDirectory(initialDir);
     } else {
       File userHome = new File(
-          System.getProperty("user.home")); // FIXME: this is being called on my system
+          System.getProperty("user.home"));
       fileChooser.setInitialDirectory(userHome);
     }
     File chosen = fileChooser.showOpenDialog(stage);
