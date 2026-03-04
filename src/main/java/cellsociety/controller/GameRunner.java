@@ -13,6 +13,7 @@ import cellsociety.view.ViewFactory;
 import cellsociety.view.grids.GridView;
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import javafx.stage.FileChooser;
@@ -147,7 +148,7 @@ public class GameRunner {
         currentCells[r][c] = reader.getCellState(r, c);
       }
     }
-    Map<String, String> currentParams = currentParseResult.getParams();
+    Map<String, String> currentParams = new LinkedHashMap<>(currentParseResult.getParams());
     currentParams.put("speed", controller.getGameSpeed() + "");
     return new ParseResult(
         currentParseResult.getRows(),

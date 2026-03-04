@@ -1,5 +1,6 @@
 package cellsociety.model;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -85,7 +86,7 @@ public class ParseResult {
 
     /** @return mapping of state IDs to hex color strings (e.g., 0 -> "#FFFFFF") */
     public Map<Integer, String> getColorMap() {
-        return colorMap;
+        return Collections.unmodifiableMap(colorMap);
     }
 
     public Set<Integer> getColorKeys() {
@@ -126,14 +127,21 @@ public class ParseResult {
         return title;
     }
 
-    /** @return 2D array of initial cell states, or null if not provided */
+    /** @return defensive copy of the 2D array of initial cell states, or null if not provided */
     public int[][] getCells() {
-        return cells;
+        if (cells == null) {
+            return null;
+        }
+        int[][] copy = new int[cells.length][];
+        for (int i = 0; i < cells.length; i++) {
+            copy[i] = cells[i].clone();
+        }
+        return copy;
     }
 
     /** @return Map of parameters */
     public Map<String, String> getParams() {
-        return params;
+        return Collections.unmodifiableMap(params);
     }
 
     public Set<String> getParamKeys() {
