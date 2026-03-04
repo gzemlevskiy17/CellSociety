@@ -210,7 +210,7 @@ public class XMLReader {
     }
   }
 
-  private static void parseParameters(Element paramEl, LinkedHashMap<String, String> holding) {
+  private static void parseParameters(Element paramEl, Map<String, String> holding) {
     NodeList nodes = paramEl.getChildNodes();
     for (int i = 0; i < nodes.getLength(); i++) {
       if (!nodes.item(i).getNodeName().equals("states") && !nodes.item(i).getNodeName().equals("#text")) {

@@ -109,6 +109,11 @@ public class Grid {
     return neighbors;
   }
 
+  /**
+   * Reverts the grid to the previous snapshot in the history deque and removes
+   * the most recent snapshot. Does nothing if there is only one snapshot (the
+   * initial state) in history.
+   */
   public void revertState() {
     if (history.size() > 1) {
       history.removeFirst();
@@ -121,6 +126,10 @@ public class Grid {
     }
   }
 
+  /**
+   * Saves the current cell states to the front of the history deque.
+   * If history has reached {@code MAX_HISTORY} snapshots, the oldest is discarded.
+   */
   public void saveState() {
     if (history.size() >= MAX_HISTORY) {
       history.removeLast();

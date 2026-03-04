@@ -131,7 +131,7 @@ public class GameRunner {
     controller = new Controller(game, gameScreen, gridView, currentParseResult,
         createNewGameAction);
     controller.gameScreenShow(currentParseResult, this::handleSave, this::setup, createNewGameAction,
-        this::loadForResults, this::toBeUpdates);
+        this::loadForResults, this::applyUpdates);
     controller.reset();
   }
 
@@ -184,8 +184,8 @@ public class GameRunner {
     }
   }
 
-  private void toBeUpdates() {
+  private void applyUpdates() {
     currentParseResult = gameScreen.getResultChanges();
-    controller.toBeUpdates(currentParseResult);
+    controller.applyUpdates(currentParseResult);
   }
 }

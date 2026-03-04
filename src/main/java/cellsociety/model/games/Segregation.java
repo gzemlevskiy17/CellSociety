@@ -37,7 +37,7 @@ public class Segregation extends Game {
   public static final int EMPTY = 0;
   private static final Logger LOG = LogManager.getLogger(Segregation.class);
 
-  private final String[] newVariables = new String[]{"threshold"};
+  private static final String[] newVariables = new String[]{"threshold"};
 
   /**
    * Constructs a Segregation simulation with the given satisfaction threshold.

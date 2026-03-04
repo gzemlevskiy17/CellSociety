@@ -1,9 +1,11 @@
 package cellsociety.view.grids;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import cellsociety.controller.Controller;
-import cellsociety.controller.GameRunner;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -34,6 +36,7 @@ public abstract class GridView {
     private double height;
 
     private Pane mainPane;
+    private final List<Shape> allShapes = new ArrayList<>();
 
     public GridView(String gameName, Map<Integer, Color> colors, int x, int y) {
         this.gameName = gameName.replaceAll("([a-z])([A-Z])", "$1 $2");
@@ -56,7 +59,21 @@ public abstract class GridView {
 
     public abstract void addMouseEvents(Controller controller);
 
-    public abstract void toggleGridOutline();
+    /**
+     * Toggles the visibility of cell borders on all shapes in the grid.
+     *
+     * <p>If borders are currently visible (stroke width &gt; 0), they are hidden;
+     * otherwise they are restored to a width of 1.</p>
+     */
+    public void toggleGridOutline() {
+        for (Shape s : allShapes) {
+            if (s.getStrokeWidth() > 0) {
+                s.setStrokeWidth(0);
+            } else {
+                s.setStrokeWidth(1);
+            }
+        }
+    }
 
     /**
      * Returns the root JavaFX pane containing the rendered grid.
@@ -91,6 +108,7 @@ public abstract class GridView {
         cell.setStroke(Color.BLACK);
         cell.setStrokeWidth(1);
         cell.setStrokeType(StrokeType.INSIDE);
+        allShapes.add(cell);
     }
 
     /**
@@ -109,7 +127,7 @@ public abstract class GridView {
      * @return a map from state integer to {@link javafx.scene.paint.Color}
      */
     public Map<Integer, Color> retAllColor() {
-        return gridColors;
+        return Collections.unmodifiableMap(gridColors);
     }
 
     /**

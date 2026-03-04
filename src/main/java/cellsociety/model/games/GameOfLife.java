@@ -40,7 +40,7 @@ public class GameOfLife extends Game {
 
     private final Set<Integer> birthCounts;
     private final Set<Integer> survivalCounts;
-    private final String[] newVariables = new String[] { "rulestring" };
+    private static final String[] newVariables = new String[] { "rulestring" };
 
     public GameOfLife(Grid grid) {
         this(grid, "");

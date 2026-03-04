@@ -46,21 +46,48 @@ public class ButtonCreator extends StylableView {
     }
   }
 
-  // TODO: fix confusing method name. why is the button empty?
+  /**
+   * Creates a new {@link Button} whose label text is looked up from the
+   * Buttons resource bundle using {@code name} as the key, then registers it
+   * under that name for later retrieval.
+   *
+   * @param name the bundle key and internal identifier for the button
+   */
   public void addEmptyButton(String name) {
     Button newButton = new Button();
     buttonHolder.put(name, newButton);
     setButtonText(name, name);
   }
 
+  /**
+   * Attaches an action handler to the button registered under {@code name}.
+   *
+   * @param name the identifier of the target button
+   * @param e    the handler to invoke when the button is clicked
+   */
   public void addActionToButton(String name, EventHandler<ActionEvent> e) {
     getButton(name).setOnAction(e);
   }
 
+  /**
+   * Returns the {@link Button} registered under {@code name}, or {@code null}
+   * if no such button exists.
+   *
+   * @param name the identifier of the button to retrieve
+   * @return the corresponding {@link Button}
+   */
   public Button getButton(String name) {
     return buttonHolder.get(name);
   }
 
+  /**
+   * Updates the label of the button registered under {@code name} using
+   * {@code text} as a resource-bundle key. Falls back to using {@code text}
+   * literally if the key is not found in the bundle.
+   *
+   * @param name the identifier of the button to update
+   * @param text the bundle key (or fallback literal) for the new label
+   */
   public void setButtonText(String name, String text) {
     try {
       getButton(name).setText(myResources.getString(text));

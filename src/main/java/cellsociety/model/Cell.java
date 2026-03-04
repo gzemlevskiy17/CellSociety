@@ -86,6 +86,12 @@ public class Cell {
     return state;
   }
 
+  /**
+   * Returns a new {@link Cell} with the same current and next state as this cell.
+   * Used by {@link Grid} to snapshot the grid for history and reset purposes.
+   *
+   * @return a deep copy of this cell
+   */
   public Cell copy() {
     Cell copy = new Cell(this.state);
     copy.setNextState(this.nextState);

@@ -50,12 +50,12 @@ public class WaTor extends Game {
     public static final int FISH = 1;
     public static final int SHARK = 2;
 
-    private final String[] newVariables = new String[] { "pyRepro", "pdrEner", "pdrRepro", "pdrEatsFor" };
+    private static final String[] newVariables = new String[] { "pyRepro", "pdrEner", "pdrRepro", "pdrEatsFor" };
     private boolean moved = false;
     private Map<Cell, WaTorShark> sharkLives = new java.util.HashMap<>();
     private Map<Cell, WaTorFish> fishLives = new java.util.HashMap<>();
 
-    public WaTor(Grid grid, Map<String, String> params) throws Exception {
+    public WaTor(Grid grid, Map<String, String> params) {
         super(grid, params);
         int val = -1;
         for (String vari : newVariables) {

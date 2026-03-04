@@ -31,7 +31,6 @@ import org.apache.logging.log4j.Logger;
  */
 
 public class GameScreen extends StylableView {
-  public static final String THEME_STYLESHEET = "light.css";
   private static final Logger LOG = LogManager.getLogger(GameScreen.class);
   private Stage myStage;
   private GridView gridView;
@@ -47,24 +46,48 @@ public class GameScreen extends StylableView {
   private ResourceBundle buttonsToCreate;
   // TODO: figure out default_resource_folder across multiple files
 
+  /**
+   * Constructs a GameScreen bound to the given stage. The stage is not shown
+   * until {@link #gameScreen} is called.
+   *
+   * @param stage the primary window for this simulation screen
+   */
   public GameScreen(Stage stage) {
     myStage = stage;
     config = PropertiesLoader.getResourceBundle("view/Config/GameScreen/GameScreen");
     registerLanguageListener();
   }
 
-  public void checkAllNotNull(Object... params) throws Exception { // TODO: do we need this
-    for (Object param : params) {
-      if (param == null) {
-        throw new NullPointerException("A parameter is null.");
-      }
-    }
-  }
-
+  /**
+   * Sets the grid view used by this screen. Must be called before
+   * {@link #gameScreen} builds the layout.
+   *
+   * @param newGridView the rendered grid to display
+   */
   public void setGridView(GridView newGridView) {
     gridView = newGridView;
   }
 
+  /**
+   * Builds and displays the simulation window with the grid, control buttons,
+   * speed slider, and generation counter.
+   *
+   * @param parsingInfo         simulation metadata used to populate the info panel
+   * @param onSave              called when the user clicks Save
+   * @param onLoad              called when the user clicks Load
+   * @param pause               called when the user pauses the simulation
+   * @param play                called when the user resumes the simulation
+   * @param reset               called when the user clicks Reset
+   * @param setGameSpeed        called when the speed slider value changes
+   * @param createNewGameAction called when the user opens a new game window
+   * @param clear               called when the user clicks Clear
+   * @param stepForward         called when the user steps forward one generation
+   * @param stepBack            called when the user steps back one generation
+   * @param pullChanges         called to apply any pending info-panel edits
+   * @param toggleLine          called to toggle cell border visibility
+   * @param startingGenerations the initial generation count to display
+   * @param startSpeed          the initial speed slider value
+   */
   public void gameScreen(ParseResult parsingInfo, Runnable onSave, Runnable onLoad, Runnable pause,
       Runnable play,
       Runnable reset, Runnable setGameSpeed,
@@ -166,7 +189,7 @@ public class GameScreen extends StylableView {
 
     dynamicGenerations = new Label();
     dynamicGenerations.setId("generation-label");
-    dynamicGenerations.setText("Gen: " + generations); // TODO: properties
+    dynamicGenerations.setText(screenText.getString("generationPrefix") + " " + generations);
 
     timeAreaBox.getChildren().addAll(speedSlider, dynamicGenerations);
     return timeAreaBox;
@@ -229,11 +252,22 @@ public class GameScreen extends StylableView {
     }
   }
 
-  public void simPausedButtonChange() { // FIXME: better method name; javadoc
+  /**
+   * Updates the Play/Pause button to show "Play" and records that the
+   * simulation is currently paused. Call this whenever the simulation stops
+   * so the button label stays in sync with the actual state.
+   */
+  public void simPausedButtonChange() {
     onPlay = false;
     buttons.setButtonText("Play", "Play");
   }
 
+  /**
+   * Returns the current speed slider value, with a minimum of 1.0 so that
+   * callers never receive a non-positive multiplier.
+   *
+   * @return the speed multiplier, always &ge; 1.0
+   */
   public double getSliderValue() {
     if (speedSlider.getValue() <= 0) {
       return 1;
@@ -241,18 +275,35 @@ public class GameScreen extends StylableView {
     return speedSlider.getValue();
   }
 
+  /**
+   * Updates the generation counter label to show the given value.
+   *
+   * @param generations the current generation count to display
+   */
   public void setGenerations(int generations) {
     this.generations = generations;
-    dynamicGenerations.setText(
-        "Gen: " + this.generations);
+    dynamicGenerations.setText(screenText.getString("generationPrefix") + " " + this.generations);
   }
 
+  /**
+   * Reads any pending edits from the info panel and returns an updated
+   * {@link ParseResult} reflecting those changes.
+   *
+   * @return a new {@link ParseResult} with any user-edited metadata or parameters applied
+   */
   public ParseResult getResultChanges() {
     ParseResult changedResult = infoView.getEditResults();
     parseHolder = changedResult;
     return changedResult;
   }
 
+  /**
+   * Opens a file chooser dialog filtered to XML files and returns the chosen
+   * file, or an empty {@link Optional} if the user cancelled.
+   *
+   * @param stage the owner window for the dialog
+   * @return an {@link Optional} containing the chosen file, or empty if cancelled
+   */
   public Optional<File> startScreen(Stage stage) {
     FileChooser fileChooser = new FileChooser();
     File initialDir = new File("data/");

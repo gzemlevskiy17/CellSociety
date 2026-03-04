@@ -38,8 +38,8 @@ public class ForestFire extends Game {
   public static final int TREE = 1;
   public static final int BURNING = 2;
   private static final Logger LOG = LogManager.getLogger(ForestFire.class);
-  private final String[] newVariables = new String[]{"ignitionProbability",
-      "fillProbability"}; //TODO: replace with property file
+  private static final String[] newVariables = new String[]{"ignitionProbability",
+      "fillProbability"};
 
   /**
    * Constructs a Forest Fire simulation with the given probabilities.

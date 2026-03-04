@@ -39,8 +39,6 @@ import javafx.stage.Stage;
  */
 public class GameManager {
 
-  private Stage primaryStage;
-
   /**
    * Initializes the GameManager which immediately launches a new game window
    * using the provided
@@ -49,7 +47,6 @@ public class GameManager {
    * @param primaryStage the JavaFX stage to host the first game instance
    */
   public GameManager(Stage primaryStage) {
-    this.primaryStage = primaryStage;
     launchNewGame(primaryStage);
   }
 
