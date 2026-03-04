@@ -135,6 +135,11 @@ public class GameRunner {
 
   private void handleSave() {
     controller.pause();
+    ParseResult snapshot = buildSnapshot();
+    promptSaveLocation().ifPresent(file -> writeSaveFile(snapshot, file));
+  }
+
+  private ParseResult buildSnapshot() {
     GridReader reader = game.getGridReader();
     int[][] currentCells = new int[reader.getRows()][reader.getCols()];
     for (int r = 0; r < reader.getRows(); r++) {
@@ -144,7 +149,7 @@ public class GameRunner {
     }
     Map<String, String> currentParams = currentParseResult.getParams();
     currentParams.put("speed", controller.getGameSpeed() + "");
-    ParseResult snapshot = new ParseResult(
+    return new ParseResult(
         currentParseResult.getRows(),
         currentParseResult.getCols(),
         currentParseResult.getGameType(),
@@ -154,6 +159,9 @@ public class GameRunner {
         currentCells,
         currentParams,
         currentParseResult.getColorMap());
+  }
+
+  private Optional<File> promptSaveLocation() {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Save Simulation As");
     File dataDir = new File(
@@ -163,10 +171,10 @@ public class GameRunner {
     }
     fileChooser.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
     fileChooser.setInitialFileName("simulation.xml");
-    File outputFile = fileChooser.showSaveDialog(myStage);
-    if (outputFile == null) {
-      return;
-    }
+    return Optional.ofNullable(fileChooser.showSaveDialog(myStage));
+  }
+
+  private void writeSaveFile(ParseResult snapshot, File outputFile) {
     try {
       XMLWriter.save(snapshot, outputFile);
     } catch (ParserConfigurationException e) {
