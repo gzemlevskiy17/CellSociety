@@ -113,7 +113,7 @@ public class StartScreen {
     }
 
     private void setTheme(String theme) {
-        chosenTheme = theme;
+        String chosenTheme = theme;
     }
 
     private void setLanguage() {

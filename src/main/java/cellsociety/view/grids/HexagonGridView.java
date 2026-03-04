@@ -6,6 +6,7 @@ import cellsociety.controller.Controller;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.StrokeType;
 
 /**
  * Renders the simulation grid as a pointy-top hexagonal lattice.
@@ -67,9 +68,7 @@ public class HexagonGridView extends GridView {
     double cy = offsetY + circumRadius + row * vSpacing;
 
     Polygon hex = new Polygon(buildHexPoints(cx, cy));
-    hex.setFill(getGridColors().getOrDefault(0, Color.WHITE));
-    hex.setStroke(Color.BLACK);
-    hex.setStrokeWidth(1);
+    addToShape(hex);
 
     hexArray[row][col] = hex;
     pane.getChildren().add(hex);

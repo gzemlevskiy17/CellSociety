@@ -20,7 +20,7 @@
 
 #toggle-area-box {
   -fx-spacing: 20;
-  -fx-alignment: right-center;
+  -fx-alignment: center-right;
 }
 
 #top-label {

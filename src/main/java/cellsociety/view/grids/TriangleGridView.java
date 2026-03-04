@@ -6,12 +6,14 @@ import cellsociety.controller.Controller;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.StrokeType;
 
 /**
  * Renders the simulation grid as a triangular lattice.
  *
  * <p>
  * Triangles alternate between pointing up (▲) and pointing down (▽) based on
+ * 
  * the parity of {@code (row + col)}. Each triangle fills the same rectangular
  * bounding box, so all columns are the same width and all rows the same height,
  * creating a seamless tiling.
@@ -76,9 +78,7 @@ public class TriangleGridView extends GridView {
       );
     }
 
-    tri.setFill(getGridColors().getOrDefault(0, Color.WHITE));
-    tri.setStroke(Color.BLACK);
-    tri.setStrokeWidth(1);
+    addToShape(tri);
 
     triArray[row][col] = tri;
     pane.getChildren().add(tri);

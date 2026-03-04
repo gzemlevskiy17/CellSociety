@@ -271,8 +271,8 @@ public class Controller {
       Runnable createNewGameAction,
       Runnable loadForResults, Runnable pullChanges) {
     gameScreen.gameScreen(parsingInfo, onSave, onLoad, this::pause, this::play, loadForResults,
-        this::findGameSpeed, createNewGameAction, this::clear, this::stepForward, this::stepBack, this::toggleOutline,
-        pullChanges, generations,
+        this::findGameSpeed, createNewGameAction, this::clear, this::stepForward, this::stepBack, pullChanges,
+        this::toggleOutline, generations,
         gameSpeed); // FIXME: don't pass parameters straight on
     setGameSpeed(gameSpeed);
     gameScreen.simPausedButtonChange();
