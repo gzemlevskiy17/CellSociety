@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+  <type>LangtonsLoop</type>
+  <title>Langton's Loop: Small Grid Edge Test</title>
+  <author>Christopher Langton (1984)</author>
+  <description>Loop placed near the top-left on a small 25x25 grid. Tests behavior when the loop's arm grows near the grid boundary.</description>
+  <grid>
+    <rows>25</rows>
+    <columns>25</columns>
+    <cells>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 2 1 7 0 1 4 0 1 4 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 2 0 2 2 2 2 2 2 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 2 7 2 0 0 0 0 2 1 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 2 1 2 0 0 0 0 2 1 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 2 0 2 0 0 0 0 2 1 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 2 7 2 0 0 0 0 2 1 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 2 1 2 2 2 2 2 2 1 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 2 0 7 1 0 7 1 0 7 1 1 1 1 1 2 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+    </cells>
+  </grid>
+  <parameters>
+    <states>
+      <state id="0" color="#000000"/>
+      <state id="1" color="#0000FF"/>
+      <state id="2" color="#FF0000"/>
+      <state id="3" color="#00CC00"/>
+      <state id="4" color="#FFFF00"/>
+      <state id="5" color="#FF69B4"/>
+      <state id="6" color="#FFFFFF"/>
+      <state id="7" color="#00FFFF"/>
+    </states>
+  </parameters>
+</simulation>
