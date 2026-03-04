@@ -7,6 +7,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
+/**
+ * Renders the simulation grid as a uniform rectangular grid of
+ * {@link javafx.scene.shape.Rectangle} cells.
+ *
+ * @author cellsociety team
+ */
 public class RectangleGridView extends GridView {
 
     private Rectangle[][] RectArray;

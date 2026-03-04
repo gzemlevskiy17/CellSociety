@@ -46,6 +46,9 @@ import org.apache.logging.log4j.Logger;
 public class ModelFactory {
 
   private static final Logger LOG = LogManager.getLogger(ModelFactory.class);
+  private static final String GAMES_PACKAGE = "cellsociety.model.games.";
+  private static final String NEIGHBORHOOD_PACKAGE = "cellsociety.model.topology.neighborhood.";
+  private static final String EDGE_PACKAGE = "cellsociety.model.topology.edgebehavior.";
 
   /**
    * Creates a {@link Game} instance matching the simulation type in the given
@@ -68,7 +71,7 @@ public class ModelFactory {
 
     Class<?> superClazzReq = Game.class;
     try {
-      Class<?> gameClazz = Class.forName("cellsociety.model.games." + gameType);
+      Class<?> gameClazz = Class.forName(GAMES_PACKAGE + gameType);
       if (!gameClazz.getSuperclass().equals(superClazzReq)) {
         throw new IllegalArgumentException("Unknown game type: " + gameType);
       }
@@ -87,14 +90,14 @@ public class ModelFactory {
   private NeighborhoodStrategy buildNeighborhood(String neighborhood) {
     //TODO: store neighborhood types in properties file and handle unrecognized neighborhood types
     return buildFromReflection(
-        "cellsociety.model.topology.neighborhood.", neighborhood, "Neighborhood",
+        NEIGHBORHOOD_PACKAGE, neighborhood, "Neighborhood",
         NeighborhoodStrategy.class);
   }
 
   private EdgePolicy buildEdge(String edgeType) {
     //TODO: store edge types in properties file and handle unrecognized edge types
     return buildFromReflection(
-        "cellsociety.model.topology.edgebehavior.", edgeType, "Edge",
+        EDGE_PACKAGE, edgeType, "Edge",
         EdgePolicy.class);
   }
 

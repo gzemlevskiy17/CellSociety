@@ -45,8 +45,8 @@ import java.util.Map;
  */
 public abstract class Game {
 
-  private Grid grid;
-  private Map<String, String> gameParams;
+  private final Grid grid;
+  private final Map<String, String> gameParams;
 
   /**
    * Constructs a Game with the given grid.

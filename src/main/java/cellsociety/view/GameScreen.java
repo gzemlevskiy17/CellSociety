@@ -22,7 +22,16 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-//TODO: comment
+/**
+ * Manages the main simulation window layout, including the grid display,
+ * playback controls, speed slider, and generation counter.
+ *
+ * <p>Wires UI events (play, pause, step, reset, save, load) to caller-supplied
+ * {@link Runnable} callbacks so that this class remains decoupled from the
+ * controller logic.</p>
+ *
+ * @author cellsociety team
+ */
 public class GameScreen {
 
   public static final String THEME_STYLESHEET = "light.css";

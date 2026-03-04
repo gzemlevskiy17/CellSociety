@@ -26,6 +26,14 @@ import java.util.Map;
  */
 public class SDSRLoop extends LangtonsLoop {
 
+  private static final int BACKGROUND = 0;
+  private static final int CORE = 1;
+  private static final int SHEATH = 2;
+  private static final int CAP = 3;
+  private static final int TURN = 4;
+  private static final int DISCONNECT = 5;
+  private static final int GUIDE = 6;
+  private static final int STRAIGHT = 7;
   private static final int DISSOLVE = 8;
   private static final int TUBE_THRESHOLD = 2;
 
@@ -58,42 +66,42 @@ public class SDSRLoop extends LangtonsLoop {
 
     boolean inTube = isInTube(trbl);
 
-    if (current == 0) {
-      return (inTube && contains(trbl, 1)) ? 1 : 0;
+    if (current == BACKGROUND) {
+      return (inTube && contains(trbl, CORE)) ? CORE : BACKGROUND;
     }
-    if (current == 1 && inTube) {
+    if (current == CORE && inTube) {
       return resolveSignalInTube(trbl);
     }
-    if ((current == 4 || current == 6 || current == 7) && inTube && contains(trbl, 0)) {
-      return 0;
+    if ((current == TURN || current == GUIDE || current == STRAIGHT) && inTube && contains(trbl, BACKGROUND)) {
+      return BACKGROUND;
     }
-    if (current == 2) {
-      if (contains(trbl, 3)) {
-        return 1;
+    if (current == SHEATH) {
+      if (contains(trbl, CAP)) {
+        return CORE;
       }
-      if (contains(trbl, 2)) {
-        return 2;
+      if (contains(trbl, SHEATH)) {
+        return SHEATH;
       }
     }
     if (current == DISSOLVE) {
-      return 0;
+      return BACKGROUND;
     }
 
-    return (current == 0) ? 0 : DISSOLVE;
+    return (current == BACKGROUND) ? BACKGROUND : DISSOLVE;
   }
 
   private int resolveWithDissolution(int current, int[] trbl) {
-    if (current == 0 || current == 1) {
+    if (current == BACKGROUND || current == CORE) {
       if (hasHigherState(trbl)) {
         return DISSOLVE;
       }
       return current;
     }
-    if (current == 2 || current == 3 || current == 5) {
-      return 0;
+    if (current == SHEATH || current == CAP || current == DISCONNECT) {
+      return BACKGROUND;
     }
-    if (current == 4 || current == 6 || current == 7) {
-      return 1;
+    if (current == TURN || current == GUIDE || current == STRAIGHT) {
+      return CORE;
     }
     if (current == DISSOLVE) {
       return 0;
@@ -102,22 +110,22 @@ public class SDSRLoop extends LangtonsLoop {
   }
 
   private int resolveSignalInTube(int[] trbl) {
-    if (contains(trbl, 7)) {
-      return 7;
+    if (contains(trbl, STRAIGHT)) {
+      return STRAIGHT;
     }
-    if (contains(trbl, 6)) {
-      return 6;
+    if (contains(trbl, GUIDE)) {
+      return GUIDE;
     }
-    if (contains(trbl, 4)) {
-      return 4;
+    if (contains(trbl, TURN)) {
+      return TURN;
     }
-    return 1;
+    return CORE;
   }
 
   private boolean isInTube(int[] trbl) {
     int count = 0;
     for (int s : trbl) {
-      if (s == 1 || s == 2 || s == 4 || s == 6 || s == 7) {
+      if (s == CORE || s == SHEATH || s == TURN || s == GUIDE || s == STRAIGHT) {
         count++;
       }
     }
@@ -126,7 +134,7 @@ public class SDSRLoop extends LangtonsLoop {
 
   private boolean hasHigherState(int[] trbl) {
     for (int s : trbl) {
-      if (s >= 2 && s <= 7) {
+      if (s >= SHEATH && s <= STRAIGHT) {
         return true;
       }
     }

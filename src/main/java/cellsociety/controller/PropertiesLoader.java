@@ -7,6 +7,16 @@ import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Utility class for loading {@link java.util.ResourceBundle} instances from the
+ * application's resource directory.
+ *
+ * <p>All bundles are resolved relative to {@link #DEFAULT_RESOURCE_PACKAGE}.
+ * Throws {@link NullPointerException} if a bundle cannot be found, so callers
+ * can catch a single exception type regardless of the underlying cause.</p>
+ *
+ * @author cellsociety team
+ */
 public class PropertiesLoader {
 
     public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety/"; // TODO: parameterize

@@ -3,6 +3,7 @@ package cellsociety.view;
 import cellsociety.controller.PropertiesLoader;
 import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -11,10 +12,20 @@ import javafx.scene.control.Button;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Creates and manages labeled {@link javafx.scene.control.Button} instances with
+ * locale-aware text loaded from resource bundles.
+ *
+ * <p>Buttons are stored by name and can be retrieved, re-labeled, or have actions
+ * attached after creation. Text is resolved via the {@code view/Text/Buttons/Buttons}
+ * properties file for the current locale.</p>
+ *
+ * @author cellsociety team
+ */
 public class ButtonCreator {
 
     private static final Logger LOG = LogManager.getLogger(ButtonCreator.class);
-    private LinkedHashMap<String, Button> buttonHolder;
+    private Map<String, Button> buttonHolder;
     private ResourceBundle myResources;
 
     public ButtonCreator(Locale locale) {

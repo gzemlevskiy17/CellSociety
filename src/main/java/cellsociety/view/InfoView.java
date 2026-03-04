@@ -25,6 +25,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+/**
+ * Displays and edits simulation metadata and parameters in a secondary window.
+ *
+ * <p>Provides two modes: a read-only info view ({@link #showInfoView}) and an
+ * editable form ({@link #showInfoEdit}) whose results are collected via
+ * {@link #getEditResults()}. Parameter spinners are configured from the game's
+ * {@code model/[GameType].properties} resource file.</p>
+ *
+ * @author cellsociety team
+ */
 public class InfoView {
     private Stage newStage;
     private ParseResult currentResult;

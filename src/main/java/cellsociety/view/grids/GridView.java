@@ -11,6 +11,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.StrokeType;
 
+/**
+ * Abstract base class for rendering a cellular automaton grid in JavaFX.
+ *
+ * <p>Manages grid dimensions, cell sizing within a fixed display area, and the
+ * color map used to paint each cell state. Subclasses implement
+ * {@link #initializeGridPane()}, {@link #updateCell(int, int, int)}, and
+ * {@link #addMouseEvents(cellsociety.controller.Controller)} for their specific shape.</p>
+ *
+ * @author cellsociety team
+ */
 public abstract class GridView {
 
     private static final double MAX_GRID_WIDTH = 800.0; // TODO: put in property files & handle duplicates, super?
