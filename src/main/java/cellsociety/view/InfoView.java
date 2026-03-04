@@ -56,7 +56,10 @@ public class InfoView {
         buttonHold = new ButtonCreator(this.locale);
         try {
             gameResources = PropertiesLoader.getResourceBundle(MODEL_RESOURCE_FOLDER + currentResult.getGameType());
-            paramVariables = gameResources.getString("variables").split("[,\s]+");
+            String variToExplore = gameResources.getString("variables");
+            if (!variToExplore.isBlank()) {
+                paramVariables = variToExplore.split("[,\s]+");
+            }
         } catch (Exception e) {
             new ErrorView("Missing Variables", "No Properties File for " + currentResult.getGameType());
         }
@@ -308,19 +311,17 @@ public class InfoView {
                     params.put(name, Integer.toString(intChanges.get(name).getValue()));
                 } catch (Exception e) {
                 }
-            } else {
-                if (doubleChanges.containsKey(name)) {
-                    try {
-                        params.put(name, Double.toString(doubleChanges.get(name).getValue()));
-                    } catch (Exception e) {
-                    }
-                } else {
-                    if (textChanges.containsKey(name)) {
-                        try {
-                            params.put(name, textChanges.get(name).getText());
-                        } catch (Exception e) {
-                        }
-                    }
+            }
+            if (doubleChanges.containsKey(name)) {
+                try {
+                    params.put(name, Double.toString(doubleChanges.get(name).getValue()));
+                } catch (Exception e) {
+                }
+            }
+            if (textChanges.containsKey(name)) {
+                try {
+                    params.put(name, textChanges.get(name).getText());
+                } catch (Exception e) {
                 }
             }
         }

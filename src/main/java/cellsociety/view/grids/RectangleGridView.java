@@ -37,7 +37,7 @@ public class RectangleGridView extends GridView {
         cellRect.setLayoutY(y);
         cellRect.setFill(getGridColors().get(state));
         cellRect.setStroke(Color.BLACK);
-        cellRect.setStrokeWidth(2);
+        cellRect.setStrokeWidth(5);
 
         RectArray[row][col] = cellRect;
         ((javafx.scene.layout.GridPane) getGridPane()).add(cellRect, col, row);
@@ -58,6 +58,19 @@ public class RectangleGridView extends GridView {
                 RectArray[row][col].setOnMouseClicked(event -> {
                     controller.pushFromScreentoGrid(indepRow, indepCol);
                 });
+            }
+        }
+    }
+
+    @Override
+    public void toggleGridOutline() {
+        for (int row = 0; row < getNumRows(); row++) {
+            for (int col = 0; col < getNumCols(); col++) {
+                if (RectArray[row][col].getStrokeWidth() > 0) {
+                    RectArray[row][col].setStrokeWidth(0);
+                } else {
+                    RectArray[row][col].setStrokeWidth(5);
+                }
             }
         }
     }

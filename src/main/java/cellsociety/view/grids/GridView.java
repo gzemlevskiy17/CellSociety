@@ -45,6 +45,8 @@ public abstract class GridView {
 
     public abstract void addMouseEvents(Controller controller);
 
+    public abstract void toggleGridOutline();
+
     public Pane getGridPane() {
         return mainPane;
     }

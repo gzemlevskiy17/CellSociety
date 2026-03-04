@@ -3,7 +3,6 @@ package cellsociety.view.grids;
 import java.util.Map;
 
 import cellsociety.controller.Controller;
-import cellsociety.controller.GameRunner;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -113,6 +112,19 @@ public class HexagonGridView extends GridView {
         hexArray[row][col].setOnMouseClicked(event -> {
           controller.pushFromScreentoGrid(indepRow, indepCol);
         });
+      }
+    }
+  }
+
+  @Override
+  public void toggleGridOutline() {
+    for (int row = 0; row < getNumRows(); row++) {
+      for (int col = 0; col < getNumCols(); col++) {
+        if (hexArray[row][col].getStrokeWidth() > 0) {
+          hexArray[row][col].setStrokeWidth(0);
+        } else {
+          hexArray[row][col].setStrokeWidth(1);
+        }
       }
     }
   }

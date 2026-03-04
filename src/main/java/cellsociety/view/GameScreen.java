@@ -38,10 +38,12 @@ public class GameScreen {
   private ParseResult parseHolder;
 
   private ResourceBundle layoutResources;
+  private ResourceBundle wordResources;
   private static final Logger LOG = LogManager.getLogger(GameScreen.class);
   private static final String LAYOUT_STYLESHEET = "GameScreen.css";
   private static final String CONFIG_RESOURCE_FOLDER = "view/Config/";
-  private static final String GAME_SCREEN_CONFIG = "GameScreen"; // TODO: parameterize
+  private static final String GAME_SCREEN_CONFIG = "GameScreen";
+  private static final String GAME_SCREEN_TEXT = "view/Text/Screen/GameScreen/GameScreen";// TODO: parameterize
   // TODO: figure out default_resource_folder across multiple files
 
   public GameScreen(Stage stage, Locale locale) {
@@ -49,6 +51,7 @@ public class GameScreen {
     this.locale = locale;
     layoutResources = PropertiesLoader.getResourceBundle(
         CONFIG_RESOURCE_FOLDER + GAME_SCREEN_CONFIG);
+    wordResources = PropertiesLoader.getResourceBundle(GAME_SCREEN_TEXT);
   }
 
   public void checkAllNotNull(Object... params) throws Exception { // TODO: do we need this
@@ -67,6 +70,7 @@ public class GameScreen {
       Runnable play,
       Runnable reset, Runnable setGameSpeed,
       Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack, Runnable pullChanges,
+      Runnable toggleLine,
       int startingGenerations,
       double startSpeed) {
     parseHolder = parsingInfo;
@@ -74,9 +78,9 @@ public class GameScreen {
     onPlay = true; // TODO: make more elegant
     infoView = new InfoView(stageLive, parseHolder, locale, pullChanges);
     buttons = new ButtonCreator(locale);
-    String[] names = { "Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
-        "NewGame" }; // TODO: reflection
+    String[] names = wordResources.getString("names").split("[,\s]+"); // TODO: reflection
     String[] info = { "Info", "EditInfo" };
+    String[] toggling = { "Outline" };
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
@@ -87,12 +91,15 @@ public class GameScreen {
         reset, setGameSpeed, createNewGameAction, clear, stepForward, stepBack, startSpeed);
     mainScreen.setBottom(simulationControl);
 
+    VBox toggleControl = createToggleArea(toggling, toggleLine);
+    mainScreen.setRight(toggleControl);
+
     double windowWidth = Double.parseDouble(layoutResources.getString("window.width"));
     double windowHeight = Double.parseDouble(layoutResources.getString("window.height"));
     Scene scene = new Scene(mainScreen, windowWidth, windowHeight);
     addStyleSheets(scene);
 
-    String titleOfWindow = "Cell Society: Running " + gridView.getGameName(); // TODO: language & properties
+    String titleOfWindow = wordResources.getString("title") + gridView.getGameName(); // TODO: language & properties
 
     stageLive.setTitle(titleOfWindow);
     stageLive.setScene(scene);
@@ -221,6 +228,24 @@ public class GameScreen {
     }
 
     return buttonBoxArea;
+  }
+
+  private VBox createToggleArea(String[] names, Runnable toggleOutline) {
+    VBox toggle = new VBox(10);
+
+    for (String name : names) {
+      buttons.addEmptyButton(name);
+    }
+
+    buttons.addActionToButton("Outline", event -> {
+      toggleOutline.run();
+    });
+
+    for (String name : names) {
+      toggle.getChildren().add(buttons.getButton(name));
+    }
+    toggle.setId("toggle-area-box");
+    return toggle;
   }
 
   private void playButtonFunction(Runnable play, Runnable pause) {

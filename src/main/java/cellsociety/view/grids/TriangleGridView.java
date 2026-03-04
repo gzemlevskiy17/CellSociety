@@ -106,4 +106,17 @@ public class TriangleGridView extends GridView {
       }
     }
   }
+
+  @Override
+  public void toggleGridOutline() {
+    for (int row = 0; row < getNumRows(); row++) {
+      for (int col = 0; col < getNumCols(); col++) {
+        if (triArray[row][col].getStrokeWidth() > 0) {
+          triArray[row][col].setStrokeWidth(0);
+        } else {
+          triArray[row][col].setStrokeWidth(1);
+        }
+      }
+    }
+  }
 }
