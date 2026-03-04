@@ -38,6 +38,7 @@ import java.util.Map;
 public class Percolation extends Game {
 
   public static final int EMPTY = 0;
+  public static final int BLOCKED = 1;
   public static final int PERCOLATED = 2;
 
   // TODO: paper uses a linkedlist with all open cells. for this we would need
