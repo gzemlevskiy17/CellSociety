@@ -132,7 +132,7 @@ public class Grid {
     Cell[][] copy = new Cell[source.length][source[0].length];
     for (int i = 0; i < source.length; i++) {
       for (int j = 0; j < source[i].length; j++) {
-        copy[i][j] = getCell(i, j).copy();
+        copy[i][j] = source[i][j].copy();
       }
     }
     return copy;
