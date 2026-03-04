@@ -21,19 +21,20 @@ public abstract class StylableView {
 
   protected void registerThemeListenerWithLayoutSheet(Scene scene) {
     String className = this.getClass().getSimpleName();
-    Consumer<String> themeListener = theme -> styleLoader.addStyleSheets(scene, theme, className);
+    themeListener = theme -> styleLoader.addStyleSheets(scene, theme, className);
+    themeManager.addListener(themeListener);
     styleLoader.addStyleSheets(scene, themeManager.getTheme(), className);
   }
 
   protected void registerThemeListener(Scene scene) {
-    Consumer<String> themeListener = theme -> styleLoader.addThemeStyleSheet(scene, theme);
+    themeListener = theme -> styleLoader.addThemeStyleSheet(scene, theme);
     themeManager.addListener(themeListener);
     // Apply current values
     styleLoader.addThemeStyleSheet(scene, themeManager.getTheme());
   }
 
   protected void registerLanguageListener() {
-    Consumer<Locale> languageListener = locale -> onLanguageChanged(locale);
+    languageListener = locale -> onLanguageChanged(locale);
     languageManager.addListener(languageListener);
     // Apply current values
     onLanguageChanged(languageManager.getLocale());

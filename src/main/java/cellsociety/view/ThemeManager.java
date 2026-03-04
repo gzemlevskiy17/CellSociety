@@ -52,6 +52,5 @@ public class ThemeManager {
 
   public void setDefaultTheme(String theme) {
     DEFAULT_THEME = theme;
-    currentTheme = DEFAULT_THEME;
   }
 }

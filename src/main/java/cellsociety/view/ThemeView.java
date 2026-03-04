@@ -62,7 +62,6 @@ public class ThemeView extends StylableView {
     dialog.setOnHidden(event -> unregisterAllListeners());
     Optional<String> result = dialog.showAndWait();
 
-    result.ifPresentOrElse(choice -> themeManager.setTheme(choice),
-        () -> themeManager.setTheme(themeManager.getDefaultTheme()));
+    result.ifPresent(choice -> themeManager.setTheme(choice));
   }
 }
