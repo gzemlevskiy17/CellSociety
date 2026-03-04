@@ -1,14 +1,18 @@
 package cellsociety.view.grids;
 
 import java.util.Map;
+
+import cellsociety.controller.Controller;
+import cellsociety.controller.GameRunner;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Shape;
 
 public abstract class GridView {
 
-    private static final double MAX_GRID_WIDTH = 800.0; //TODO: put in property files & handle duplicates, super?
+    private static final double MAX_GRID_WIDTH = 800.0; // TODO: put in property files & handle duplicates, super?
     private String gameName;
     private Map<Integer, Color> gridColors;
     private static final double MAX_GRID_HEIGHT = 500.0;
@@ -38,6 +42,8 @@ public abstract class GridView {
     protected abstract void initializeGridPane();
 
     public abstract void updateCell(int row, int col, int state);
+
+    public abstract void addMouseEvents(Controller controller);
 
     public Pane getGridPane() {
         return mainPane;
