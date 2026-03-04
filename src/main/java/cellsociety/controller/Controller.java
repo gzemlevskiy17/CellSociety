@@ -60,17 +60,17 @@ import javafx.util.Duration;
  */
 public class Controller {
 
-  private Game game;
-  private GameScreen gameScreen;
-  private GridView gridView;
-  private Timeline gameLoop;
+  private final Game game;
+  private final GameScreen gameScreen;
+  private final GridView gridView;
+  private final Timeline gameLoop;
+  private final int cellMax;
 
   private static final double FRAMES_PER_SECOND = 0.5;
   private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 
   private double gameSpeed;
   private int generations;
-  private int cellMax;
 
   /**
    * Constructs a Controller that coordinates the model, view, and UI controls.
