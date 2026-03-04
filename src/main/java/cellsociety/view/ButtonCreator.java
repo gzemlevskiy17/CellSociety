@@ -22,57 +22,51 @@ import org.apache.logging.log4j.Logger;
  *
  * @author cellsociety team
  */
-public class ButtonCreator {
+public class ButtonCreator extends StylableView {
 
     private static final Logger LOG = LogManager.getLogger(ButtonCreator.class);
     private Map<String, Button> buttonHolder;
     private ResourceBundle myResources;
 
-    public ButtonCreator(Locale locale) {
-        buttonHolder = new LinkedHashMap<>();
-        try {
-            myResources = PropertiesLoader.getResourceBundleWithLocale("view/Text/Buttons/Buttons",
-                    locale);
-        } catch (Exception e) {
-            throw new IllegalStateException(
-                    "Failed to load button properties for language: " + locale.getDisplayLanguage(), e);
-        }
-    }
 
-    // TODO: fix confusing method name. why is the button empty?
-    public void addEmptyButton(String name) {
-        Button newButton = new Button();
-        buttonHolder.put(name, newButton);
-        setButtonText(name, name);
-    }
+  public ButtonCreator() {
+    buttonHolder = new LinkedHashMap<>();
+    registerLanguageListener();
+  }
 
-    public void addActionToButton(String name, EventHandler<ActionEvent> e) {
-        getButton(name).setOnAction(e);
+  /**
+   * @param locale
+   */
+  @Override
+  protected void onLanguageChanged(Locale locale) {
+    myResources = PropertiesLoader.getResourceBundleWithLocale("view/Text/Buttons/Buttons",
+        locale);
+    for (String name : buttonHolder.keySet()) {
+      setButtonText(name, name);
     }
+  }
 
-    public Button getButton(String name) {
-        return buttonHolder.get(name);
-    }
+  // TODO: fix confusing method name. why is the button empty?
+  public void addEmptyButton(String name) {
+    Button newButton = new Button();
+    buttonHolder.put(name, newButton);
+    setButtonText(name, name);
+  }
 
-    public void setButtonText(String name, String text) {
-        try {
-            getButton(name).setText(myResources.getString(text));
-        } catch (MissingResourceException e) {
-            LOG.warn("Failed to find button text for key: {}. Defaulting to key as text.", text, e);
-            getButton(name).setText(text);
-        }
-    }
+  public void addActionToButton(String name, EventHandler<ActionEvent> e) {
+    getButton(name).setOnAction(e);
+  }
 
-    public void changeLocale(Locale locale) { // resource bundle does not work, rewrite
-        try {
-            myResources = PropertiesLoader.getResourceBundleWithLocale("view/Text/Buttons/Buttons",
-                    locale);
-        } catch (Exception e) {
-            throw new IllegalStateException(
-                    "Failed to load button properties for language: " + locale.getDisplayLanguage(), e);
-        }
-        for (String name : buttonHolder.keySet()) {
-            setButtonText(name, name);
-        }
+  public Button getButton(String name) {
+    return buttonHolder.get(name);
+  }
+
+  public void setButtonText(String name, String text) {
+    try {
+      getButton(name).setText(myResources.getString(text));
+    } catch (MissingResourceException e) {
+      LOG.warn("Failed to find button text for key: {}. Defaulting to key as text.", text, e);
+      getButton(name).setText(text);
     }
+  }
 }

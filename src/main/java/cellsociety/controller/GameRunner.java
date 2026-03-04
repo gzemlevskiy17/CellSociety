@@ -91,7 +91,7 @@ public class GameRunner {
   }
 
   private void firstStart() {
-    gameScreen = new GameScreen(myStage, startScreen.getLocale());
+    gameScreen = new GameScreen(myStage);
     setup();
   }
 
@@ -189,8 +189,7 @@ public class GameRunner {
   }
 
   private void toBeUpdates() {
-    ParseResult changes = gameScreen.getResultChanges();
-    currentParseResult = changes;
+    currentParseResult = gameScreen.getResultChanges();
     controller.toBeUpdates(currentParseResult);
   }
 }

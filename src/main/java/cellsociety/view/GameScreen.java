@@ -1,7 +1,5 @@
 package cellsociety.view;
 
-import static cellsociety.controller.PropertiesLoader.DEFAULT_RESOURCE_FOLDER;
-
 import cellsociety.controller.PropertiesLoader;
 import cellsociety.model.ParseResult;
 import cellsociety.view.grids.GridView;
@@ -32,32 +30,37 @@ import org.apache.logging.log4j.Logger;
  *
  * @author cellsociety team
  */
-public class GameScreen {
 
+public class GameScreen extends StylableView {
   public static final String THEME_STYLESHEET = "light.css";
-  private Stage stageLive;
+  private static final Logger LOG = LogManager.getLogger(GameScreen.class);
+  private Stage myStage;
   private GridView gridView;
   private InfoView infoView;
   private ButtonCreator buttons;
-  private Locale locale;
   private boolean onPlay;
   private Label dynamicGenerations;
   private Slider speedSlider;
   private int generations;
   private ParseResult parseHolder;
-
-  private ResourceBundle layoutResources;
-  private static final Logger LOG = LogManager.getLogger(GameScreen.class);
-  private static final String LAYOUT_STYLESHEET = "GameScreen.css";
-  private static final String CONFIG_RESOURCE_FOLDER = "view/Config/";
-  private static final String GAME_SCREEN_CONFIG = "GameScreen"; // TODO: parameterize
+  private ResourceBundle screenText;
+  private ResourceBundle config;
+  private ResourceBundle buttonsToCreate;
   // TODO: figure out default_resource_folder across multiple files
 
-  public GameScreen(Stage stage, Locale locale) {
-    stageLive = stage;
-    this.locale = locale;
-    layoutResources = PropertiesLoader.getResourceBundle(
-        CONFIG_RESOURCE_FOLDER + GAME_SCREEN_CONFIG);
+  public GameScreen(Stage stage) {
+    myStage = stage;
+    config = PropertiesLoader.getResourceBundle("view/Config/GameScreen/GameScreen");
+    buttonsToCreate = PropertiesLoader.getResourceBundle("view/Config/GameScreen/Buttons");
+    registerLanguageListener();
+  }
+
+  public void checkAllNotNull(Object... params) throws Exception { // TODO: do we need this
+    for (Object param : params) {
+      if (param == null) {
+        throw new NullPointerException("A parameter is null.");
+      }
+    }
   }
 
   public void setGridView(GridView newGridView) {
@@ -68,16 +71,17 @@ public class GameScreen {
       Runnable play,
       Runnable reset, Runnable setGameSpeed,
       Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack, Runnable pullChanges,
+      Runnable toggleLine,
       int startingGenerations,
       double startSpeed) {
     parseHolder = parsingInfo;
     generations = startingGenerations;
     onPlay = true; // TODO: make more elegant
-    infoView = new InfoView(stageLive, parseHolder, locale, pullChanges);
-    buttons = new ButtonCreator(locale);
-    String[] names = { "Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
-        "NewGame" }; // TODO: reflection
+    infoView = new InfoView(myStage, parseHolder, pullChanges);
+    buttons = new ButtonCreator();
+    String[] names = buttonsToCreate.getString("names").split("[,\s]+"); // TODO: reflection
     String[] info = { "Info", "EditInfo" };
+    String[] toggling = { "Outline" };
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
@@ -88,49 +92,22 @@ public class GameScreen {
         reset, setGameSpeed, createNewGameAction, clear, stepForward, stepBack, startSpeed);
     mainScreen.setBottom(simulationControl);
 
-    double windowWidth = Double.parseDouble(layoutResources.getString("window.width"));
-    double windowHeight = Double.parseDouble(layoutResources.getString("window.height"));
+    double windowWidth = Double.parseDouble(config.getString("window.width"));
+    double windowHeight = Double.parseDouble(config.getString("window.height"));
+    VBox toggleControl = createToggleArea(toggling, toggleLine);
+    mainScreen.setRight(toggleControl);
+
     Scene scene = new Scene(mainScreen, windowWidth, windowHeight);
-    addStyleSheets(scene);
 
-    String titleOfWindow = "Cell Society: Running " + gridView.getGameName(); // TODO: language & properties
+    registerThemeListenerWithLayoutSheet(scene);
 
-    stageLive.setTitle(titleOfWindow);
-    stageLive.setScene(scene);
-    stageLive.centerOnScreen();
-  }
+    myStage.setOnHidden(event -> unregisterAllListeners());
 
-  private void addStyleSheets(Scene scene) {
-    String importedThemeStyleSheet = null;
-    String themeStyleSheetPath = DEFAULT_RESOURCE_FOLDER + "Style/" + THEME_STYLESHEET;
-    try {
-      importedThemeStyleSheet = getClass().getResource(
-          themeStyleSheetPath)
-          .toExternalForm();
-    } catch (NullPointerException e) {
-      String message = String.format("Failed to load theme stylesheet from %s.",
-          themeStyleSheetPath);
-      LOG.warn(message, e);
-      throw new RuntimeException(message, e);
-    }
+    String titleOfWindow = config.getString("title") + gridView.getGameName();
 
-    String importedLayoutStyleSheet = null;
-    String layoutStyleSheetPath = DEFAULT_RESOURCE_FOLDER + "Style/" + LAYOUT_STYLESHEET;
-    try {
-      importedLayoutStyleSheet = getClass().getResource(
-          layoutStyleSheetPath)
-          .toExternalForm();
-    } catch (NullPointerException e) {
-      String message = String.format("Failed to load layout stylesheet from %s.",
-          layoutStyleSheetPath);
-      LOG.warn(message, e);
-      throw new RuntimeException(message, e);
-    }
-
-    scene.getStylesheets()
-        .addAll(
-            importedThemeStyleSheet,
-            importedLayoutStyleSheet);
+    myStage.setTitle(titleOfWindow);
+    myStage.setScene(scene);
+    myStage.centerOnScreen();
   }
 
   private BorderPane createTopBox(String[] names) {
@@ -173,17 +150,17 @@ public class GameScreen {
     HBox timeAreaBox = new HBox();
     timeAreaBox.setId("time-area-box");
 
-    double sliderMin = Double.parseDouble(layoutResources.getString("slider.min"));
-    double sliderMax = Double.parseDouble(layoutResources.getString("slider.max"));
+    double sliderMin = Double.parseDouble(config.getString("slider.min"));
+    double sliderMax = Double.parseDouble(config.getString("slider.max"));
     speedSlider = new Slider(sliderMin, sliderMax, startSpeed);
 
-    double sliderPrefWidth = Double.parseDouble(layoutResources.getString("slider.prefWidth"));
-    double sliderMaxWidth = Double.parseDouble(layoutResources.getString("slider.maxWidth"));
+    double sliderPrefWidth = Double.parseDouble(config.getString("slider.prefWidth"));
+    double sliderMaxWidth = Double.parseDouble(config.getString("slider.maxWidth"));
     speedSlider.setPrefWidth(sliderPrefWidth);
     speedSlider.setMaxWidth(sliderMaxWidth);
     speedSlider.setShowTickMarks(true); // TODO: need properties?
 
-    double majorTickUnit = Double.parseDouble(layoutResources.getString("slider.majorTickUnit"));
+    double majorTickUnit = Double.parseDouble(config.getString("slider.majorTickUnit"));
     speedSlider.setMajorTickUnit(majorTickUnit);
     speedSlider.setSnapToTicks(true);
 
@@ -222,6 +199,24 @@ public class GameScreen {
     }
 
     return buttonBoxArea;
+  }
+
+  private VBox createToggleArea(String[] names, Runnable toggleOutline) {
+    VBox toggle = new VBox(10);
+
+    for (String name : names) {
+      buttons.addEmptyButton(name);
+    }
+
+    buttons.addActionToButton("Outline", event -> {
+      toggleOutline.run();
+    });
+
+    for (String name : names) {
+      toggle.getChildren().add(buttons.getButton(name));
+    }
+    toggle.setId("toggle-area-box");
+    return toggle;
   }
 
   private void playButtonFunction(Runnable play, Runnable pause) {
@@ -277,5 +272,14 @@ public class GameScreen {
     }
     File chosen = fileChooser.showOpenDialog(stage);
     return Optional.ofNullable(chosen);
+  }
+
+  /**
+   * @param locale
+   */
+  @Override
+  protected void onLanguageChanged(Locale locale) {
+    screenText = PropertiesLoader.getResourceBundleWithLocale(
+        "view/Text/Screen/GameScreen/GameScreen", locale);
   }
 }

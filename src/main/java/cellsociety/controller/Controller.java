@@ -117,7 +117,14 @@ public class Controller {
   }
 
   /**
-   * Enables changing
+   * Toggles outline for cells
+   */
+  public void toggleOutline() {
+    gridView.toggleGridOutline();
+  }
+
+  /**
+   * Enables changing of grid cells
    */
   public void pushFromScreentoGrid(int yRows, int xCols) {
     Cell cell = game.getCell(yRows, xCols);
@@ -264,8 +271,8 @@ public class Controller {
       Runnable createNewGameAction,
       Runnable loadForResults, Runnable pullChanges) {
     gameScreen.gameScreen(parsingInfo, onSave, onLoad, this::pause, this::play, loadForResults,
-        this::findGameSpeed, createNewGameAction, this::clear, this::stepForward, this::stepBack,
-        pullChanges, generations,
+        this::findGameSpeed, createNewGameAction, this::clear, this::stepForward, this::stepBack, pullChanges,
+        this::toggleOutline, generations,
         gameSpeed); // FIXME: don't pass parameters straight on
     setGameSpeed(gameSpeed);
     gameScreen.simPausedButtonChange();

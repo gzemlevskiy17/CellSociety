@@ -9,6 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
+import javafx.scene.shape.StrokeType;
 
 /**
  * Abstract base class for rendering a cellular automaton grid in JavaFX.
@@ -55,6 +56,8 @@ public abstract class GridView {
 
     public abstract void addMouseEvents(Controller controller);
 
+    public abstract void toggleGridOutline();
+
     public Pane getGridPane() {
         return mainPane;
     }
@@ -76,6 +79,13 @@ public abstract class GridView {
         pane.setPrefSize(MAX_GRID_WIDTH, MAX_GRID_HEIGHT);
         setMainPane(pane);
         return pane;
+    }
+
+    protected void addToShape(Shape cell) {
+        cell.setFill(getGridColors().getOrDefault(0, Color.WHITE));
+        cell.setStroke(Color.BLACK);
+        cell.setStrokeWidth(1);
+        cell.setStrokeType(StrokeType.INSIDE);
     }
 
     public String getGameName() {
