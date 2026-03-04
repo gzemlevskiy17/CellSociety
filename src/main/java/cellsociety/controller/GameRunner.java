@@ -19,8 +19,8 @@ import java.util.Optional;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Orchestrates application flow for a single window: shows start screen, loads
@@ -68,6 +68,7 @@ public class GameRunner {
   private ParseResult currentParseResult;
   private StartScreen startScreen;
 
+  private static final Logger LOG = LogManager.getLogger(GameRunner.class);
   private Runnable createNewGameAction;
 
   /**
@@ -102,7 +103,7 @@ public class GameRunner {
         new ErrorView("Configuration Error", e.getMessage());
       } catch (Exception e) {
         new ErrorView("Unexpected Error", "Failed to load simulation: " + e.getMessage());
-        e.printStackTrace();
+        LOG.warn("Unexpected error loading simulation", e);
       }
     });
   }
@@ -178,10 +179,8 @@ public class GameRunner {
   private void writeSaveFile(ParseResult snapshot, File outputFile) {
     try {
       XMLWriter.save(snapshot, outputFile);
-    } catch (ParserConfigurationException e) {
-      new ErrorView("Save Error", "Failed to configure XML writer: " + e.getMessage());
-    } catch (TransformerException e) {
-      new ErrorView("Save Error", "Failed to write XML file: " + e.getMessage());
+    } catch (IllegalStateException e) {
+      new ErrorView("Save Error", "Failed to write simulation file: " + e.getMessage());
     }
   }
 
