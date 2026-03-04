@@ -12,6 +12,14 @@ import javafx.scene.control.ChoiceDialog;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Presents a language-selection dialog and tracks the active {@link java.util.Locale}.
+ *
+ * <p>Available languages are loaded from the {@code view/Text/Languages} resource bundle.
+ * The selected locale is propagated to other UI components via {@link #getLocale()}.</p>
+ *
+ * @author cellsociety team
+ */
 public class LanguageView {
 
   private static final Logger LOG = LogManager.getLogger(LanguageView.class);

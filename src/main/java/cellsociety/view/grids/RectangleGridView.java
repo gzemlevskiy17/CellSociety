@@ -6,6 +6,12 @@ import cellsociety.controller.Controller;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Renders the simulation grid as a uniform rectangular grid of
+ * {@link javafx.scene.shape.Rectangle} cells.
+ *
+ * @author cellsociety team
+ */
 public class RectangleGridView extends GridView {
 
     private Rectangle[][] RectArray;

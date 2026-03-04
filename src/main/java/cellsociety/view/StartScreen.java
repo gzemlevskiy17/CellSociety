@@ -14,6 +14,15 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * The application launch screen shown before a simulation is loaded.
+ *
+ * <p>Presents buttons to choose a language, select a visual theme, and open a
+ * simulation file. Delegates locale changes to {@link LanguageView} and
+ * exposes the selected locale via {@link #getLocale()}.</p>
+ *
+ * @author cellsociety team
+ */
 public class StartScreen {
 
     public static final String THEME_STYLESHEET = "light.css";

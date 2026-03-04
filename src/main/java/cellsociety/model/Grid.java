@@ -34,7 +34,7 @@ public class Grid {
 
   private Cell[][] cells;
   private Deque<Cell[][]> history;
-  private Cell[][] initialState;
+  private final Cell[][] initialState;
 
   private final NeighborhoodStrategy neighborhoodStrategy;
   private final EdgePolicy edgePolicy;
@@ -78,13 +78,9 @@ public class Grid {
     cells = new Cell[numRows][numCols];
     defaultInitializeCells();
     history = new ArrayDeque<>();
-    createFirstState(numRows, numCols, cellStates);
-  }
-
-  private void createFirstState(int rows, int cols, int[][] cellStates) {
     if (cellStates != null) {
-      for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
+      for (int i = 0; i < numRows; i++) {
+        for (int j = 0; j < numCols; j++) {
           getCell(i, j).setState(cellStates[i][j]);
         }
       }
