@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import javafx.scene.control.ChoiceDialog;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,15 +16,18 @@ import org.apache.logging.log4j.Logger;
 public class LanguageView {
 
   private static final Logger LOG = LogManager.getLogger(LanguageView.class);
-  private static Locale DEFAULT_LOCALE = Locale.getDefault();
-  private static String DEFAULT_LANGUAGE = "English";
   private List<String> languageChoices;
-  private Map<String, String> languageToLocaleString;
-  private Locale locale;
+  private Map<String, Locale> languagetoLocale;
   private ResourceBundle screenText;
+  private StyleLoader styleLoader;
+  private ThemeManager themeManager;
+  private LanguageManager languageManager;
 
   public LanguageView() {
-    languageToLocaleString = new HashMap<>();
+    languageManager = LanguageManager.getInstance();
+    Consumer<Locale> localeListener = locale -> updateScreenTextBundle(locale);
+    languageManager.addListener(localeListener);
+    languagetoLocale = new HashMap<>();
     loadLanguages();
   }
 
@@ -34,42 +38,38 @@ public class LanguageView {
           "view/Text/Languages");
     } catch (NullPointerException e) {
       String message = String.format("Failed to load language list, defaulting to %s.",
-          DEFAULT_LOCALE.getDisplayLanguage());
-      locale = DEFAULT_LOCALE;
+          languageManager.getDefaultLocale().getDisplayLanguage());
       LOG.warn(message, e);
       throw new IllegalStateException(message,
           e);
     }
-    DEFAULT_LANGUAGE = languageBundle.getString("defaultLanguage");
-    locale = DEFAULT_LOCALE;
-    screenText = updateScreenTextBundle();
 
     String languages = languageBundle.getString("languages");
     languageChoices = Arrays.asList(languages.split(","));
     for (String language : languageChoices) {
       String localeString = languageBundle.getString(language);
-      languageToLocaleString.put(language, localeString);
+      languagetoLocale.put(language, Locale.of(localeString));
     }
+
+    languageManager.setDefaultLocale(
+        languagetoLocale.get(languageBundle.getString("defaultLanguage")));
+    languageManager.setLocale(languageManager.getDefaultLocale());
   }
 
-  private ResourceBundle updateScreenTextBundle() {
-    return PropertiesLoader.getResourceBundleWithLocale(
+  private void updateScreenTextBundle(Locale locale) {
+    screenText = PropertiesLoader.getResourceBundleWithLocale(
         "view/Text/Screen/StartScreen/LanguageView/LanguageView", locale);
   }
 
-  public void languageScreen() {
-    ChoiceDialog<String> dialog = new ChoiceDialog<>(DEFAULT_LANGUAGE, languageChoices);
+  public void languageChoiceScreen() {
+    ChoiceDialog<String> dialog = new ChoiceDialog<>(languageManager.getDefaultLanguage(),
+        languageChoices);
     // dialog.setTitle("Language of Cell Society"); //TODO: need header?
     dialog.setHeaderText(screenText.getString("header"));
     dialog.setContentText(screenText.getString("prompt"));
     Optional<String> result = dialog.showAndWait();
-    result.ifPresent(choice -> {
-      locale = Locale.of(languageToLocaleString.get(choice));
-      screenText = updateScreenTextBundle();
-    });
-  }
 
-  public Locale getLocale() {
-    return locale;
+    // Don't need default choice as it will be set in loadLanguages()
+    result.ifPresent(choice -> languageManager.setLocale(languagetoLocale.get(choice)));
   }
 }
