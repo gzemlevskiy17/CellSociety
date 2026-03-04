@@ -8,8 +8,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ColorPicker;
@@ -66,9 +64,9 @@ public class InfoView extends StylableView {
         try {
           gameResources = PropertiesLoader.getResourceBundle(
               "model/" + currentResult.getGameType());
-            String variToExplore = gameResources.getString("variables");
-            if (!variToExplore.isBlank()) {
-                paramVariables = variToExplore.split("[,\s]+");
+          String variablesToExplore = gameResources.getString("variables");
+          if (!variablesToExplore.isBlank()) {
+            paramVariables = variablesToExplore.split("[,\s]+");
             }
         } catch (Exception e) {
             new ErrorView("Missing Variables", "No Properties File for " + currentResult.getGameType());
@@ -151,22 +149,26 @@ public class InfoView extends StylableView {
     currentResult = givenInfo;
     clazz = currentResult.getClass();
     VBox stackOfParam = createTextArea(false);
+    stackOfParam.setId("info-stack");
     stackOfParam.getChildren().addAll(createParamArea(false));
     stackOfParam.getChildren().addAll(createColorArea(false));
     setupInfoButton(stackOfParam, buttonNamesView);
+    //        registerLanguageListener();
+    registerThemeListenerWithLayoutSheet(newStage.getScene());
+
+    newStage.setOnHidden(event -> unregisterAllListeners());
     newStage.setTitle("Show Information Screen");
     newStage.show();
   }
 
-  private void setupInfoButton(VBox stackOfParam, String[] buttonNamesView) {
-    HBox buttonArea = new HBox(10);
+  private void setupInfoButton(VBox stackOfParameters, String[] buttonNamesView) {
+    HBox buttonArea = new HBox();
+    buttonArea.setId("button-area");
     for (String name : buttonNamesView) {
       buttonArea.getChildren().add(buttonHold.getButton(name));
     }
-    stackOfParam.getChildren().add(buttonArea);
-    stackOfParam.setAlignment(Pos.CENTER);
-    stackOfParam.setPadding(new Insets(10));
-    Scene infoScene = new Scene(stackOfParam);
+    stackOfParameters.getChildren().add(buttonArea);
+    Scene infoScene = new Scene(stackOfParameters);
     newStage.setScene(infoScene);
   }
 
@@ -177,12 +179,17 @@ public class InfoView extends StylableView {
     stackOfParam.getChildren().addAll(createParamArea(true));
     stackOfParam.getChildren().addAll(createColorArea(true));
     setupInfoButton(stackOfParam, buttonNamesEdit);
-    newStage.setTitle("Show Edit Screen");
+    //        registerLanguageListener();
+    registerThemeListenerWithLayoutSheet(newStage.getScene());
+
+    newStage.setOnHidden(event -> unregisterAllListeners());
+    newStage.setTitle("Show Edit Screen"); //TODO: properties
     newStage.show();
   }
 
   public VBox createTextArea(boolean allowEditing) {
-    VBox stackOfParam = new VBox(5);
+    VBox stackOfParam = new VBox();
+    stackOfParam.setId("param-area");
     for (String paramName : infoSolid) {
       HBox values = returnText(paramName, false);
       stackOfParam.getChildren().add(values);
@@ -195,7 +202,8 @@ public class InfoView extends StylableView {
   }
 
   private HBox returnText(String paramName, boolean allowEditing) {
-    HBox values = new HBox(5);
+    HBox values = new HBox();
+    values.setId("values");
     values.getChildren().add(new Label(paramName));
 
     String result = "";
@@ -212,7 +220,7 @@ public class InfoView extends StylableView {
     } else {
       text = new Label(result);
       ((Labeled) text).setWrapText(true);
-      text.prefWidth(200);
+      text.prefWidth(200); //TODO: properties
     }
     ScrollPane scrolling = new ScrollPane((Node) text);
     values.getChildren().add(scrolling);
@@ -220,10 +228,12 @@ public class InfoView extends StylableView {
   }
 
   private VBox createParamArea(boolean allowEditing) {
-    VBox stackOfParam = new VBox(5);
+    VBox stackOfParam = new VBox();
+    stackOfParam.setId("param-area");
 
     for (String param : paramVariables) {
-      HBox values = new HBox(5);
+      HBox values = new HBox();
+      values.setId("values");
       values.getChildren().add(new Label(param));
 
       if (allowEditing) {
@@ -252,7 +262,7 @@ public class InfoView extends StylableView {
       } else {
         Label textOnly = new Label(currentResult.getParam(param));
         textOnly.setWrapText(true);
-        textOnly.prefWidth(200);
+        textOnly.prefWidth(200); //TODO: properties
 
         ScrollPane scrolling = new ScrollPane(textOnly);
         values.getChildren().add(scrolling);
@@ -263,11 +273,13 @@ public class InfoView extends StylableView {
   }
 
   private VBox createColorArea(boolean allowEditing) {
-    VBox stackOfParam = new VBox(5);
+    VBox stackOfParam = new VBox();
+    stackOfParam.setId("param-area");
     Set<Integer> colorKeys = currentResult.getColorKeys();
 
     for (Integer state : colorKeys) {
       HBox values = new HBox(5);
+      values.setId("values");
       values.getChildren().add(new Label("State" + state + ":"));
 
       Node text = null;
@@ -276,11 +288,11 @@ public class InfoView extends StylableView {
         text = colorChanges.get(state);
         ((ColorPicker) text).setValue(Color.web(currentColor));
       } else {
-        Rectangle colorPatch = new Rectangle(25, 25, Color.web(currentColor));
+        Rectangle colorPatch = new Rectangle(25, 25, Color.web(currentColor)); //TODO: properties
         values.getChildren().add(colorPatch);
         text = new Label(currentColor);
         ((Labeled) text).setWrapText(true);
-        text.prefWidth(200);
+        text.prefWidth(200); //TODO: properties
       }
       ScrollPane scrolling = new ScrollPane((Node) text);
       values.getChildren().add(scrolling);

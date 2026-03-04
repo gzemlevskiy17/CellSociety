@@ -1,0 +1,16 @@
+#button-area {
+  -fx-spacing: 10;
+}
+
+#info-stack {
+  -fx-alignment: center;
+  -fx-padding: 10 10 10 10;
+}
+
+#values {
+  -fx-spacing: 5;
+}
+
+#param-area {
+  -fx-spacing: 5;
+}
