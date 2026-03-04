@@ -66,7 +66,6 @@ public class LanguageView extends StylableView {
 
     languageManager.setDefaultLocale(
         languagetoLocale.get(languageBundle.getString("defaultLanguage")));
-    languageManager.setLocale(languageManager.getDefaultLocale());
   }
 
   public void languageChoiceScreen() {

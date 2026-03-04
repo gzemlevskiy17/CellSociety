@@ -35,6 +35,7 @@ public class StartScreen extends StylableView {
     languageView = new LanguageView();
     buttonCreator = new ButtonCreator();
     config = PropertiesLoader.getResourceBundle("view/Config/StartScreen/StartScreen");
+    registerLanguageListener();
 
     String[] names = config.getString("buttonNames").split("[,\s]+");
 
@@ -48,7 +49,6 @@ public class StartScreen extends StylableView {
     BorderPane root = new BorderPane();
     Scene scene = new Scene(root);
     registerThemeListenerWithLayoutSheet(scene);
-    registerLanguageListener();
 
     stage.setOnHidden(event -> unregisterAllListeners());
 
