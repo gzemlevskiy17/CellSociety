@@ -3,9 +3,9 @@ package cellsociety.view.grids;
 import java.util.Map;
 
 import cellsociety.controller.Controller;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeType;
 
 /**
  * Renders the simulation grid as a uniform rectangular grid of
@@ -15,7 +15,8 @@ import javafx.scene.shape.StrokeType;
  */
 public class RectangleGridView extends GridView {
 
-    private Rectangle[][] RectArray;
+    private Rectangle[][] rectArray;
+    private GridPane gridPane;
 
     public RectangleGridView(String gameName, Map<Integer, Color> colors, int x, int y) {
         super(gameName, colors, x, y);
@@ -23,7 +24,8 @@ public class RectangleGridView extends GridView {
 
     @Override
     public void initializeGridPane() {
-        RectArray = new Rectangle[getNumRows()][getNumCols()];
+        gridPane = (GridPane) getGridPane();
+        rectArray = new Rectangle[getNumRows()][getNumCols()];
 
         double y = 0;
         for (int i = 0; i < getNumRows(); i++) {
@@ -43,13 +45,13 @@ public class RectangleGridView extends GridView {
         cellRect.setLayoutY(y);
         addToShape(cellRect);
 
-        RectArray[row][col] = cellRect;
-        ((javafx.scene.layout.GridPane) getGridPane()).add(cellRect, col, row);
+        rectArray[row][col] = cellRect;
+        gridPane.add(cellRect, col, row);
     }
 
     @Override
     public void updateCell(int row, int col, int state) {
-        RectArray[row][col].setFill(getGridColors().get(state));
+        rectArray[row][col].setFill(getGridColors().get(state));
     }
 
     @Override
@@ -59,23 +61,11 @@ public class RectangleGridView extends GridView {
                 int indepRow = row;
                 int indepCol = col;
 
-                RectArray[row][col].setOnMouseClicked(event -> {
+                rectArray[row][col].setOnMouseClicked(event -> {
                     controller.pushFromScreentoGrid(indepRow, indepCol);
                 });
             }
         }
     }
 
-    @Override
-    public void toggleGridOutline() {
-        for (int row = 0; row < getNumRows(); row++) {
-            for (int col = 0; col < getNumCols(); col++) {
-                if (RectArray[row][col].getStrokeWidth() > 0) {
-                    RectArray[row][col].setStrokeWidth(0);
-                } else {
-                    RectArray[row][col].setStrokeWidth(1);
-                }
-            }
-        }
-    }
 }
