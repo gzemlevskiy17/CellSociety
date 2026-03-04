@@ -9,26 +9,32 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import javafx.scene.Scene;
 import javafx.scene.control.ChoiceDialog;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class LanguageView {
+public class LanguageView extends StylableView {
 
   private static final Logger LOG = LogManager.getLogger(LanguageView.class);
   private List<String> languageChoices;
   private Map<String, Locale> languagetoLocale;
   private ResourceBundle screenText;
-  private StyleLoader styleLoader;
-  private ThemeManager themeManager;
-  private LanguageManager languageManager;
 
   public LanguageView() {
-    languageManager = LanguageManager.getInstance();
-    Consumer<Locale> localeListener = locale -> updateScreenTextBundle(locale);
-    languageManager.addListener(localeListener);
+    super();
+    registerLanguageListener();
     languagetoLocale = new HashMap<>();
     loadLanguages();
+  }
+
+  /**
+   * @param locale
+   */
+  @Override
+  protected void onLanguageChanged(Locale locale) {
+    screenText = PropertiesLoader.getResourceBundleWithLocale(
+        "view/Text/Screen/StartScreen/LanguageView/LanguageView", locale);
   }
 
   private void loadLanguages() {
@@ -56,11 +62,6 @@ public class LanguageView {
     languageManager.setLocale(languageManager.getDefaultLocale());
   }
 
-  private void updateScreenTextBundle(Locale locale) {
-    screenText = PropertiesLoader.getResourceBundleWithLocale(
-        "view/Text/Screen/StartScreen/LanguageView/LanguageView", locale);
-  }
-
   public void languageChoiceScreen() {
     ChoiceDialog<String> dialog = new ChoiceDialog<>(languageManager.getDefaultLanguage(),
         languageChoices);
@@ -68,6 +69,13 @@ public class LanguageView {
     dialog.setHeaderText(screenText.getString("header"));
     dialog.setContentText(screenText.getString("prompt"));
     Optional<String> result = dialog.showAndWait();
+    Scene scene = dialog.getDialogPane().getScene();
+
+    Consumer<String> themeListener = registerThemeListener(scene);
+
+    dialog.setOnHidden(event -> {
+      themeManager.removeListener(themeListener);
+    });
 
     // Don't need default choice as it will be set in loadLanguages()
     result.ifPresent(choice -> languageManager.setLocale(languagetoLocale.get(choice)));
