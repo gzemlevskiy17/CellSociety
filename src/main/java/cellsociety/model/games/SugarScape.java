@@ -20,9 +20,11 @@ import java.util.Random;
  * <p>
  * Supports multiple presets (variations) through XML configuration alone:
  * <ul>
- *   <li>Preset 1 (Movement): basic foraging with default parameters</li>
- *   <li>Preset 2 (Migration): higher vision, clustered start, slower growback</li>
- *   <li>Preset 3 (Reproduction): agents can reproduce when fertile and wealthy</li>
+ * <li>Preset 1 (Movement): basic foraging with default parameters</li>
+ * <li>Preset 2 (Migration): higher vision, clustered start, slower
+ * growback</li>
+ * <li>Preset 3 (Reproduction): agents can reproduce when fertile and
+ * wealthy</li>
  * </ul>
  * </p>
  *
@@ -48,6 +50,16 @@ public class SugarScape extends Game {
   private static final int DISPLAY_AGENT = 5;
   private static final int MAX_SUGAR_LEVEL = 4;
 
+  private static final int DEFAULT_NUM_AGENTS = 400;
+  private static final int DEFAULT_MIN_VISION = 1;
+  private static final int DEFAULT_MAX_VISION = 6;
+  private static final int DEFAULT_MIN_METABOLISM = 1;
+  private static final int DEFAULT_MAX_METABOLISM = 4;
+  private static final int DEFAULT_MIN_SUGAR = 5;
+  private static final int DEFAULT_MAX_SUGAR = 25;
+  private static final int DEFAULT_GROW_BACK_RATE = 1;
+  private static final int DEFAULT_GROW_BACK_INTERVAL = 1;
+
   private final int[][] sugarCapacity;
   private final int[][] currentSugar;
   private final List<SugarAgent> agents;
@@ -67,15 +79,15 @@ public class SugarScape extends Game {
     super(grid, params);
     random = new Random();
 
-    int numAgents = intParam("numAgents", 400);
-    int minVision = intParam("minVision", 1);
-    int maxVision = intParam("maxVision", 6);
-    int minMetabolism = intParam("minMetabolism", 1);
-    int maxMetabolism = intParam("maxMetabolism", 4);
-    int minInitSugar = intParam("minInitSugar", 5);
-    int maxInitSugar = intParam("maxInitSugar", 25);
-    sugarGrowBackRate = intParam("sugarGrowBackRate", 1);
-    sugarGrowBackInterval = intParam("sugarGrowBackInterval", 1);
+    int numAgents = intParam("numAgents", DEFAULT_NUM_AGENTS);
+    int minVision = intParam("minVision", DEFAULT_MIN_VISION);
+    int maxVision = intParam("maxVision", DEFAULT_MAX_VISION);
+    int minMetabolism = intParam("minMetabolism", DEFAULT_MIN_METABOLISM);
+    int maxMetabolism = intParam("maxMetabolism", DEFAULT_MAX_METABOLISM);
+    int minInitSugar = intParam("minInitSugar", DEFAULT_MIN_SUGAR);
+    int maxInitSugar = intParam("maxInitSugar", DEFAULT_MAX_SUGAR);
+    sugarGrowBackRate = intParam("sugarGrowBackRate", DEFAULT_GROW_BACK_RATE);
+    sugarGrowBackInterval = intParam("sugarGrowBackInterval", DEFAULT_GROW_BACK_INTERVAL);
 
     int rows = grid.getRows();
     int cols = grid.getColumns();
@@ -101,7 +113,7 @@ public class SugarScape extends Game {
     List<int[]> emptyCells = new ArrayList<>();
     for (int r = 0; r < getGrid().getRows(); r++) {
       for (int c = 0; c < getGrid().getColumns(); c++) {
-        emptyCells.add(new int[]{r, c});
+        emptyCells.add(new int[] { r, c });
       }
     }
     Collections.shuffle(emptyCells, random);
@@ -187,7 +199,7 @@ public class SugarScape extends Game {
         }
       }
     }
-    return new int[]{bestRow, bestCol};
+    return new int[] { bestRow, bestCol };
   }
 
   /**
