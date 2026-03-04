@@ -165,6 +165,7 @@ public class GameScreen extends StylableView {
     speedSlider.valueProperty().addListener((observable) -> setGameSpeed.run());
 
     dynamicGenerations = new Label();
+    dynamicGenerations.setId("generation-label");
     dynamicGenerations.setText("Gen: " + generations); // TODO: properties
 
     timeAreaBox.getChildren().addAll(speedSlider, dynamicGenerations);
