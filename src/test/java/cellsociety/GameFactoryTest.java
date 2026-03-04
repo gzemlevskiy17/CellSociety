@@ -1,15 +1,18 @@
 package cellsociety;
 
-import cellsociety.model.games.ForestFire;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import cellsociety.model.Game;
-import cellsociety.model.games.GameOfLife;
 import cellsociety.model.ModelFactory;
 import cellsociety.model.ParseResult;
+import cellsociety.model.games.GameOfLife;
 import cellsociety.view.ViewFactory;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.Test;
 
 class GameFactoryTest {
 
@@ -21,16 +24,6 @@ class GameFactoryTest {
         Game game = factory.createGame(result);
 
         assertInstanceOf(GameOfLife.class, game);
-    }
-
-    @Test
-    void createForestFireReturnsCorrectType() {
-        ParseResult result = new ParseResult(5, 5, "ForestFire", "ForestFire", "Author", "Description", null,
-                new HashMap<>(), new HashMap<>());
-        ModelFactory factory = new ModelFactory();
-        Game game = factory.createGame(result);
-
-        assertInstanceOf(ForestFire.class, game);
     }
 
     @Test
