@@ -21,9 +21,6 @@ import javafx.scene.shape.Polygon;
  */
 public class HexagonGridView extends GridView {
 
-  private static final double MAX_GRID_WIDTH = 800.0;
-  private static final double MAX_GRID_HEIGHT = 500.0;
-
   private Polygon[][] hexArray;
   private double circumRadius;
 
@@ -34,9 +31,7 @@ public class HexagonGridView extends GridView {
   @Override
   public void initializeGridPane() {
     // Replace the default GridPane with a free-layout Pane
-    Pane pane = new Pane();
-    pane.setPrefSize(MAX_GRID_WIDTH, MAX_GRID_HEIGHT);
-    setMainPane(pane);
+    Pane pane = createDisplayPane();
 
     int rows = getNumRows();
     int cols = getNumCols();
@@ -44,8 +39,8 @@ public class HexagonGridView extends GridView {
     // Pointy-top hex: height = 2r, width = sqrt(3)*r
     // Vertical spacing between centers: 1.5 * r
     // Horizontal spacing between centers: sqrt(3) * r
-    double rFromHeight = MAX_GRID_HEIGHT / (rows * 1.5 + 0.5);
-    double rFromWidth = MAX_GRID_WIDTH / (cols * Math.sqrt(3) + Math.sqrt(3) / 2.0);
+    double rFromHeight = getMaxGridHeight() / (rows * 1.5 + 0.5);
+    double rFromWidth = getMaxGridWidth() / (cols * Math.sqrt(3) + Math.sqrt(3) / 2.0);
     circumRadius = Math.min(rFromHeight, rFromWidth);
 
     hexArray = new Polygon[rows][cols];
@@ -54,8 +49,8 @@ public class HexagonGridView extends GridView {
     double hexW = Math.sqrt(3) * circumRadius;
     double totalWidth = hexW * cols + hexW / 2.0;
     double totalHeight = circumRadius * (1.5 * rows + 0.5);
-    double offsetX = (MAX_GRID_WIDTH - totalWidth) / 2.0;
-    double offsetY = (MAX_GRID_HEIGHT - totalHeight) / 2.0;
+    double offsetX = (getMaxGridWidth() - totalWidth) / 2.0;
+    double offsetY = (getMaxGridHeight() - totalHeight) / 2.0;
 
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {

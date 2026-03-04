@@ -21,7 +21,6 @@ public class StartScreen {
     private static final String DEFAULT_THEME = "Light"; // TODO: set defaults
     private ButtonCreator firstButton;
     private String[] themeChoices = { "Light", "Dark" }; // TOOD: load dynamically
-    private String chosenTheme = DEFAULT_THEME;
     private static final Logger LOG = LogManager.getLogger(StartScreen.class);
     private static final String LAYOUT_STYLESHEET = "StartScreen.css";
     private static final String CONFIG_RESOURCE_FOLDER = "view/Config/";

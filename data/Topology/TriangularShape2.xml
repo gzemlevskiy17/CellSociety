@@ -7,7 +7,7 @@
     <grid>
         <rows>12</rows>
         <columns>12</columns>
-        <shape>Triangular</shape>
+        <shape>Triangle</shape>
         <neighborhood>Triangular</neighborhood>
         <stateDistribution type="proportion">
             <state id="0" proportion="0.15"/>

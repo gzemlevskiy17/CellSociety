@@ -21,9 +21,6 @@ import javafx.scene.shape.Polygon;
  */
 public class TriangleGridView extends GridView {
 
-  private static final double MAX_GRID_WIDTH = 800.0;
-  private static final double MAX_GRID_HEIGHT = 500.0;
-
   private Polygon[][] triArray;
 
   public TriangleGridView(String gameName, Map<Integer, Color> colors, int cols, int rows) {
@@ -32,21 +29,19 @@ public class TriangleGridView extends GridView {
 
   @Override
   public void initializeGridPane() {
-    Pane pane = new Pane();
-    pane.setPrefSize(MAX_GRID_WIDTH, MAX_GRID_HEIGHT);
-    setMainPane(pane);
+    Pane pane = createDisplayPane();
 
     int rows = getNumRows();
     int cols = getNumCols();
 
     // Triangle width: each column is half a triangle base
     // So we need cols/2 full triangles across
-    double triWidth = MAX_GRID_WIDTH / (cols / 2.0);
+    double triWidth = getMaxGridWidth() / (cols / 2.0);
     // Height of equilateral triangle: sqrt(3)/2 * base
     double triHeight = triWidth * Math.sqrt(3) / 2.0;
     // Total rows needed vertically
     double totalHeight = rows * triHeight;
-    double scale = Math.min(1.0, MAX_GRID_HEIGHT / totalHeight);
+    double scale = Math.min(1.0, getMaxGridHeight() / totalHeight);
     triWidth *= scale;
     triHeight *= scale;
 

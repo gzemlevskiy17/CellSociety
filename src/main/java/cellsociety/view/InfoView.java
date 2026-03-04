@@ -290,7 +290,7 @@ public class InfoView {
         String author = currentResult.getAuthor();
         String description = currentResult.getDescription();
         int[][] cells = currentResult.getCells();
-        Map<String, String> params = currentResult.getParams();
+        Map<String, String> params = new HashMap<>(currentResult.getParams());
         Map<Integer, String> colorMap = currentResult.getColorMap();
 
         try {

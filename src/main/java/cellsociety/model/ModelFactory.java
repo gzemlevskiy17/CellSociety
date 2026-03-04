@@ -86,26 +86,26 @@ public class ModelFactory {
 
   private NeighborhoodStrategy buildNeighborhood(String neighborhood) {
     //TODO: store neighborhood types in properties file and handle unrecognized neighborhood types
-    try {
-      return (NeighborhoodStrategy) Class.forName(
-              "cellsociety.model.topology.neighborhood." + neighborhood + "Neighborhood")
-          .getDeclaredConstructor().newInstance(); //TODO: split into multiple catches
-    } catch (Exception e) {
-      String message = neighborhood + " constructor could not be invoked";
-      LOG.warn(message, e);
-      throw new IllegalArgumentException(message, e);
-    }
+    return buildFromReflection(
+        "cellsociety.model.topology.neighborhood.", neighborhood, "Neighborhood",
+        NeighborhoodStrategy.class);
   }
 
   private EdgePolicy buildEdge(String edgeType) {
     //TODO: store edge types in properties file and handle unrecognized edge types
-    //TODO: how to make new ErrorView here?
+    return buildFromReflection(
+        "cellsociety.model.topology.edgebehavior.", edgeType, "Edge",
+        EdgePolicy.class);
+  }
+
+  private <T> T buildFromReflection(String basePackage, String name, String suffix,
+      Class<T> expectedType) {
     try {
-      return (EdgePolicy) Class.forName(
-              "cellsociety.model.topology.edgebehavior." + edgeType + "Edge").getDeclaredConstructor()
-          .newInstance();
+      Object instance = Class.forName(basePackage + name + suffix)
+          .getDeclaredConstructor().newInstance();
+      return expectedType.cast(instance);
     } catch (Exception e) {
-      String message = edgeType + " constructor could not be invoked";
+      String message = name + " constructor could not be invoked";
       LOG.warn(message, e);
       throw new IllegalArgumentException(message, e);
     }
