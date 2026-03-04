@@ -72,7 +72,7 @@ public class ModelFactory {
     Class<?> superClazzReq = Game.class;
     try {
       Class<?> gameClazz = Class.forName(GAMES_PACKAGE + gameType);
-      if (!gameClazz.getSuperclass().equals(superClazzReq)) {
+      if (!superClazzReq.isAssignableFrom(gameClazz)) {
         throw new IllegalArgumentException("Unknown game type: " + gameType);
       }
       Class<?>[] gameParamTypes = new Class<?>[]{Grid.class, Map.class};
