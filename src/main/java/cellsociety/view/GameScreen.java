@@ -45,11 +45,13 @@ public class GameScreen extends StylableView {
   private ParseResult parseHolder;
   private ResourceBundle screenText;
   private ResourceBundle config;
+  private ResourceBundle buttonsToCreate;
   // TODO: figure out default_resource_folder across multiple files
 
   public GameScreen(Stage stage) {
     myStage = stage;
-    config = PropertiesLoader.getResourceBundle("view/Config/GameScreen");
+    config = PropertiesLoader.getResourceBundle("view/Config/GameScreen/GameScreen");
+    buttonsToCreate = PropertiesLoader.getResourceBundle("view/Config/GameScreen/Buttons");
     registerLanguageListener();
   }
 
@@ -75,9 +77,9 @@ public class GameScreen extends StylableView {
     parseHolder = parsingInfo;
     generations = startingGenerations;
     onPlay = true; // TODO: make more elegant
-    infoView = new InfoView(myStage, parseHolder, locale, pullChanges);
-    buttons = new ButtonCreator(locale);
-    String[] names = wordResources.getString("names").split("[,\s]+"); // TODO: reflection
+    infoView = new InfoView(myStage, parseHolder, pullChanges);
+    buttons = new ButtonCreator();
+    String[] names = buttonsToCreate.getString("names").split("[,\s]+"); // TODO: reflection
     String[] info = { "Info", "EditInfo" };
     String[] toggling = { "Outline" };
 
@@ -101,7 +103,7 @@ public class GameScreen extends StylableView {
 
     myStage.setOnHidden(event -> unregisterAllListeners());
 
-    String titleOfWindow = wordResources.getString("title") + gridView.getGameName();
+    String titleOfWindow = config.getString("title") + gridView.getGameName();
 
     myStage.setTitle(titleOfWindow);
     myStage.setScene(scene);

@@ -57,14 +57,15 @@ public class InfoView extends StylableView {
 
   private ResourceBundle gameResources;
 
-    public InfoView(Stage ownerStage, ParseResult givenInfo, Locale locale, Runnable save) {
+  public InfoView(Stage ownerStage, ParseResult givenInfo, Runnable save) {
         newStage = new Stage();
         newStage.initOwner(ownerStage);
         currentResult = givenInfo;
         clazz = currentResult.getClass();
         buttonHold = new ButtonCreator();
         try {
-            gameResources = PropertiesLoader.getResourceBundle(MODEL_RESOURCE_FOLDER + currentResult.getGameType());
+          gameResources = PropertiesLoader.getResourceBundle(
+              "model/" + currentResult.getGameType());
             String variToExplore = gameResources.getString("variables");
             if (!variToExplore.isBlank()) {
                 paramVariables = variToExplore.split("[,\s]+");
