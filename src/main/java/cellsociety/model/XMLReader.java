@@ -3,13 +3,11 @@ package cellsociety.model;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
@@ -23,19 +21,6 @@ import org.xml.sax.SAXException;
  * @author Michael Li
  */
 public class XMLReader {
-
-  private static final List<String> VALID_TYPES = Arrays.asList(
-      "GameOfLife", "ForestFire", "Segregation", "Percolation", "WaTor", "FallingSand",
-      "ForagingAnts");
-
-  private static final List<String> VALID_NEIGHBORHOODS = Arrays.asList(
-      "Moore", "VonNeumann", "ExtendedMoore", "Hexagonal", "Triangular");
-
-  private static final List<String> VALID_EDGES = Arrays.asList(
-      "Bounded", "Toroidal", "Mirror");
-
-  private static final List<String> VALID_SHAPES = Arrays.asList(
-      "Rectangle", "Hexagonal", "Triangular");
 
   public static ParseResult parse(File file)
       throws ParserConfigurationException, IOException {
@@ -60,11 +45,11 @@ public class XMLReader {
     String author = getTextValue(root, "author");
     String description = getTextValue(root, "description");
 
-    validateRequiredField(gameType, "type");
-    validateRequiredField(title, "title");
-    validateRequiredField(author, "author");
-    validateRequiredField(description, "description");
-    validateSimulationType(gameType);
+    XMLValidator.validateRequiredField(gameType, "type");
+    XMLValidator.validateRequiredField(title, "title");
+    XMLValidator.validateRequiredField(author, "author");
+    XMLValidator.validateRequiredField(description, "description");
+    XMLValidator.validateSimulationType(gameType);
 
     // 2. Section Elements
     Element gridEl = getFirstElement(root, "grid");
@@ -112,15 +97,15 @@ public class XMLReader {
         params.putIfAbsent("shape", shape);
       }
     }
-    validateOptionalTopologyField(params.get("neighborhood"), VALID_NEIGHBORHOODS, "neighborhood");
-    validateOptionalTopologyField(params.get("edge"), VALID_EDGES, "edge");
-    validateOptionalTopologyField(params.get("shape"), VALID_SHAPES, "shape");
+    XMLValidator.validateOptionalTopologyField(params.get("neighborhood"), XMLValidator.VALID_NEIGHBORHOODS, "neighborhood");
+    XMLValidator.validateOptionalTopologyField(params.get("edge"), XMLValidator.VALID_EDGES, "edge");
+    XMLValidator.validateOptionalTopologyField(params.get("shape"), XMLValidator.VALID_SHAPES, "shape");
 
     Element colorEl = getFirstElement(paramEl, "states");
     Map<Integer, String> colorMap = parseColors(colorEl);
 
     if (cells != null && !colorMap.isEmpty()) {
-      validateCellStates(cells, colorMap.keySet());
+      XMLValidator.validateCellStates(cells, colorMap.keySet());
     }
 
     return new ParseResult(dims[0], dims[1], gameType, title, author, description, cells, params, colorMap);
@@ -262,30 +247,6 @@ public class XMLReader {
     return colorMap;
   }
 
-  private static void validateRequiredField(String value, String fieldName) {
-    if (value == null || value.isEmpty()) {
-      throw new IllegalArgumentException("Missing required field: " + fieldName);
-    }
-  }
-
-  private static void validateSimulationType(String gameType) {
-    if (!VALID_TYPES.contains(gameType)) {
-      throw new IllegalArgumentException("Invalid simulation type: " + gameType);
-    }
-  }
-
-  private static void validateCellStates(int[][] cells, Set<Integer> validStates) {
-    for (int i = 0; i < cells.length; i++) {
-      for (int j = 0; j < cells[i].length; j++) {
-        if (!validStates.contains(cells[i][j])) {
-          throw new IllegalArgumentException(
-              "Invalid cell state " + cells[i][j] + " at (" + i + ", " + j
-                  + "). Valid states: " + validStates);
-        }
-      }
-    }
-  }
-
   private static Element getFirstElement(Element parent, String tagName) {
     NodeList nodeList = parent.getElementsByTagName(tagName);
     if (nodeList.getLength() > 0) {
@@ -302,11 +263,4 @@ public class XMLReader {
     return "";
   }
 
-  private static void validateOptionalTopologyField(String value, List<String> validValues,
-      String fieldName) {
-    if (value != null && !value.isEmpty() && !validValues.contains(value)) {
-      throw new IllegalArgumentException(
-          "Invalid " + fieldName + ": " + value + ". Valid values: " + validValues);
-    }
-  }
 }

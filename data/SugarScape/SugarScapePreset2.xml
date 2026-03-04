@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+  <type>SugarScape</type>
+  <title>SugarScape Preset 2: Migration</title>
+  <author>Michael Li</author>
+  <description>Agents start clustered in bottom-left with high vision. Demonstrates emergent diagonal migration waves.</description>
+  <grid>
+    <rows>20</rows>
+    <columns>20</columns>
+    <cells>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 1 2 2 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 1 2 3 3 2 1 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 1 2 3 4 3 2 1 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 1 2 3 3 2 1 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 1 2 2 1 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 1 2 2 1 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 1 2 3 3 2 1 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 1 2 3 4 3 2 1 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 1 2 3 3 2 1 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 1 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+    </cells>
+  </grid>
+  <parameters>
+    <numAgents>80</numAgents>
+    <minVision>4</minVision>
+    <maxVision>10</maxVision>
+    <minMetabolism>1</minMetabolism>
+    <maxMetabolism>4</maxMetabolism>
+    <minInitSugar>5</minInitSugar>
+    <maxInitSugar>25</maxInitSugar>
+    <sugarGrowBackRate>1</sugarGrowBackRate>
+    <sugarGrowBackInterval>2</sugarGrowBackInterval>
+    <states>
+      <state id="0" color="#FFFFFF"/>
+      <state id="1" color="#FFF3C4"/>
+      <state id="2" color="#FFD93D"/>
+      <state id="3" color="#FF9F1C"/>
+      <state id="4" color="#E8590C"/>
+      <state id="5" color="#2196F3"/>
+    </states>
+  </parameters>
+</simulation>

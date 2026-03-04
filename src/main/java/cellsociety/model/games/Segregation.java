@@ -101,20 +101,11 @@ public class Segregation extends Game {
     int myState = getGrid().getCell(row, col).getState();
     List<Cell> neighbors = getGrid().getNeighbors(row, col);
 
-    int sameCount = 0;
-    int totalCount = 0;
-    for (Cell neighbor : neighbors) {
-      if (neighbor.getState() != EMPTY) {
-        totalCount++;
-        if (neighbor.getState() == myState) {
-          sameCount++;
-        }
-      }
-    }
-
+    int totalCount = neighbors.size() - countNeighborsWithState(neighbors, EMPTY);
     if (totalCount == 0) {
       return true;
     }
+    int sameCount = countNeighborsWithState(neighbors, myState);
     return (double) sameCount / totalCount >= Double.parseDouble(getParam("threshold"));
   }
 

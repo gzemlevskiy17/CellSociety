@@ -2,6 +2,7 @@ package cellsociety.model;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -170,5 +171,22 @@ public abstract class Game {
 
   public void updateParams(Map<String, String> gameParams) {
     this.gameParams.putAll(gameParams);
+  }
+
+  /**
+   * Counts how many cells in the given neighbor list have the specified state.
+   *
+   * @param neighbors the list of neighboring cells
+   * @param state     the state to count
+   * @return the number of neighbors with that state
+   */
+  protected int countNeighborsWithState(List<Cell> neighbors, int state) {
+    int count = 0;
+    for (Cell neighbor : neighbors) {
+      if (neighbor.getState() == state) {
+        count++;
+      }
+    }
+    return count;
   }
 }

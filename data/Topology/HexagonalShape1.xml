@@ -7,7 +7,7 @@
     <grid>
         <rows>10</rows>
         <columns>10</columns>
-        <shape>Hexagonal</shape>
+        <shape>Hexagon</shape>
         <neighborhood>Hexagonal</neighborhood>
         <cells>
             <row>0 0 0 0 0 0 0 0 0 0</row>

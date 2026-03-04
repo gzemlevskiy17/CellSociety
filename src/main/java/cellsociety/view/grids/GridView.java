@@ -53,6 +53,21 @@ public abstract class GridView {
         mainPane = pane;
     }
 
+    protected double getMaxGridWidth() {
+        return MAX_GRID_WIDTH;
+    }
+
+    protected double getMaxGridHeight() {
+        return MAX_GRID_HEIGHT;
+    }
+
+    protected Pane createDisplayPane() {
+        Pane pane = new Pane();
+        pane.setPrefSize(MAX_GRID_WIDTH, MAX_GRID_HEIGHT);
+        setMainPane(pane);
+        return pane;
+    }
+
     public String getGameName() {
         return gameName;
     }
