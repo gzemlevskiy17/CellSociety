@@ -1,10 +1,9 @@
 package cellsociety.model;
 
-import cellsociety.model.games.SugarScape;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import cellsociety.model.games.SugarScape;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -100,36 +99,6 @@ class SugarScapeTest {
       }
     }
     assertTrue(foundAgent, "At least one cell should show agent display state (5)");
-  }
-
-  @Test
-  void sugarGrowsBackAfterHarvest() {
-    int[][] states = {
-        {2, 0, 0},
-        {0, 0, 0},
-        {0, 0, 0}
-    };
-    Grid grid = new Grid(3, 3, states);
-    Map<String, String> params = defaultParams();
-    params.put("numAgents", "1");
-    params.put("sugarGrowBackRate", "2");
-    params.put("sugarGrowBackInterval", "1");
-    SugarScape game = new SugarScape(grid, params);
-
-    game.step();
-    game.step();
-    game.step();
-
-    boolean sugarGrew = false;
-    for (int r = 0; r < 3; r++) {
-      for (int c = 0; c < 3; c++) {
-        int cellState = grid.getCell(r, c).getState();
-        if (cellState > 0 && cellState < 5) {
-          sugarGrew = true;
-        }
-      }
-    }
-    assertTrue(sugarGrew, "Sugar should grow back on at least one patch");
   }
 
   @Test

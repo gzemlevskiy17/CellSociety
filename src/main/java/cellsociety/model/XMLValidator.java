@@ -27,7 +27,7 @@ class XMLValidator {
       "Bounded", "Toroidal", "Mirror");
 
   static final List<String> VALID_SHAPES = Arrays.asList(
-      "Rectangle", "Hexagon", "Triangle");
+      "Rectangular", "Hexagonal", "Triangular");
 
   private XMLValidator() {
     // utility class — not instantiable
