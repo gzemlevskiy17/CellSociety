@@ -1,0 +1,46 @@
+.root {
+  -fx-font-size: 14pt;
+  -fx-font-family: "Courier New";
+  -fx-base: rgb(30, 30, 35);
+  -fx-background: rgb(20, 20, 25);
+  /* Global variable that can be used in any element */
+  color-TEXT: #ecf0f1;
+  color-DEFAULT: #8e44ad;
+  color-HOVER: #a569bd;
+  font-LABEL: "Segoe UI Semibold";
+}
+
+.button {
+  -fx-text-fill: white;
+  -fx-background-color: color-DEFAULT;
+  -fx-border-radius: 20;
+  -fx-background-radius: 20;
+  -fx-padding: 8;
+}
+
+.button:hover {
+  -fx-background-color: color-HOVER;
+}
+
+.combo-box-base {
+  -fx-text-base-color: color-TEXT;
+  -fx-background-color: color-DEFAULT;
+  -fx-border-radius: 20;
+  -fx-background-radius: 20;
+}
+
+.combo-box-base:hover {
+  -fx-background-color: color-HOVER;
+}
+
+.label {
+  -fx-opacity: 0.9;
+  -fx-font-size: 11pt;
+  -fx-font-family: font-LABEL;
+  -fx-text-fill: color-TEXT;
+}
+
+.text-field {
+  -fx-font-size: 14pt;
+  -fx-font-family: font-LABEL;
+}

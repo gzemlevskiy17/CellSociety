@@ -1,17 +1,17 @@
 .root {
   -fx-font-size: 14pt;
   -fx-font-family: "Courier New";
-  -fx-base: rgb(132, 145, 47);
-  -fx-background: rgb(225, 228, 203);
+  -fx-base: rgb(240, 240, 245);
+  -fx-background: rgb(250, 250, 252);
   /* Global variable that can be used in any element */
-  color-TEXT: #006464;
-  color-DEFAULT: #DFB951;
-  color-HOVER: cyan;
+  color-TEXT: #2c3e50;
+  color-DEFAULT: #3498db;
+  color-HOVER: #5dade2;
   font-LABEL: "Segoe UI Semibold";
 }
 
 .button {
-  -fx-text-fill: color-TEXT;
+  -fx-text-fill: white;
   -fx-background-color: color-DEFAULT;
   -fx-border-radius: 20;
   -fx-background-radius: 20;
@@ -34,7 +34,7 @@
 }
 
 .label {
-  -fx-opacity: 0.6;
+  -fx-opacity: 0.8;
   -fx-font-size: 11pt;
   -fx-font-family: font-LABEL;
   -fx-text-fill: color-TEXT;
