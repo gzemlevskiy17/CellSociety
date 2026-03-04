@@ -41,12 +41,12 @@ public class InfoView extends StylableView {
   private Stage newStage;
   private ParseResult currentResult;
 
+  private static final Class<?>[] PARAM_TYPES = new Class<?>[]{};
+  private static final String[] BUTTON_NAMES_VIEW = {"OK"};
+  private static final String[] BUTTON_NAMES_EDIT = {"Save", "Cancel"};
+  private static final String[] INFO_SOLID = {"GameType", "Rows", "Cols"};
+  private static final String[] INFO_SEARCH = {"Title", "Author", "Description"};
   private Class<?> clazz;
-  private Class<?>[] paramTypes = new Class<?>[]{};
-  private String[] buttonNamesView = {"OK"};
-  private String[] buttonNamesEdit = {"Save", "Cancel"};
-  private String[] infoSolid = {"GameType", "Rows", "Cols"};
-  private String[] infoSearch = {"Title", "Author", "Description"};
   private String[] paramVariables = {};
   private Map<String, Spinner<Integer>> intChanges;
   private Map<String, Spinner<Double>> doubleChanges;
@@ -58,6 +58,15 @@ public class InfoView extends StylableView {
 
   private ResourceBundle gameResources;
 
+  /**
+   * Constructs an InfoView for the given simulation data. Loads game-specific
+   * parameter metadata from the corresponding properties file and sets up the
+   * editable change-tracking maps.
+   *
+   * @param ownerStage the parent window; the info stage will be owned by it
+   * @param givenInfo  the simulation's current parsed metadata
+   * @param save       callback invoked when the user confirms edits
+   */
   public InfoView(Stage ownerStage, ParseResult givenInfo, Runnable save) {
         newStage = new Stage();
         newStage.initOwner(ownerStage);
@@ -83,7 +92,7 @@ public class InfoView extends StylableView {
     doubleChanges = new HashMap<>();
     textChanges = new HashMap<>();
     colorChanges = new HashMap<>();
-    for (String name : infoSearch) {
+    for (String name : INFO_SEARCH) {
       textChanges.put(name, new TextField());
     }
     for (String name : paramVariables) {
@@ -133,10 +142,10 @@ public class InfoView extends StylableView {
   }
 
   private void makeActionEvent(Runnable save) {
-    for (String name : buttonNamesView) {
+    for (String name : BUTTON_NAMES_VIEW) {
       buttonHold.addEmptyButton(name);
     }
-    for (String name : buttonNamesEdit) {
+    for (String name : BUTTON_NAMES_EDIT) {
       buttonHold.addEmptyButton(name);
     }
     buttonHold.addActionToButton("OK", event -> {
@@ -150,6 +159,12 @@ public class InfoView extends StylableView {
     });
   }
 
+  /**
+   * Opens the read-only info window displaying the simulation's metadata,
+   * parameters, and color map for the given {@link ParseResult}.
+   *
+   * @param givenInfo the simulation metadata to display
+   */
   public void showInfoView(ParseResult givenInfo) {
     currentResult = givenInfo;
     clazz = currentResult.getClass();
@@ -157,7 +172,7 @@ public class InfoView extends StylableView {
     stackOfParam.setId("info-stack");
     stackOfParam.getChildren().addAll(createParamArea(false));
     stackOfParam.getChildren().addAll(createColorArea(false));
-    setupInfoButton(stackOfParam, buttonNamesView);
+    setupInfoButton(stackOfParam, BUTTON_NAMES_VIEW);
     //        registerLanguageListener();
     registerThemeListenerWithLayoutSheet(newStage.getScene());
 
@@ -166,10 +181,10 @@ public class InfoView extends StylableView {
     newStage.show();
   }
 
-  private void setupInfoButton(VBox stackOfParameters, String[] buttonNamesView) {
+  private void setupInfoButton(VBox stackOfParameters, String[] BUTTON_NAMES_VIEW) {
     HBox buttonArea = new HBox();
     buttonArea.setId("button-area");
-    for (String name : buttonNamesView) {
+    for (String name : BUTTON_NAMES_VIEW) {
       buttonArea.getChildren().add(buttonHold.getButton(name));
     }
     stackOfParameters.getChildren().add(buttonArea);
@@ -177,13 +192,19 @@ public class InfoView extends StylableView {
     newStage.setScene(infoScene);
   }
 
+  /**
+   * Opens the editable info window allowing the user to modify simulation
+   * metadata and parameters for the given {@link ParseResult}.
+   *
+   * @param givenInfo the simulation metadata to edit
+   */
   public void showInfoEdit(ParseResult givenInfo) {
     currentResult = givenInfo;
     clazz = currentResult.getClass();
     VBox stackOfParam = createTextArea(true);
     stackOfParam.getChildren().addAll(createParamArea(true));
     stackOfParam.getChildren().addAll(createColorArea(true));
-    setupInfoButton(stackOfParam, buttonNamesEdit);
+    setupInfoButton(stackOfParam, BUTTON_NAMES_EDIT);
     //        registerLanguageListener();
     registerThemeListenerWithLayoutSheet(newStage.getScene());
 
@@ -192,14 +213,23 @@ public class InfoView extends StylableView {
     newStage.show();
   }
 
+  /**
+   * Builds a {@link VBox} containing rows for all fixed metadata fields
+   * (game type, rows, cols) and the editable metadata fields (title, author,
+   * description).
+   *
+   * @param allowEditing if {@code true}, editable text fields are shown;
+   *                     otherwise read-only labels are used
+   * @return the assembled metadata panel
+   */
   public VBox createTextArea(boolean allowEditing) {
     VBox stackOfParam = new VBox();
     stackOfParam.setId("param-area");
-    for (String paramName : infoSolid) {
+    for (String paramName : INFO_SOLID) {
       HBox values = returnText(paramName, false);
       stackOfParam.getChildren().add(values);
     }
-    for (String paramName : infoSearch) {
+    for (String paramName : INFO_SEARCH) {
       HBox values = returnText(paramName, allowEditing);
       stackOfParam.getChildren().add(values);
     }
@@ -214,7 +244,7 @@ public class InfoView extends StylableView {
     String result = "";
     try {
       result =
-          "" + clazz.getMethod("get" + paramName, paramTypes).invoke(currentResult, paramTypes);
+          "" + clazz.getMethod("get" + paramName, PARAM_TYPES).invoke(currentResult, PARAM_TYPES);
     } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
       allowEditing = false;
     }
@@ -306,7 +336,15 @@ public class InfoView extends StylableView {
     return stackOfParam;
   }
 
-    public ParseResult getEditResults() {
+  /**
+   * Collects all user-entered values from the edit form and returns a new
+   * {@link ParseResult} with those values applied. Any field whose value
+   * cannot be read is silently kept at its original value (and the failure
+   * is logged as a warning).
+   *
+   * @return an updated {@link ParseResult} reflecting the user's edits
+   */
+  public ParseResult getEditResults() {
         int rows = currentResult.getRows();
         int cols = currentResult.getCols();
         String gameType = currentResult.getGameType();
@@ -320,32 +358,38 @@ public class InfoView extends StylableView {
         try {
             title = textChanges.get("Title").getText();
         } catch (Exception e) {
+            LOG.warn("Could not read edited title, keeping original", e);
         }
         try {
             author = textChanges.get("Author").getText();
         } catch (Exception e) {
+            LOG.warn("Could not read edited author, keeping original", e);
         }
         try {
             description = textChanges.get("Description").getText();
         } catch (Exception e) {
+            LOG.warn("Could not read edited description, keeping original", e);
         }
         for (String name : paramVariables) {
             if (intChanges.containsKey(name)) {
                 try {
                     params.put(name, Integer.toString(intChanges.get(name).getValue()));
                 } catch (Exception e) {
+                    LOG.warn("Could not read edited int param '{}', keeping original", name, e);
                 }
             }
             if (doubleChanges.containsKey(name)) {
                 try {
                     params.put(name, Double.toString(doubleChanges.get(name).getValue()));
                 } catch (Exception e) {
+                    LOG.warn("Could not read edited double param '{}', keeping original", name, e);
                 }
             }
             if (textChanges.containsKey(name)) {
                 try {
                     params.put(name, textChanges.get(name).getText());
                 } catch (Exception e) {
+                    LOG.warn("Could not read edited text param '{}', keeping original", name, e);
                 }
             }
         }

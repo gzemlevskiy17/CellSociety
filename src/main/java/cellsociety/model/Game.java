@@ -123,7 +123,7 @@ public abstract class Game {
    *
    * @return the simulation's {@link Grid}
    */
-  public Grid getGrid() {
+  protected Grid getGrid() {
     return grid;
   }
 
