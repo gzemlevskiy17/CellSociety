@@ -47,13 +47,12 @@ public class InfoView {
     private static final String LAYOUT_STYLESHEET = "";
     private static final String MODEL_RESOURCE_FOLDER = "model/";
 
-    public InfoView(Stage ownerStage, ParseResult givenInfo, Locale locale, Runnable save) {
+    public InfoView(Stage ownerStage, ParseResult givenInfo, Runnable save) {
         newStage = new Stage();
         newStage.initOwner(ownerStage);
         currentResult = givenInfo;
         clazz = currentResult.getClass();
-        this.locale = locale;
-        buttonHold = new ButtonCreator(this.locale);
+        buttonHold = new ButtonCreator();
         try {
             gameResources = PropertiesLoader.getResourceBundle(MODEL_RESOURCE_FOLDER + currentResult.getGameType());
             paramVariables = gameResources.getString("variables").split("[,\s]+");
@@ -326,10 +325,5 @@ public class InfoView {
         }
 
         return new ParseResult(rows, cols, gameType, title, author, description, cells, params, colorMap);
-    }
-
-    public void changeLocale(Locale locale) {
-        this.locale = locale;
-        buttonHold.changeLocale(this.locale);
     }
 }

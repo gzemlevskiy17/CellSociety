@@ -87,7 +87,7 @@ public class GameRunner {
   }
 
   private void firstStart() {
-    gameScreen = new GameScreen(myStage, startScreen.getLocale());
+    gameScreen = new GameScreen(myStage);
     setup();
   }
 

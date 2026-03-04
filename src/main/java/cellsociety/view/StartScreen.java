@@ -1,6 +1,5 @@
 package cellsociety.view;
 
-import java.util.Locale;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -21,8 +20,8 @@ public class StartScreen {
 
   public StartScreen(Stage stage, Runnable start) {
     languageView = new LanguageView();
-    firstButton = new ButtonCreator(languageView.getLocale());
-    themeView = new ThemeView(languageView.getLocale());
+    firstButton = new ButtonCreator();
+    themeView = new ThemeView();
     styleLoader = new StyleLoader();
 
     String[] names = {"Language", "Theme", "Choice"}; // TODO: properties
@@ -68,10 +67,5 @@ public class StartScreen {
 
   private void setLanguage() {
     languageView.languageChoiceScreen();
-    firstButton.changeLocale(getLocale());
-  }
-
-  public Locale getLocale() {
-    return languageView.getLocale();
   }
 }

@@ -1,7 +1,5 @@
 package cellsociety.view;
 
-import static cellsociety.controller.PropertiesLoader.DEFAULT_RESOURCE_FOLDER;
-
 import cellsociety.controller.PropertiesLoader;
 import cellsociety.model.ParseResult;
 import cellsociety.view.grids.GridView;
@@ -44,9 +42,8 @@ public class GameScreen {
   private static final String GAME_SCREEN_CONFIG = "GameScreen"; // TODO: parameterize
   // TODO: figure out default_resource_folder across multiple files
 
-  public GameScreen(Stage stage, Locale locale) {
+  public GameScreen(Stage stage) {
     stageLive = stage;
-    this.locale = locale;
     layoutResources = PropertiesLoader.getResourceBundle(
         CONFIG_RESOURCE_FOLDER + GAME_SCREEN_CONFIG);
   }
@@ -72,8 +69,8 @@ public class GameScreen {
     parseHolder = parsingInfo;
     generations = startingGenerations;
     onPlay = true; // TODO: make more elegant
-    infoView = new InfoView(stageLive, parseHolder, locale, pullChanges);
-    buttons = new ButtonCreator(locale);
+    infoView = new InfoView(stageLive, parseHolder, pullChanges);
+    buttons = new ButtonCreator();
     String[] names = { "Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
         "NewGame" }; // TODO: reflection
     String[] info = { "Info", "EditInfo" };
@@ -90,46 +87,15 @@ public class GameScreen {
     double windowWidth = Double.parseDouble(layoutResources.getString("window.width"));
     double windowHeight = Double.parseDouble(layoutResources.getString("window.height"));
     Scene scene = new Scene(mainScreen, windowWidth, windowHeight);
-    addStyleSheets(scene);
+
+    StyleLoader styleLoader = new StyleLoader();
+    styleLoader.addStyleSheets(scene, THEME_STYLESHEET, LAYOUT_STYLESHEET);
 
     String titleOfWindow = "Cell Society: Running " + gridView.getGameName(); // TODO: language & properties
 
     stageLive.setTitle(titleOfWindow);
     stageLive.setScene(scene);
     stageLive.centerOnScreen();
-  }
-
-  private void addStyleSheets(Scene scene) {
-    String importedThemeStyleSheet = null;
-    String themeStyleSheetPath = DEFAULT_RESOURCE_FOLDER + "Style/" + THEME_STYLESHEET;
-    try {
-      importedThemeStyleSheet = getClass().getResource(
-          themeStyleSheetPath)
-          .toExternalForm();
-    } catch (NullPointerException e) {
-      String message = String.format("Failed to load theme stylesheet from %s.",
-          themeStyleSheetPath);
-      LOG.warn(message, e);
-      throw new RuntimeException(message, e);
-    }
-
-    String importedLayoutStyleSheet = null;
-    String layoutStyleSheetPath = DEFAULT_RESOURCE_FOLDER + "Style/" + LAYOUT_STYLESHEET;
-    try {
-      importedLayoutStyleSheet = getClass().getResource(
-          layoutStyleSheetPath)
-          .toExternalForm();
-    } catch (NullPointerException e) {
-      String message = String.format("Failed to load layout stylesheet from %s.",
-          layoutStyleSheetPath);
-      LOG.warn(message, e);
-      throw new RuntimeException(message, e);
-    }
-
-    scene.getStylesheets()
-        .addAll(
-            importedThemeStyleSheet,
-            importedLayoutStyleSheet);
   }
 
   private BorderPane createTopBox(String[] names) {
