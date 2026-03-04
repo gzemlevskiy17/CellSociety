@@ -176,6 +176,7 @@ public class Controller {
     generations = 0;
     game.clearGrid();
     gameScreen.simPausedButtonChange();
+    gameScreen.setGenerations(generations);
     updateGrid();
   }
 
@@ -187,6 +188,7 @@ public class Controller {
     generations = 0;
     game.reset();
     gameScreen.simPausedButtonChange();
+    gameScreen.setGenerations(generations);
     updateGrid();
   }
 
