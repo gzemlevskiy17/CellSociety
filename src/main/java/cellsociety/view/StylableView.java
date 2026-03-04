@@ -10,25 +10,26 @@ public abstract class StylableView {
   protected final LanguageManager languageManager;
   protected final StyleLoader styleLoader;
 
+  private Consumer<String> themeListener;
+  private Consumer<Locale> languageListener;
+
   protected StylableView() {
     this.themeManager = ThemeManager.getInstance();
     this.languageManager = LanguageManager.getInstance();
     this.styleLoader = new StyleLoader();
   }
 
-  protected Consumer<String> registerThemeListenerWithLayoutSheet(Scene scene) {
+  protected void registerThemeListenerWithLayoutSheet(Scene scene) {
     String className = this.getClass().getSimpleName();
     Consumer<String> themeListener = theme -> styleLoader.addStyleSheets(scene, theme, className);
     styleLoader.addStyleSheets(scene, themeManager.getTheme(), className);
-    return themeListener;
   }
 
-  protected Consumer<String> registerThemeListener(Scene scene) {
+  protected void registerThemeListener(Scene scene) {
     Consumer<String> themeListener = theme -> styleLoader.addThemeStyleSheet(scene, theme);
     themeManager.addListener(themeListener);
     // Apply current values
     styleLoader.addThemeStyleSheet(scene, themeManager.getTheme());
-    return themeListener;
   }
 
   protected void registerLanguageListener() {
@@ -38,6 +39,25 @@ public abstract class StylableView {
     onLanguageChanged(languageManager.getLocale());
   }
 
-  protected abstract void onLanguageChanged(Locale locale);
+  protected void unregisterThemeListener() {
+    if (themeListener != null) {
+      themeManager.removeListener(themeListener);
+      themeListener = null;
+    }
+  }
 
+  protected void unregisterLanguageListener() {
+    if (languageListener != null) {
+      languageManager.removeListener(languageListener);
+      languageListener = null;
+    }
+  }
+
+  protected void unregisterAllListeners() {
+    unregisterThemeListener();
+    unregisterLanguageListener();
+
+  }
+
+  protected abstract void onLanguageChanged(Locale locale);
 }

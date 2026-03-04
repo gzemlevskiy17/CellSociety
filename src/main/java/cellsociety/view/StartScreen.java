@@ -1,5 +1,8 @@
 package cellsociety.view;
 
+import cellsociety.controller.PropertiesLoader;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -8,34 +11,37 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class StartScreen {
+public class StartScreen extends StylableView {
 
   private static final Logger LOG = LogManager.getLogger(StartScreen.class);
 
   private LanguageView languageView;
   private ThemeView themeView;
-  private ButtonCreator firstButton;
-  private StyleLoader styleLoader;
+  private ButtonCreator buttonCreator;
+  private ResourceBundle screenText;
   // TODO: figure out default_resource_folder across multiple files
 
   public StartScreen(Stage stage, Runnable start) {
     languageView = new LanguageView();
-    firstButton = new ButtonCreator();
+    buttonCreator = new ButtonCreator();
     themeView = new ThemeView();
-    styleLoader = new StyleLoader();
+
 
     String[] names = {"Language", "Theme", "Choice"}; // TODO: properties
 
     for (String name : names) {
-      firstButton.addEmptyButton(name);
+      buttonCreator.addEmptyButton(name);
     }
-    firstButton.addActionToButton("Language", e -> setLanguage());
-    firstButton.addActionToButton("Theme", e -> setTheme());
-    firstButton.addActionToButton("Choice", e -> start.run());
+    buttonCreator.addActionToButton("Language", e -> setLanguage());
+    buttonCreator.addActionToButton("Theme", e -> setTheme());
+    buttonCreator.addActionToButton("Choice", e -> start.run());
 
     BorderPane root = new BorderPane();
     Scene scene = new Scene(root);
-    styleLoader.addStyleSheets(scene, "Light", "StartScreen");
+    registerThemeListenerWithLayoutSheet(scene);
+    registerLanguageListener();
+
+    stage.setOnHidden(event -> unregisterAllListeners());
 
     HBox hBox = new HBox(); // TODO: rename to be more descriptive
     hBox.setId("hbox");
@@ -50,7 +56,7 @@ public class StartScreen {
     buttonHBox.setId("button-hbox");
 
     for (String name : names) {
-      buttonHBox.getChildren().add(firstButton.getButton(name));
+      buttonHBox.getChildren().add(buttonCreator.getButton(name));
     }
     root.setTop(hBox);
     root.setCenter(buttonHBox);
@@ -67,5 +73,14 @@ public class StartScreen {
 
   private void setLanguage() {
     languageView.languageChoiceScreen();
+  }
+
+  /**
+   * @param locale
+   */
+  @Override
+  protected void onLanguageChanged(Locale locale) {
+    screenText = PropertiesLoader.getResourceBundleWithLocale(
+        "view/Text/Screen/StartScreen/StartScreen", locale);
   }
 }

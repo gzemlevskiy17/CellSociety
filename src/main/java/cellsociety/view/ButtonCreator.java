@@ -11,22 +11,27 @@ import javafx.scene.control.Button;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ButtonCreator {
+public class ButtonCreator extends StylableView {
 
   private static final Logger LOG = LogManager.getLogger(ButtonCreator.class);
   private LinkedHashMap<String, Button> buttonHolder;
   private ResourceBundle myResources;
-  private LanguageManager languageManager = LanguageManager.getInstance();
+
 
   public ButtonCreator() {
     buttonHolder = new LinkedHashMap<>();
-    try {
-      myResources = PropertiesLoader.getResourceBundleWithLocale("view/Text/Buttons/Buttons",
-          languageManager.getLocale());
-    } catch (Exception e) {
-      throw new IllegalStateException(
-          "Failed to load button properties for language: " + languageManager.getLocale()
-              .getDisplayLanguage(), e);
+    registerLanguageListener();
+  }
+
+  /**
+   * @param locale
+   */
+  @Override
+  protected void onLanguageChanged(Locale locale) {
+    myResources = PropertiesLoader.getResourceBundleWithLocale("view/Text/Buttons/Buttons",
+        locale);
+    for (String name : buttonHolder.keySet()) {
+      setButtonText(name, name);
     }
   }
 
@@ -51,19 +56,6 @@ public class ButtonCreator {
     } catch (MissingResourceException e) {
       LOG.warn("Failed to find button text for key: {}. Defaulting to key as text.", text, e);
       getButton(name).setText(text);
-    }
-  }
-
-  public void changeLocale(Locale locale) {
-    try {
-      myResources = PropertiesLoader.getResourceBundleWithLocale("view/Text/Buttons/Buttons",
-          locale);
-    } catch (Exception e) {
-      throw new IllegalStateException(
-          "Failed to load button properties for language: " + locale.getDisplayLanguage(), e);
-    }
-    for (String name : buttonHolder.keySet()) {
-      setButtonText(name, name);
     }
   }
 }

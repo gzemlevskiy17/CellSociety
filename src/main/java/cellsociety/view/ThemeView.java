@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceDialog;
 import org.apache.logging.log4j.LogManager;
@@ -50,7 +49,6 @@ public class ThemeView extends StylableView {
 
     String themes = themeBundle.getString("themes");
     themeChoices = Arrays.asList(themes.split(","));
-    System.out.println(themeChoices);
   }
 
   public void themeChoiceScreen() {
@@ -61,10 +59,8 @@ public class ThemeView extends StylableView {
     Optional<String> result = dialog.showAndWait();
     Scene scene = dialog.getDialogPane().getScene();
 
-    Consumer<String> themeListener = registerThemeListener(scene);
-    dialog.setOnHidden(event -> {
-      themeManager.removeListener(themeListener);
-    });
+    registerThemeListener(scene);
+    dialog.setOnHidden(event -> unregisterAllListeners());
 
     result.ifPresentOrElse(choice -> themeManager.setTheme(choice),
         () -> themeManager.setTheme(themeManager.getDefaultTheme()));

@@ -21,31 +21,26 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 //TODO: comment
-public class GameScreen {
+public class GameScreen extends StylableView {
 
-  public static final String THEME_STYLESHEET = "Light.css";
-  private Stage stageLive;
+  private static final Logger LOG = LogManager.getLogger(GameScreen.class);
+  private Stage myStage;
   private GridView gridView;
   private InfoView infoView;
   private ButtonCreator buttons;
-  private Locale locale;
   private boolean onPlay;
   private Label dynamicGenerations;
   private Slider speedSlider;
   private int generations;
   private ParseResult parseHolder;
-
-  private ResourceBundle layoutResources;
-  private static final Logger LOG = LogManager.getLogger(GameScreen.class);
-  private static final String LAYOUT_STYLESHEET = "GameScreen.css";
-  private static final String CONFIG_RESOURCE_FOLDER = "view/Config/";
-  private static final String GAME_SCREEN_CONFIG = "GameScreen"; // TODO: parameterize
+  private ResourceBundle screenText;
+  private ResourceBundle config;
   // TODO: figure out default_resource_folder across multiple files
 
   public GameScreen(Stage stage) {
-    stageLive = stage;
-    layoutResources = PropertiesLoader.getResourceBundle(
-        CONFIG_RESOURCE_FOLDER + GAME_SCREEN_CONFIG);
+    myStage = stage;
+    config = PropertiesLoader.getResourceBundle("view/Config/GameScreen");
+    registerLanguageListener();
   }
 
   public void checkAllNotNull(Object... params) throws Exception { // TODO: do we need this
@@ -63,17 +58,18 @@ public class GameScreen {
   public void gameScreen(ParseResult parsingInfo, Runnable onSave, Runnable onLoad, Runnable pause,
       Runnable play,
       Runnable reset, Runnable setGameSpeed,
-      Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack, Runnable pullChanges,
+      Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack,
+      Runnable pullChanges,
       int startingGenerations,
       double startSpeed) {
     parseHolder = parsingInfo;
     generations = startingGenerations;
     onPlay = true; // TODO: make more elegant
-    infoView = new InfoView(stageLive, parseHolder, pullChanges);
+    infoView = new InfoView(myStage, parseHolder, pullChanges);
     buttons = new ButtonCreator();
-    String[] names = { "Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
-        "NewGame" }; // TODO: reflection
-    String[] info = { "Info", "EditInfo" };
+    String[] names = {"Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
+        "NewGame"}; // TODO: reflection
+    String[] info = {"Info", "EditInfo"};
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
@@ -84,18 +80,20 @@ public class GameScreen {
         reset, setGameSpeed, createNewGameAction, clear, stepForward, stepBack, startSpeed);
     mainScreen.setBottom(simulationControl);
 
-    double windowWidth = Double.parseDouble(layoutResources.getString("window.width"));
-    double windowHeight = Double.parseDouble(layoutResources.getString("window.height"));
+    double windowWidth = Double.parseDouble(config.getString("window.width"));
+    double windowHeight = Double.parseDouble(config.getString("window.height"));
     Scene scene = new Scene(mainScreen, windowWidth, windowHeight);
 
-    StyleLoader styleLoader = new StyleLoader();
-    styleLoader.addStyleSheets(scene, THEME_STYLESHEET, LAYOUT_STYLESHEET);
+    registerThemeListenerWithLayoutSheet(scene);
 
-    String titleOfWindow = "Cell Society: Running " + gridView.getGameName(); // TODO: language & properties
+    myStage.setOnHidden(event -> unregisterAllListeners());
 
-    stageLive.setTitle(titleOfWindow);
-    stageLive.setScene(scene);
-    stageLive.centerOnScreen();
+    String titleOfWindow =
+        "Cell Society: Running " + gridView.getGameName(); // TODO: language & properties
+
+    myStage.setTitle(titleOfWindow);
+    myStage.setScene(scene);
+    myStage.centerOnScreen();
   }
 
   private BorderPane createTopBox(String[] names) {
@@ -138,17 +136,17 @@ public class GameScreen {
     HBox timeAreaBox = new HBox();
     timeAreaBox.setId("time-area-box");
 
-    double sliderMin = Double.parseDouble(layoutResources.getString("slider.min"));
-    double sliderMax = Double.parseDouble(layoutResources.getString("slider.max"));
+    double sliderMin = Double.parseDouble(config.getString("slider.min"));
+    double sliderMax = Double.parseDouble(config.getString("slider.max"));
     speedSlider = new Slider(sliderMin, sliderMax, startSpeed);
 
-    double sliderPrefWidth = Double.parseDouble(layoutResources.getString("slider.prefWidth"));
-    double sliderMaxWidth = Double.parseDouble(layoutResources.getString("slider.maxWidth"));
+    double sliderPrefWidth = Double.parseDouble(config.getString("slider.prefWidth"));
+    double sliderMaxWidth = Double.parseDouble(config.getString("slider.maxWidth"));
     speedSlider.setPrefWidth(sliderPrefWidth);
     speedSlider.setMaxWidth(sliderMaxWidth);
     speedSlider.setShowTickMarks(true); // TODO: need properties?
 
-    double majorTickUnit = Double.parseDouble(layoutResources.getString("slider.majorTickUnit"));
+    double majorTickUnit = Double.parseDouble(config.getString("slider.majorTickUnit"));
     speedSlider.setMajorTickUnit(majorTickUnit);
     speedSlider.setSnapToTicks(true);
 
@@ -243,5 +241,14 @@ public class GameScreen {
     }
     File chosen = fileChooser.showOpenDialog(stage);
     return Optional.ofNullable(chosen);
+  }
+
+  /**
+   * @param locale
+   */
+  @Override
+  protected void onLanguageChanged(Locale locale) {
+    screenText = PropertiesLoader.getResourceBundleWithLocale(
+        "view/Text/Screen/GameScreen/GameScreen", locale);
   }
 }

@@ -8,7 +8,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceDialog;
 import org.apache.logging.log4j.LogManager;
@@ -71,11 +70,9 @@ public class LanguageView extends StylableView {
     Optional<String> result = dialog.showAndWait();
     Scene scene = dialog.getDialogPane().getScene();
 
-    Consumer<String> themeListener = registerThemeListener(scene);
+    registerThemeListener(scene);
 
-    dialog.setOnHidden(event -> {
-      themeManager.removeListener(themeListener);
-    });
+    dialog.setOnHidden(event -> unregisterAllListeners());
 
     // Don't need default choice as it will be set in loadLanguages()
     result.ifPresent(choice -> languageManager.setLocale(languagetoLocale.get(choice)));
