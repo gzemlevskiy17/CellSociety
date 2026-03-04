@@ -150,11 +150,19 @@ public abstract class Game {
     return grid.getCell(row, col);
   }
 
-  // TODO: does this work for all types of games?
+  /**
+   * Resets every cell in the grid to state 0 without affecting the history.
+   */
   public void clearGrid() {
     grid.defaultInitializeCells();
   }
 
+  /**
+   * Returns the value of the named simulation parameter, or an empty string if absent.
+   *
+   * @param name the parameter key
+   * @return the parameter value, or {@code ""} if not found
+   */
   public String getParam(String name) {
     if (gameParams == null)
       throw new NullPointerException("Parameter Storage does not exist");
@@ -165,10 +173,22 @@ public abstract class Game {
     }
   }
 
+  /**
+   * Sets a single simulation parameter by name.
+   *
+   * @param name     the parameter key
+   * @param newValue the new value to assign
+   */
   public void setParam(String name, String newValue) {
     gameParams.put(name, newValue);
   }
 
+  /**
+   * Merges the given parameter map into this simulation's parameters,
+   * overwriting any keys that already exist.
+   *
+   * @param gameParams the parameters to merge in
+   */
   public void updateParams(Map<String, String> gameParams) {
     this.gameParams.putAll(gameParams);
   }

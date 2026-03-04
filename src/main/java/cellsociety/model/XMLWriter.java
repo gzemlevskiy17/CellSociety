@@ -34,7 +34,15 @@ public class XMLWriter {
    * @throws ParserConfigurationException if the XML document builder cannot be created
    * @throws TransformerException         if the XML transformation fails
    */
-  public static void save(ParseResult result, File outputFile)
+  public static void save(ParseResult result, File outputFile) {
+    try {
+      doSave(result, outputFile);
+    } catch (ParserConfigurationException | TransformerException e) {
+      throw new IllegalStateException("Failed to write simulation XML: " + e.getMessage(), e);
+    }
+  }
+
+  private static void doSave(ParseResult result, File outputFile)
       throws ParserConfigurationException, TransformerException {
     Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 

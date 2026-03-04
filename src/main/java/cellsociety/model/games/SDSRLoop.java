@@ -104,7 +104,7 @@ public class SDSRLoop extends LangtonsLoop {
       return CORE;
     }
     if (current == DISSOLVE) {
-      return 0;
+      return BACKGROUND;
     }
     return DISSOLVE;
   }

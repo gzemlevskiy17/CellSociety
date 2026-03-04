@@ -47,10 +47,10 @@ public class InfoView extends StylableView {
   private String[] infoSolid = {"GameType", "Rows", "Cols"};
   private String[] infoSearch = {"Title", "Author", "Description"};
   private String[] paramVariables = {};
-  private HashMap<String, Spinner<Integer>> intChanges;
-  private HashMap<String, Spinner<Double>> doubleChanges;
-  private HashMap<String, TextField> textChanges;
-  private HashMap<Integer, ColorPicker> colorChanges;
+  private Map<String, Spinner<Integer>> intChanges;
+  private Map<String, Spinner<Double>> doubleChanges;
+  private Map<String, TextField> textChanges;
+  private Map<Integer, ColorPicker> colorChanges;
   private ButtonCreator buttonHold;
   private ResourceBundle screenText;
   private ResourceBundle config;
