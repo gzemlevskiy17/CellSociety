@@ -17,8 +17,8 @@
     </grid>
     <parameters>
         <speed>2</speed>
-        <probCatch>0.55</probCatch>
-        <probGrow>0.04</probGrow>
+        <ignitionProbability>0.55</ignitionProbability>
+        <fillProbability>0.04</fillProbability>
         <states>
             <state id="0" name="EMPTY" color="#C8A97C"/>
             <state id="1" name="TREE" color="#2ECC71"/>
