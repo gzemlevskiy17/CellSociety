@@ -18,6 +18,11 @@
   -fx-alignment: top-center;
 }
 
+#toggle-area-box {
+  -fx-spacing: 20;
+  -fx-alignment: center-right;
+}
+
 #top-label {
   font-family: "Comic Sans MS", Arial, sans-serif;
   font-size: 50px;

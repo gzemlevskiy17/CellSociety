@@ -1,9 +1,12 @@
 package cellsociety.view.grids;
 
 import java.util.Map;
+
+import cellsociety.controller.Controller;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.StrokeType;
 
 /**
  * Renders the simulation grid as a pointy-top hexagonal lattice.
@@ -19,9 +22,6 @@ import javafx.scene.shape.Polygon;
  */
 public class HexagonGridView extends GridView {
 
-  private static final double MAX_GRID_WIDTH = 800.0;
-  private static final double MAX_GRID_HEIGHT = 500.0;
-
   private Polygon[][] hexArray;
   private double circumRadius;
 
@@ -32,9 +32,7 @@ public class HexagonGridView extends GridView {
   @Override
   public void initializeGridPane() {
     // Replace the default GridPane with a free-layout Pane
-    Pane pane = new Pane();
-    pane.setPrefSize(MAX_GRID_WIDTH, MAX_GRID_HEIGHT);
-    setMainPane(pane);
+    Pane pane = createDisplayPane();
 
     int rows = getNumRows();
     int cols = getNumCols();
@@ -42,8 +40,8 @@ public class HexagonGridView extends GridView {
     // Pointy-top hex: height = 2r, width = sqrt(3)*r
     // Vertical spacing between centers: 1.5 * r
     // Horizontal spacing between centers: sqrt(3) * r
-    double rFromHeight = MAX_GRID_HEIGHT / (rows * 1.5 + 0.5);
-    double rFromWidth = MAX_GRID_WIDTH / (cols * Math.sqrt(3) + Math.sqrt(3) / 2.0);
+    double rFromHeight = getMaxGridHeight() / (rows * 1.5 + 0.5);
+    double rFromWidth = getMaxGridWidth() / (cols * Math.sqrt(3) + Math.sqrt(3) / 2.0);
     circumRadius = Math.min(rFromHeight, rFromWidth);
 
     hexArray = new Polygon[rows][cols];
@@ -52,8 +50,8 @@ public class HexagonGridView extends GridView {
     double hexW = Math.sqrt(3) * circumRadius;
     double totalWidth = hexW * cols + hexW / 2.0;
     double totalHeight = circumRadius * (1.5 * rows + 0.5);
-    double offsetX = (MAX_GRID_WIDTH - totalWidth) / 2.0;
-    double offsetY = (MAX_GRID_HEIGHT - totalHeight) / 2.0;
+    double offsetX = (getMaxGridWidth() - totalWidth) / 2.0;
+    double offsetY = (getMaxGridHeight() - totalHeight) / 2.0;
 
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
@@ -70,9 +68,7 @@ public class HexagonGridView extends GridView {
     double cy = offsetY + circumRadius + row * vSpacing;
 
     Polygon hex = new Polygon(buildHexPoints(cx, cy));
-    hex.setFill(getGridColors().getOrDefault(0, Color.WHITE));
-    hex.setStroke(Color.BLACK);
-    hex.setStrokeWidth(1);
+    addToShape(hex);
 
     hexArray[row][col] = hex;
     pane.getChildren().add(hex);
@@ -99,5 +95,31 @@ public class HexagonGridView extends GridView {
   @Override
   public void updateCell(int row, int col, int state) {
     hexArray[row][col].setFill(getGridColors().getOrDefault(state, Color.WHITE));
+  }
+
+  @Override
+  public void addMouseEvents(Controller controller) {
+    for (int row = 0; row < getNumRows(); row++) {
+      for (int col = 0; col < getNumCols(); col++) {
+        int indepRow = row;
+        int indepCol = col;
+        hexArray[row][col].setOnMouseClicked(event -> {
+          controller.pushFromScreentoGrid(indepRow, indepCol);
+        });
+      }
+    }
+  }
+
+  @Override
+  public void toggleGridOutline() {
+    for (int row = 0; row < getNumRows(); row++) {
+      for (int col = 0; col < getNumCols(); col++) {
+        if (hexArray[row][col].getStrokeWidth() > 0) {
+          hexArray[row][col].setStrokeWidth(0);
+        } else {
+          hexArray[row][col].setStrokeWidth(1);
+        }
+      }
+    }
   }
 }

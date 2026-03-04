@@ -20,9 +20,19 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-//TODO: comment
-public class GameScreen extends StylableView {
+/**
+ * Manages the main simulation window layout, including the grid display,
+ * playback controls, speed slider, and generation counter.
+ *
+ * <p>Wires UI events (play, pause, step, reset, save, load) to caller-supplied
+ * {@link Runnable} callbacks so that this class remains decoupled from the
+ * controller logic.</p>
+ *
+ * @author cellsociety team
+ */
 
+public class GameScreen extends StylableView {
+  public static final String THEME_STYLESHEET = "light.css";
   private static final Logger LOG = LogManager.getLogger(GameScreen.class);
   private Stage myStage;
   private GridView gridView;
@@ -58,18 +68,18 @@ public class GameScreen extends StylableView {
   public void gameScreen(ParseResult parsingInfo, Runnable onSave, Runnable onLoad, Runnable pause,
       Runnable play,
       Runnable reset, Runnable setGameSpeed,
-      Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack,
-      Runnable pullChanges,
+      Runnable createNewGameAction, Runnable clear, Runnable stepForward, Runnable stepBack, Runnable pullChanges,
+      Runnable toggleLine,
       int startingGenerations,
       double startSpeed) {
     parseHolder = parsingInfo;
     generations = startingGenerations;
     onPlay = true; // TODO: make more elegant
-    infoView = new InfoView(myStage, parseHolder, pullChanges);
-    buttons = new ButtonCreator();
-    String[] names = {"Play", "Reset", "Forward", "Back", "Clear", "Save", "Load", "Edit",
-        "NewGame"}; // TODO: reflection
-    String[] info = {"Info", "EditInfo"};
+    infoView = new InfoView(myStage, parseHolder, locale, pullChanges);
+    buttons = new ButtonCreator(locale);
+    String[] names = wordResources.getString("names").split("[,\s]+"); // TODO: reflection
+    String[] info = { "Info", "EditInfo" };
+    String[] toggling = { "Outline" };
 
     BorderPane mainScreen = new BorderPane(gridView.getGridPane());
 
@@ -82,14 +92,16 @@ public class GameScreen extends StylableView {
 
     double windowWidth = Double.parseDouble(config.getString("window.width"));
     double windowHeight = Double.parseDouble(config.getString("window.height"));
+    VBox toggleControl = createToggleArea(toggling, toggleLine);
+    mainScreen.setRight(toggleControl);
+
     Scene scene = new Scene(mainScreen, windowWidth, windowHeight);
 
     registerThemeListenerWithLayoutSheet(scene);
 
     myStage.setOnHidden(event -> unregisterAllListeners());
 
-    String titleOfWindow =
-        "Cell Society: Running " + gridView.getGameName(); // TODO: language & properties
+    String titleOfWindow = wordResources.getString("title") + gridView.getGameName();
 
     myStage.setTitle(titleOfWindow);
     myStage.setScene(scene);
@@ -187,6 +199,24 @@ public class GameScreen extends StylableView {
     return buttonBoxArea;
   }
 
+  private VBox createToggleArea(String[] names, Runnable toggleOutline) {
+    VBox toggle = new VBox(10);
+
+    for (String name : names) {
+      buttons.addEmptyButton(name);
+    }
+
+    buttons.addActionToButton("Outline", event -> {
+      toggleOutline.run();
+    });
+
+    for (String name : names) {
+      toggle.getChildren().add(buttons.getButton(name));
+    }
+    toggle.setId("toggle-area-box");
+    return toggle;
+  }
+
   private void playButtonFunction(Runnable play, Runnable pause) {
     if (onPlay) {
       simPausedButtonChange();
@@ -230,7 +260,6 @@ public class GameScreen extends StylableView {
     ExtensionFilter onlyXML = new ExtensionFilter("*.xml", "*.xml");
 
     fileChooser.getExtensionFilters().add(onlyXML);
-    // fileChooser.setTitle("Open My File"); //TODO: need title?
     if (initialDir.exists()
         && initialDir.isDirectory()) { // FIXME: maybe doesn't work because initial dir doesn't exist, see fixme above
       fileChooser.setInitialDirectory(initialDir);

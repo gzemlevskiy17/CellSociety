@@ -69,7 +69,8 @@ public class Controller {
   private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 
   private double gameSpeed;
-  private int generations = 0; // TODO: add to constructor
+  private int generations;
+  private int cellMax;
 
   /**
    * Constructs a Controller that coordinates the model, view, and UI controls.
@@ -87,6 +88,9 @@ public class Controller {
     this.game = game;
     this.gameScreen = gameScreen;
     this.gridView = gridView;
+    cellMax = infoResult.getColorMap().size();
+    generations = 0;
+    gridView.addMouseEvents(this);
     gameScreen.setGridView(gridView);
     try {
       this.gameSpeed = Double.parseDouble(infoResult.getParams().get("speed"));
@@ -110,6 +114,23 @@ public class Controller {
     updateGrid();
     generations++;
     gameScreen.setGenerations(generations);
+  }
+
+  /**
+   * Toggles outline for cells
+   */
+  public void toggleOutline() {
+    gridView.toggleGridOutline();
+  }
+
+  /**
+   * Enables changing of grid cells
+   */
+  public void pushFromScreentoGrid(int yRows, int xCols) {
+    Cell cell = game.getCell(yRows, xCols);
+    cell.setState(((cell.getState() + 1) % cellMax));
+    cell.setNextState(cell.getState());
+    gridView.updateCell(yRows, xCols, ((cell.getState() + 1) % cellMax));
   }
 
   /**
@@ -250,8 +271,8 @@ public class Controller {
       Runnable createNewGameAction,
       Runnable loadForResults, Runnable pullChanges) {
     gameScreen.gameScreen(parsingInfo, onSave, onLoad, this::pause, this::play, loadForResults,
-        this::findGameSpeed, createNewGameAction, this::clear, this::stepForward, this::stepBack,
-        pullChanges, generations,
+        this::findGameSpeed, createNewGameAction, this::clear, this::stepForward, this::stepBack, pullChanges,
+        this::toggleOutline, generations,
         gameSpeed); // FIXME: don't pass parameters straight on
     setGameSpeed(gameSpeed);
     gameScreen.simPausedButtonChange();

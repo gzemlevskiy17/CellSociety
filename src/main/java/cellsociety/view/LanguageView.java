@@ -13,8 +13,16 @@ import javafx.scene.control.ChoiceDialog;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class LanguageView extends StylableView {
+/**
+ * Presents a language-selection dialog and tracks the active {@link java.util.Locale}.
+ *
+ * <p>Available languages are loaded from the {@code view/Text/Languages} resource bundle.
+ * The selected locale is propagated to other UI components via {@link #getLocale()}.</p>
+ *
+ * @author cellsociety team
+ */
 
+public class LanguageView extends StylableView {
   private static final Logger LOG = LogManager.getLogger(LanguageView.class);
   private List<String> languageChoices;
   private Map<String, Locale> languagetoLocale;

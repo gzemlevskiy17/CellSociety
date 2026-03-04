@@ -1,15 +1,19 @@
 package cellsociety.view.grids;
 
 import java.util.Map;
+
+import cellsociety.controller.Controller;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.StrokeType;
 
 /**
  * Renders the simulation grid as a triangular lattice.
  *
  * <p>
  * Triangles alternate between pointing up (▲) and pointing down (▽) based on
+ * 
  * the parity of {@code (row + col)}. Each triangle fills the same rectangular
  * bounding box, so all columns are the same width and all rows the same height,
  * creating a seamless tiling.
@@ -19,9 +23,6 @@ import javafx.scene.shape.Polygon;
  */
 public class TriangleGridView extends GridView {
 
-  private static final double MAX_GRID_WIDTH = 800.0;
-  private static final double MAX_GRID_HEIGHT = 500.0;
-
   private Polygon[][] triArray;
 
   public TriangleGridView(String gameName, Map<Integer, Color> colors, int cols, int rows) {
@@ -30,21 +31,19 @@ public class TriangleGridView extends GridView {
 
   @Override
   public void initializeGridPane() {
-    Pane pane = new Pane();
-    pane.setPrefSize(MAX_GRID_WIDTH, MAX_GRID_HEIGHT);
-    setMainPane(pane);
+    Pane pane = createDisplayPane();
 
     int rows = getNumRows();
     int cols = getNumCols();
 
     // Triangle width: each column is half a triangle base
     // So we need cols/2 full triangles across
-    double triWidth = MAX_GRID_WIDTH / (cols / 2.0);
+    double triWidth = getMaxGridWidth() / (cols / 2.0);
     // Height of equilateral triangle: sqrt(3)/2 * base
     double triHeight = triWidth * Math.sqrt(3) / 2.0;
     // Total rows needed vertically
     double totalHeight = rows * triHeight;
-    double scale = Math.min(1.0, MAX_GRID_HEIGHT / totalHeight);
+    double scale = Math.min(1.0, getMaxGridHeight() / totalHeight);
     triWidth *= scale;
     triHeight *= scale;
 
@@ -79,9 +78,7 @@ public class TriangleGridView extends GridView {
       );
     }
 
-    tri.setFill(getGridColors().getOrDefault(0, Color.WHITE));
-    tri.setStroke(Color.BLACK);
-    tri.setStrokeWidth(1);
+    addToShape(tri);
 
     triArray[row][col] = tri;
     pane.getChildren().add(tri);
@@ -90,5 +87,31 @@ public class TriangleGridView extends GridView {
   @Override
   public void updateCell(int row, int col, int state) {
     triArray[row][col].setFill(getGridColors().getOrDefault(state, Color.WHITE));
+  }
+
+  @Override
+  public void addMouseEvents(Controller controller) {
+    for (int row = 0; row < getNumRows(); row++) {
+      for (int col = 0; col < getNumCols(); col++) {
+        int indepRow = row;
+        int indepCol = col;
+        triArray[row][col].setOnMouseClicked(event -> {
+          controller.pushFromScreentoGrid(indepRow, indepCol);
+        });
+      }
+    }
+  }
+
+  @Override
+  public void toggleGridOutline() {
+    for (int row = 0; row < getNumRows(); row++) {
+      for (int col = 0; col < getNumCols(); col++) {
+        if (triArray[row][col].getStrokeWidth() > 0) {
+          triArray[row][col].setStrokeWidth(0);
+        } else {
+          triArray[row][col].setStrokeWidth(1);
+        }
+      }
+    }
   }
 }

@@ -1,8 +1,8 @@
 package cellsociety.view;
 
+import cellsociety.controller.GameRunner;
 import cellsociety.model.ParseResult;
 import cellsociety.view.grids.GridView;
-import cellsociety.view.grids.RectangleGridView;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.scene.paint.Color;
@@ -15,14 +15,12 @@ import org.apache.logging.log4j.Logger;
  *
  * <p>
  * Converts hex color strings from the {@link ParseResult} into JavaFX
- * {@link Color} objects and
- * builds a {@link RectangleGridView}. Falls back to default colors (white,
- * black, red) if no
- * color map is provided in the XML.
+ * {@link Color} objects and builds a {@link GridView}. Falls back to default
+ * colors (white, black, red) if no color map is provided in the XML.
  * </p>
  *
  * <p>
- * <b>Dependencies:</b> {@link ParseResult}, {@link RectangleGridView}
+ * <b>Dependencies:</b> {@link ParseResult}, {@link GridView}
  * </p>
  *
  * <p>
@@ -44,8 +42,7 @@ public class ViewFactory {
 
   /**
    * Creates a {@link GridView} with colors from the parsed configuration. Falls
-   * back to default
-   * colors (white, black, red) if no color map is provided.
+   * back to default colors (white, black, red) if no color map is provided.
    *
    * @param result the parsed XML configuration
    * @return a new {@link GridView} configured for this simulation
@@ -69,11 +66,11 @@ public class ViewFactory {
     }
     String shape = result.getShape();
 
-    // TODO: store shape in properties file and handle unrecognized types
     try {
       Class<?>[] gameParamTypes = new Class<?>[] { String.class, Map.class, int.class, int.class };
       return (GridView) Class.forName(
-          "cellsociety.view.grids." + shape + "GridView").getDeclaredConstructor(gameParamTypes)
+          "cellsociety.view.grids." + shape + "GridView")
+          .getDeclaredConstructor(gameParamTypes)
           .newInstance(gameType, colorMap, cols, rows);
     } catch (Exception e) {
       String message = shape + " constructor could not be invoked";

@@ -13,6 +13,7 @@ import cellsociety.view.ViewFactory;
 import cellsociety.view.grids.GridView;
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import javafx.stage.FileChooser;
@@ -135,6 +136,11 @@ public class GameRunner {
 
   private void handleSave() {
     controller.pause();
+    ParseResult snapshot = buildSnapshot();
+    promptSaveLocation().ifPresent(file -> writeSaveFile(snapshot, file));
+  }
+
+  private ParseResult buildSnapshot() {
     GridReader reader = game.getGridReader();
     int[][] currentCells = new int[reader.getRows()][reader.getCols()];
     for (int r = 0; r < reader.getRows(); r++) {
@@ -142,31 +148,7 @@ public class GameRunner {
         currentCells[r][c] = reader.getCellState(r, c);
       }
     }
-    ParseResult snapshot = getSnapshot(currentCells);
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Save Simulation As");
-    File dataDir = new File(
-        Paths.get(".").toAbsolutePath().normalize().resolve("cellsociety_team01/data").toString());
-    if (dataDir.exists()) {
-      fileChooser.setInitialDirectory(dataDir);
-    }
-    fileChooser.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
-    fileChooser.setInitialFileName("simulation.xml");
-    File outputFile = fileChooser.showSaveDialog(myStage);
-    if (outputFile == null) {
-      return;
-    }
-    try {
-      XMLWriter.save(snapshot, outputFile);
-    } catch (ParserConfigurationException e) {
-      new ErrorView("Save Error", "Failed to configure XML writer: " + e.getMessage());
-    } catch (TransformerException e) {
-      new ErrorView("Save Error", "Failed to write XML file: " + e.getMessage());
-    }
-  }
-
-  private ParseResult getSnapshot(int[][] currentCells) {
-    Map<String, String> currentParams = currentParseResult.getParams();
+    Map<String, String> currentParams = new LinkedHashMap<>(currentParseResult.getParams());
     currentParams.put("speed", controller.getGameSpeed() + "");
     return new ParseResult(
         currentParseResult.getRows(),
@@ -178,6 +160,29 @@ public class GameRunner {
         currentCells,
         currentParams,
         currentParseResult.getColorMap());
+  }
+
+  private Optional<File> promptSaveLocation() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Save Simulation As");
+    File dataDir = new File(
+        Paths.get(".").toAbsolutePath().normalize().resolve("cellsociety_team01/data").toString());
+    if (dataDir.exists()) {
+      fileChooser.setInitialDirectory(dataDir);
+    }
+    fileChooser.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
+    fileChooser.setInitialFileName("simulation.xml");
+    return Optional.ofNullable(fileChooser.showSaveDialog(myStage));
+  }
+
+  private void writeSaveFile(ParseResult snapshot, File outputFile) {
+    try {
+      XMLWriter.save(snapshot, outputFile);
+    } catch (ParserConfigurationException e) {
+      new ErrorView("Save Error", "Failed to configure XML writer: " + e.getMessage());
+    } catch (TransformerException e) {
+      new ErrorView("Save Error", "Failed to write XML file: " + e.getMessage());
+    }
   }
 
   private void toBeUpdates() {

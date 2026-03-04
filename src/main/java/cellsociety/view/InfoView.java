@@ -25,8 +25,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-public class InfoView extends StylableView {
+/**
+ * Displays and edits simulation metadata and parameters in a secondary window.
+ *
+ * <p>Provides two modes: a read-only info view ({@link #showInfoView}) and an
+ * editable form ({@link #showInfoEdit}) whose results are collected via
+ * {@link #getEditResults()}. Parameter spinners are configured from the game's
+ * {@code model/[GameType].properties} resource file.</p>
+ *
+ * @author cellsociety team
+ */
 
+public class InfoView extends StylableView {
   private Stage newStage;
   private ParseResult currentResult;
 
@@ -47,21 +57,24 @@ public class InfoView extends StylableView {
 
   private ResourceBundle gameResources;
 
-  public InfoView(Stage ownerStage, ParseResult givenInfo, Runnable save) {
-    newStage = new Stage();
-    newStage.initOwner(ownerStage);
-    currentResult = givenInfo;
-    clazz = currentResult.getClass();
-    buttonHold = new ButtonCreator();
-    try {
-      gameResources = PropertiesLoader.getResourceBundle("model/" + currentResult.getGameType());
-      paramVariables = gameResources.getString("variables").split("[,\s]+");
-    } catch (Exception e) {
-      new ErrorView("Missing Variables", "No Properties File for " + currentResult.getGameType());
+    public InfoView(Stage ownerStage, ParseResult givenInfo, Locale locale, Runnable save) {
+        newStage = new Stage();
+        newStage.initOwner(ownerStage);
+        currentResult = givenInfo;
+        clazz = currentResult.getClass();
+        buttonHold = new ButtonCreator();
+        try {
+            gameResources = PropertiesLoader.getResourceBundle(MODEL_RESOURCE_FOLDER + currentResult.getGameType());
+            String variToExplore = gameResources.getString("variables");
+            if (!variToExplore.isBlank()) {
+                paramVariables = variToExplore.split("[,\s]+");
+            }
+        } catch (Exception e) {
+            new ErrorView("Missing Variables", "No Properties File for " + currentResult.getGameType());
+        }
+        setUpChanges();
+        makeActionEvent(save);
     }
-    setUpChanges();
-    makeActionEvent(save);
-  }
 
   private void setUpChanges() {
     intChanges = new HashMap<>();
@@ -275,51 +288,49 @@ public class InfoView extends StylableView {
     return stackOfParam;
   }
 
-  public ParseResult getEditResults() {
-    int rows = currentResult.getRows();
-    int cols = currentResult.getCols();
-    String gameType = currentResult.getGameType();
-    String title = currentResult.getTitle();
-    String author = currentResult.getAuthor();
-    String description = currentResult.getDescription();
-    int[][] cells = currentResult.getCells();
-    Map<String, String> params = currentResult.getParams();
-    Map<Integer, String> colorMap = currentResult.getColorMap();
+    public ParseResult getEditResults() {
+        int rows = currentResult.getRows();
+        int cols = currentResult.getCols();
+        String gameType = currentResult.getGameType();
+        String title = currentResult.getTitle();
+        String author = currentResult.getAuthor();
+        String description = currentResult.getDescription();
+        int[][] cells = currentResult.getCells();
+        Map<String, String> params = new HashMap<>(currentResult.getParams());
+        Map<Integer, String> colorMap = currentResult.getColorMap();
 
-    try {
-      title = textChanges.get("Title").getText();
-    } catch (Exception e) {
-    }
-    try {
-      author = textChanges.get("Author").getText();
-    } catch (Exception e) {
-    }
-    try {
-      description = textChanges.get("Description").getText();
-    } catch (Exception e) {
-    }
-    for (String name : paramVariables) {
-      if (intChanges.containsKey(name)) {
         try {
-          params.put(name, Integer.toString(intChanges.get(name).getValue()));
+            title = textChanges.get("Title").getText();
         } catch (Exception e) {
         }
-      } else {
-        if (doubleChanges.containsKey(name)) {
-          try {
-            params.put(name, Double.toString(doubleChanges.get(name).getValue()));
-          } catch (Exception e) {
-          }
-        } else {
-          if (textChanges.containsKey(name)) {
-            try {
-              params.put(name, textChanges.get(name).getText());
-            } catch (Exception e) {
-            }
-          }
+        try {
+            author = textChanges.get("Author").getText();
+        } catch (Exception e) {
         }
-      }
-    }
+        try {
+            description = textChanges.get("Description").getText();
+        } catch (Exception e) {
+        }
+        for (String name : paramVariables) {
+            if (intChanges.containsKey(name)) {
+                try {
+                    params.put(name, Integer.toString(intChanges.get(name).getValue()));
+                } catch (Exception e) {
+                }
+            }
+            if (doubleChanges.containsKey(name)) {
+                try {
+                    params.put(name, Double.toString(doubleChanges.get(name).getValue()));
+                } catch (Exception e) {
+                }
+            }
+            if (textChanges.containsKey(name)) {
+                try {
+                    params.put(name, textChanges.get(name).getText());
+                } catch (Exception e) {
+                }
+            }
+        }
 
     return new ParseResult(rows, cols, gameType, title, author, description, cells, params,
         colorMap);

@@ -3,7 +3,6 @@ package cellsociety.model.games;
 import cellsociety.model.Cell;
 import cellsociety.model.Game;
 import cellsociety.model.Grid;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,6 +38,7 @@ import java.util.Map;
 public class Percolation extends Game {
 
   public static final int EMPTY = 0;
+  public static final int BLOCKED = 1;
   public static final int PERCOLATED = 2;
 
   // TODO: paper uses a linkedlist with all open cells. for this we would need
@@ -62,19 +62,11 @@ public class Percolation extends Game {
     for (int i = 0; i < getGrid().getRows(); i++) {
       for (int j = 0; j < getGrid().getColumns(); j++) {
         Cell cell = getGrid().getCell(i, j);
-        if (cell.getState() == EMPTY && hasPercolatedNeighbor(getGrid().getNeighbors(i, j))) {
+        if (cell.getState() == EMPTY && countNeighborsWithState(getGrid().getNeighbors(i, j), PERCOLATED) > 0) {
           cell.setNextState(PERCOLATED);
         }
       }
     }
   }
 
-  private boolean hasPercolatedNeighbor(List<Cell> neighbors) {
-    for (Cell neighbor : neighbors) {
-      if (neighbor.getState() == PERCOLATED) {
-        return true;
-      }
-    }
-    return false;
-  }
 }

@@ -21,7 +21,8 @@ import java.util.List;
  * </p>
  *
  * <p>
- * <b>Dependencies:</b> {@link Cell}, {@link NeighborhoodStrategy}, {@link EdgePolicy}
+ * <b>Dependencies:</b> {@link Cell}, {@link NeighborhoodStrategy},
+ * {@link EdgePolicy}
  * </p>
  *
  * @author Georgiy Zemlevskiy
@@ -33,7 +34,7 @@ public class Grid {
 
   private Cell[][] cells;
   private Deque<Cell[][]> history;
-  private Cell[][] initialState;
+  private final Cell[][] initialState;
 
   private final NeighborhoodStrategy neighborhoodStrategy;
   private final EdgePolicy edgePolicy;
@@ -49,7 +50,8 @@ public class Grid {
   }
 
   /**
-   * Constructs a grid with initial cell states, default Moore neighborhood and bounded edges.
+   * Constructs a grid with initial cell states, default Moore neighborhood and
+   * bounded edges.
    *
    * @param numRows    the number of rows
    * @param numCols    the number of columns
@@ -66,7 +68,8 @@ public class Grid {
    * @param numCols      the number of columns
    * @param cellStates   initial cell states, or null for all-zero
    * @param neighborhood the strategy defining which offsets count as neighbors
-   * @param edgePolicy   the policy defining how out-of-bounds positions are resolved
+   * @param edgePolicy   the policy defining how out-of-bounds positions are
+   *                     resolved
    */
   public Grid(int numRows, int numCols, int[][] cellStates,
       NeighborhoodStrategy neighborhood, EdgePolicy edgePolicy) {
@@ -75,13 +78,9 @@ public class Grid {
     cells = new Cell[numRows][numCols];
     defaultInitializeCells();
     history = new ArrayDeque<>();
-    createFirstState(numRows, numCols, cellStates);
-  }
-
-  private void createFirstState(int rows, int cols, int[][] cellStates) {
     if (cellStates != null) {
-      for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
+      for (int i = 0; i < numRows; i++) {
+        for (int j = 0; j < numCols; j++) {
           getCell(i, j).setState(cellStates[i][j]);
         }
       }
@@ -159,6 +158,24 @@ public class Grid {
    */
   public boolean isInBounds(int row, int col) {
     return row >= 0 && row < cells.length && col >= 0 && col < cells[0].length;
+  }
+
+  /**
+   * Returns the edge policy used by this grid.
+   *
+   * @return the {@link EdgePolicy} for this grid
+   */
+  public EdgePolicy getEdgePolicy() {
+    return edgePolicy;
+  }
+
+  /**
+   * Returns the neighborhood strategy used by this grid.
+   *
+   * @return the {@link NeighborhoodStrategy} for this grid
+   */
+  public NeighborhoodStrategy getNeighborhoodStrategy() {
+    return neighborhoodStrategy;
   }
 
   /**
