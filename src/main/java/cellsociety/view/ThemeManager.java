@@ -4,6 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * Singleton class that manages the application's visual theme state.
+ *
+ * <p><b>Purpose:</b> Maintains the current active theme and provides a subscription mechanism
+ * to notify UI components when the theme changes.</p>
+ *
+ * <p><b>Usage:</b> Access the singleton via {@link #getInstance()}, register listeners using
+ * {@link #addListener(Consumer)}, and switch themes with {@link #setTheme(String)}.</p>
+ *
+ * <p><b>Justification:</b> Using a Singleton ensures a single source of truth for the theme
+ * across the entire application, while the Observer pattern decouples the theme selection logic
+ * from the specific views that need to update their appearance.</p>
+ *
+ * @author Georgiy Zemlevskiy
+ */
 public class ThemeManager {
 
   private static ThemeManager instance;

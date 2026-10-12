@@ -8,21 +8,16 @@ import java.util.Map;
  * Abstract base class for all cellular automata simulations.
  *
  * <p>
- * Defines the core simulation loop: each {@link #step()} call first computes
- * the next state
- * for every cell via {@link #updateGame()}, then commits all changes
- * simultaneously via
- * {@link #commitChanges()}. This two-phase approach ensures synchronous updates
- * so that the order
+ * Defines the core simulation loop: each {@link #step()} call first computes the next state for
+ * every cell via {@link #updateGame()}, then commits all changes simultaneously via
+ * {@link #commitChanges()}. This two-phase approach ensures synchronous updates so that the order
  * cells are processed does not affect the result.
  * </p>
  *
  * <p>
  * <b>Assumptions:</b> The provided {@link Grid} is non-null and fully
- * initialized with
- * valid {@link Cell} objects. Subclasses must implement {@link #updateGame()}
- * to set each cell's
- * next state without modifying the current state directly.
+ * initialized with valid {@link Cell} objects. Subclasses must implement {@link #updateGame()} to
+ * set each cell's next state without modifying the current state directly.
  * </p>
  *
  * <p>
@@ -32,7 +27,7 @@ import java.util.Map;
  * <p>
  * <b>Example usage:</b>
  * </p>
- * 
+ *
  * <pre>{@code
  * Grid grid = new Grid(10, 10);
  * Game game = new GameOfLife(grid);
@@ -61,8 +56,7 @@ public abstract class Game {
    * Constructs a Game with the given grid and known name of parameters.
    *
    * @param grid      the grid of cells for this simulation; must not be null
-   * @param paramName array of parameter names that will be used to access
-   *                  gameParams
+   * @param paramName array of parameter names that will be used to access gameParams
    */
   public Game(Grid grid, Map<String, String> gameParams) {
     this.grid = grid;
@@ -70,8 +64,7 @@ public abstract class Game {
   }
 
   /**
-   * Advances the simulation by one step. Computes next states for all cells, then
-   * commits the
+   * Advances the simulation by one step. Computes next states for all cells, then commits the
    * changes simultaneously.
    */
   public void step() {
@@ -81,8 +74,7 @@ public abstract class Game {
   }
 
   /**
-   * Reverts the grid to the previously saved state. Sets the grid state to the
-   * last state stored in
+   * Reverts the grid to the previously saved state. Sets the grid state to the last state stored in
    * the grid's history.
    */
   public void stepBack() {
@@ -90,24 +82,20 @@ public abstract class Game {
   }
 
   /**
-   * Sets the grid state to the initial configuration captured when the grid was
-   * created.
+   * Sets the grid state to the initial configuration captured when the grid was created.
    */
   public void reset() {
     grid.resetToInitialState();
   } // TODO: test
 
   /**
-   * Computes the next state for every cell based on the simulation's rules.
-   * Implementations should
-   * call {@link Cell#setNextState(int)} and must not call
-   * {@link Cell#updateState()} directly.
+   * Computes the next state for every cell based on the simulation's rules. Implementations should
+   * call {@link Cell#setNextState(int)} and must not call {@link Cell#updateState()} directly.
    */
   protected abstract void updateGame();
 
   /**
-   * Commits all pending next-state values to the current state for every cell in
-   * the grid. Called
+   * Commits all pending next-state values to the current state for every cell in the grid. Called
    * after {@link #updateGame()} to ensure synchronous updates.
    */
   protected void commitChanges() {
@@ -128,9 +116,9 @@ public abstract class Game {
   }
 
   /**
-   * Returns a read-only {@link GridReader} for the grid backing this simulation.
-   * Controller-layer code should use this instead of {@link #getGrid()} to avoid
-   * exposing the model's internal data structure.
+   * Returns a read-only {@link GridReader} for the grid backing this simulation. Controller-layer
+   * code should use this instead of {@link #getGrid()} to avoid exposing the model's internal data
+   * structure.
    *
    * @return a {@link GridReader} wrapping this simulation's grid
    */
@@ -163,8 +151,9 @@ public abstract class Game {
    * @return the parameter value, or {@code ""} if not found
    */
   public String getParam(String name) {
-    if (gameParams == null)
+    if (gameParams == null) {
       throw new IllegalStateException("Parameter storage has not been initialised");
+    }
     try {
       return gameParams.get(name);
     } catch (Exception e) {
@@ -183,8 +172,8 @@ public abstract class Game {
   }
 
   /**
-   * Merges the given parameter map into this simulation's parameters,
-   * overwriting any keys that already exist.
+   * Merges the given parameter map into this simulation's parameters, overwriting any keys that
+   * already exist.
    *
    * @param gameParams the parameters to merge in
    */

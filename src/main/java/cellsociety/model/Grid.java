@@ -31,13 +31,11 @@ import java.util.List;
 public class Grid {
 
   private static final int MAX_HISTORY = 20;
-
-  private Cell[][] cells;
-  private Deque<Cell[][]> history;
   private final Cell[][] initialState;
-
   private final NeighborhoodStrategy neighborhoodStrategy;
   private final EdgePolicy edgePolicy;
+  private Cell[][] cells;
+  private Deque<Cell[][]> history;
 
   /**
    * Constructs a grid with default Moore neighborhood and bounded edges.

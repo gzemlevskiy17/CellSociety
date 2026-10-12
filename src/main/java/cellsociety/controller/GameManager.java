@@ -64,8 +64,6 @@ public class GameManager {
 
   private void launchNewGame(Stage newStage) {
     GameRunner gameRunner = new GameRunner(newStage, this::createNewGame);
-    // TODO: consider if we need to keep track of game runners for any reason.
-    // TODO: add launch method to GameRunner to make this code clearer
   }
 
 }

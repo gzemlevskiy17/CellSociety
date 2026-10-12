@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<simulation>
+  <author>Michael Li</author>
+  <description>ForestFire with Extended Moore neighborhood. Fire can spread up to 2 cells away,
+    causing faster and wider burning.
+  </description>
+  <grid>
+    <cells>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 1 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 1 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+      <row>0 0 0 0 0 0 0 0 0 0 0 0</row>
+    </cells>
+    <columns>12</columns>
+    <rows>12</rows>
+  </grid>
+  <parameters>
+    <fillProbability>0.01</fillProbability>
+    <ignitionProbability>0.7</ignitionProbability>
+    <neighborhood>ExtendedMoore</neighborhood>
+    <speed>2.0</speed>
+    <states>
+      <state color="#D2B48C" id="0"/>
+      <state color="#228B22" id="1"/>
+      <state color="#FF4500" id="2"/>
+    </states>
+  </parameters>
+  <title>Extended Moore Neighborhood - Wide Fire Spread</title>
+  <type>ForestFire</type>
+</simulation>

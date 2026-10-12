@@ -14,7 +14,7 @@ class SugarScapeTest {
     Map<String, String> params = new HashMap<>();
     params.put("numAgents", "5");
     params.put("minVision", "1");
-    params.put("maxVision", "3");
+    params.put("maxVision", "3"); 
     params.put("minMetabolism", "1");
     params.put("maxMetabolism", "2");
     params.put("minInitSugar", "5");
