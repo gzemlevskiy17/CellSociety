@@ -1,4 +1,4 @@
-# cell society
+# cell society - Cellular Automata Simulator - 1st Project in Advanced Software Design & Implementation
 ## TEAM NUMBER: 1
 ## NAMES: Joseph Wang, Georgiy Zemlevskiy, Michael Li
 
